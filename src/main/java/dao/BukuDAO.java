@@ -13,7 +13,7 @@ public class BukuDAO {
         System.out.println("INSERT BUKU DIJALANKAN");
         try {
             Connection conn = DBConnection.getConnection();
-            String sql = "INSERT INTO buku (judul, penulis, penerbit, tahun_terbit, jml_buku, id_kategori) VALUES (?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO buku (judul, penulis, penerbit, tahun_terbit, jml_buku, id_kategori, isbn, abstraksi) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, buku.getJudul());
             ps.setString(2, buku.getPenulis());
@@ -21,6 +21,8 @@ public class BukuDAO {
             ps.setInt(4, buku.getTahunTerbit());
             ps.setInt(5, buku.getJmlBuku());
             ps.setInt(6, buku.getIdKategori());
+            ps.setString(7, buku.getIsbn());       // Ditambahkan untuk admin insert
+            ps.setString(8, buku.getAbstraksi()); // Ditambahkan untuk admin insert
 
             int hasil = ps.executeUpdate();
             System.out.println("Data berhasil disimpan : " + hasil);
@@ -47,6 +49,11 @@ public class BukuDAO {
                 buku.setTahunTerbit(rs.getInt("tahun_terbit"));
                 buku.setJmlBuku(rs.getInt("jml_buku"));
                 buku.setIdKategori(rs.getInt("id_kategori"));
+                
+                // DISESUAIKAN: Menarik kolom baru dari database
+                buku.setIsbn(rs.getString("isbn"));
+                buku.setAbstraksi(rs.getString("abstraksi"));
+                
                 list.add(buku);
             }
             rs.close();
@@ -75,6 +82,10 @@ public class BukuDAO {
                 buku.setTahunTerbit(rs.getInt("tahun_terbit"));
                 buku.setJmlBuku(rs.getInt("jml_buku"));
                 buku.setIdKategori(rs.getInt("id_kategori"));
+                
+                // DISESUAIKAN: Menarik kolom baru dari database
+                buku.setIsbn(rs.getString("isbn"));
+                buku.setAbstraksi(rs.getString("abstraksi"));
             }
             rs.close();
             ps.close();
@@ -89,7 +100,7 @@ public class BukuDAO {
         boolean success = false;
         try {
             Connection conn = DBConnection.getConnection();
-            String sql = "UPDATE buku SET judul=?, penulis=?, penerbit=?, tahun_terbit=?, jml_buku=?, id_kategori=? WHERE id_buku=?";
+            String sql = "UPDATE buku SET judul=?, penulis=?, penerbit=?, tahun_terbit=?, jml_buku=?, id_kategori=?, isbn=?, abstraksi=? WHERE id_buku=?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, buku.getJudul());
             ps.setString(2, buku.getPenulis());
@@ -97,7 +108,9 @@ public class BukuDAO {
             ps.setInt(4, buku.getTahunTerbit());
             ps.setInt(5, buku.getJmlBuku());
             ps.setInt(6, buku.getIdKategori());
-            ps.setInt(7, buku.getIdBuku());
+            ps.setString(7, buku.getIsbn());       // Ditambahkan untuk admin update
+            ps.setString(8, buku.getAbstraksi()); // Ditambahkan untuk admin update
+            ps.setInt(9, buku.getIdBuku());
             int rows = ps.executeUpdate();
             if (rows > 0) {
                 success = true;
@@ -144,6 +157,11 @@ public class BukuDAO {
                 buku.setTahunTerbit(rs.getInt("tahun_terbit"));
                 buku.setJmlBuku(rs.getInt("jml_buku"));
                 buku.setIdKategori(rs.getInt("id_kategori"));
+                
+                // DISESUAIKAN: Menarik kolom baru dari database
+                buku.setIsbn(rs.getString("isbn"));
+                buku.setAbstraksi(rs.getString("abstraksi"));
+                
                 list.add(buku);
             }
             rs.close();
@@ -172,6 +190,11 @@ public class BukuDAO {
                 buku.setTahunTerbit(rs.getInt("tahun_terbit"));
                 buku.setJmlBuku(rs.getInt("jml_buku"));
                 buku.setIdKategori(rs.getInt("id_kategori"));
+                
+                // DISESUAIKAN: Menarik kolom baru dari database
+                buku.setIsbn(rs.getString("isbn"));
+                buku.setAbstraksi(rs.getString("abstraksi"));
+                
                 list.add(buku);
             }
             rs.close();

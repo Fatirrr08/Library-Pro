@@ -30,31 +30,28 @@ public class UlasanServlet extends HttpServlet {
         }
 
         User user = (User) session.getAttribute("user");
-        String action = request.getParameter("action");
+        String idBukuParam = request.getParameter("idBuku");
 
-        if ("delete".equals(action)) {
-            int idUlasan = Integer.parseInt(request.getParameter("id"));
-            int idBuku = Integer.parseInt(request.getParameter("idBuku"));
-            ulasanDAO.deleteUlasan(idUlasan, user.getIdUser());
-            response.sendRedirect(request.getContextPath() + "/ulasan?idBuku=" + idBuku);
-        } else {
-            String idBukuStr = request.getParameter("idBuku");
-            if (idBukuStr == null || idBukuStr.isEmpty()) {
-                response.sendRedirect(request.getContextPath() + "/anggota/katalog.jsp");
-                return;
+        // MODE 1: Jika ada parameter idBuku, berarti user mau MENULIS ULASAN BARU
+        if (idBukuParam != null && !idBukuParam.isEmpty()) {
+            try {
+                int idBuku = Integer.parseInt(idBukuParam);
+                Buku buku = bukuDAO.getBukuById(idBuku);
+                if (buku != null) {
+                    request.setAttribute("buku", buku);
+                    request.getRequestDispatcher("/anggota/ulasan.jsp").forward(request, response);
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
             }
-
-            int idBuku = Integer.parseInt(idBukuStr);
-            Buku buku = bukuDAO.getBukuById(idBuku);
-            List<Ulasan> daftarUlasan = ulasanDAO.getUlasanByBuku(idBuku);
-            double ratingRataRata = ulasanDAO.getRataRataRatingBuku(idBuku);
-
-            request.setAttribute("buku", buku);
-            request.setAttribute("daftarUlasan", daftarUlasan);
-            request.setAttribute("ratingRata", ratingRataRata);
-
-            request.getRequestDispatcher("/anggota/ulasan.jsp").forward(request, response);
         }
+
+        // MODE 2: Jika TIDAK ADA parameter idBuku, berarti menampilkan HISTORY ULASAN SAYA
+        List<Ulasan> historyUlasan = ulasanDAO.getUlasanByUser(user.getIdUser());
+        request.setAttribute("historyUlasan", historyUlasan);
+        
+        request.getRequestDispatcher("/anggota/ulasan.jsp").forward(request, response);
     }
 
     @Override
@@ -68,25 +65,39 @@ public class UlasanServlet extends HttpServlet {
         }
 
         User user = (User) session.getAttribute("user");
-        int idBuku = Integer.parseInt(request.getParameter("idBuku"));
+        
+        // Ambil data dari form submit ulasan
+        String idBukuStr = request.getParameter("idBuku");
+        String ratingStr = request.getParameter("rating");
         String ulasanText = request.getParameter("ulasan");
-        int rating = Integer.parseInt(request.getParameter("rating"));
-        String idUlasanStr = request.getParameter("idUlasan");
 
-        Ulasan ulasan = new Ulasan();
-        ulasan.setIdUser(user.getIdUser());
-        ulasan.setIdBuku(idBuku);
-        ulasan.setUlasan(ulasanText);
-        ulasan.setRating(rating);
+        if (idBukuStr != null && ratingStr != null && ulasanText != null) {
+            try {
+                int idBuku = Integer.parseInt(idBukuStr);
+                int rating = Integer.parseInt(ratingStr);
 
-        if (idUlasanStr != null && !idUlasanStr.isEmpty()) {
-            int idUlasan = Integer.parseInt(idUlasanStr);
-            ulasan.setIdUlasan(idUlasan);
-            ulasanDAO.updateUlasan(ulasan);
+                Ulasan ulasanBaru = new Ulasan();
+                ulasanBaru.setIdUser(user.getIdUser());
+                ulasanBaru.setIdBuku(idBuku);
+                ulasanBaru.setRating(rating);
+                ulasanBaru.setUlasan(ulasanText);
+
+                // Simpan ke Database via DAO
+                boolean success = ulasanDAO.insertUlasan(ulasanBaru);
+
+                if (success) {
+                    // Jika sukses, lempar ke halaman history ulasan ini
+                    response.sendRedirect(request.getContextPath() + "/ulasan");
+                } else {
+                    request.setAttribute("errorMessage", "Gagal menyimpan ulasan. Anda mungkin sudah mengulas buku ini.");
+                    doGet(request, response);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                response.sendRedirect(request.getContextPath() + "/dashboard");
+            }
         } else {
-            ulasanDAO.addUlasan(ulasan);
+            response.sendRedirect(request.getContextPath() + "/dashboard");
         }
-
-        response.sendRedirect(request.getContextPath() + "/ulasan?idBuku=" + idBuku);
     }
 }

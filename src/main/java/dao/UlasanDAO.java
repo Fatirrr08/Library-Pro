@@ -11,6 +11,11 @@ import java.util.List;
 
 public class UlasanDAO {
 
+    // DIPERBAIKI/DISESUAIKAN: Menggunakan nama insertUlasan agar cocok dengan UlasanServlet Anda
+    public boolean insertUlasan(Ulasan ulasan) {
+        return addUlasan(ulasan);
+    }
+
     public boolean addUlasan(Ulasan ulasan) {
         boolean success = false;
         try {
@@ -31,6 +36,39 @@ public class UlasanDAO {
             e.printStackTrace();
         }
         return success;
+    }
+
+    // TAMBAHAN METHOD BARU: Mengambil semua ulasan yang pernah diposting oleh USER tertentu
+    public List<Ulasan> getUlasanByUser(int idUser) {
+        List<Ulasan> list = new ArrayList<>();
+        try {
+            Connection conn = DBConnection.getConnection();
+            // Melakukan JOIN ke tabel buku untuk mendapatkan judul buku yang diulas
+            String sql = "SELECT ul.*, b.judul AS judul_buku " +
+                         "FROM ulasan ul " +
+                         "JOIN buku b ON ul.id_buku = b.id_buku " +
+                         "WHERE ul.id_user = ? " +
+                         "ORDER BY ul.id_ulasan DESC";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, idUser);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Ulasan ulasan = new Ulasan();
+                ulasan.setIdUlasan(rs.getInt("id_ulasan"));
+                ulasan.setIdUser(rs.getInt("id_user"));
+                ulasan.setIdBuku(rs.getInt("id_buku"));
+                ulasan.setUlasan(rs.getString("ulasan"));
+                ulasan.setRating(rs.getInt("rating"));
+                ulasan.setJudulBuku(rs.getString("judul_buku")); // Set judul buku ke model ulasan
+                list.add(ulasan);
+            }
+            rs.close();
+            ps.close();
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 
     public boolean updateUlasan(Ulasan ulasan) {

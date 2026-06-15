@@ -62,6 +62,7 @@ public class DashboardServlet extends HttpServlet {
             request.setAttribute("totalFavoritSaya", totalFavoritSaya);
             request.setAttribute("totalUlasanSaya", totalUlasanSaya);
             request.setAttribute("daftarBuku", daftarBuku);
+            request.setAttribute("favoritDAO", favoritDAO);
 
             request.getRequestDispatcher("/anggota/dashboard.jsp").forward(request, response);
         } else {

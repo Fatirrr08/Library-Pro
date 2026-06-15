@@ -9,6 +9,8 @@ public class Buku {
     private int tahunTerbit;
     private int jmlBuku;
     private int idKategori;
+    private String abstraksi;
+    private String isbn;
 
     public Buku() {}
 
@@ -66,5 +68,20 @@ public class Buku {
 
     public void setIdKategori(int idKategori) {
         this.idKategori = idKategori;
+    }
+    // Getter dan Setter untuk abstraksi
+    public String getAbstraksi() {
+        return abstraksi;
+    }
+    public void setAbstraksi(String abstraksi) {
+        this.abstraksi = abstraksi;
+    }
+
+    // Getter dan Setter untuk isbn
+    public String getIsbn() {
+        return isbn;
+    }
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
     }
 }
