@@ -22,9 +22,20 @@ public class UserServlet extends HttpServlet {
         String action = request.getParameter("action");
 
         if ("delete".equals(action)) {
-            int id = Integer.parseInt(request.getParameter("id"));
-            dao.delete(id);
-            response.sendRedirect(request.getContextPath() + "/user");
+            try {
+                int id = Integer.parseInt(request.getParameter("id"));
+                boolean success = dao.delete(id); // Asumsi method delete Anda mengembalikan nilai boolean
+                
+                if (success) {
+                    response.sendRedirect(request.getContextPath() + "/user?status=deleted");
+                } else {
+                    response.sendRedirect(request.getContextPath() + "/user?status=fail");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                // Antisipasi error Foreign Key Constraint jika user masih meminjam buku
+                response.sendRedirect(request.getContextPath() + "/user?status=fail");
+            }
         } else if ("edit".equals(action)) {
             int id = Integer.parseInt(request.getParameter("id"));
             User editUser = dao.getUserById(id);
@@ -56,14 +67,26 @@ public class UserServlet extends HttpServlet {
         user.setAlamat(request.getParameter("alamat"));
         user.setLevel(request.getParameter("level"));
 
-        if ("update".equals(action) || (idStr != null && !idStr.isEmpty())) {
-            int id = Integer.parseInt(idStr);
-            user.setIdUser(id);
-            dao.update(user);
-        } else {
-            dao.insert(user);
-        }
+        boolean isSuccess = false;
 
-        response.sendRedirect(request.getContextPath() + "/user");
+        try {
+            if ("update".equals(action) || (idStr != null && !idStr.isEmpty())) {
+                int id = Integer.parseInt(idStr);
+                user.setIdUser(id);
+                isSuccess = dao.update(user); // Asumsi method update Anda mengembalikan boolean
+            } else {
+                isSuccess = dao.insert(user); // Asumsi method insert Anda mengembalikan boolean
+            }
+
+            if (isSuccess) {
+                response.sendRedirect(request.getContextPath() + "/user?status=success");
+            } else {
+                response.sendRedirect(request.getContextPath() + "/user?status=fail");
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.sendRedirect(request.getContextPath() + "/user?status=fail");
+        }
     }
 }

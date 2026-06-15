@@ -29,7 +29,7 @@ public class BukuServlet extends HttpServlet {
         if ("delete".equals(action)) {
             int id = Integer.parseInt(request.getParameter("id"));
             dao.delete(id);
-            response.sendRedirect(request.getContextPath() + "/buku");
+            response.sendRedirect(request.getContextPath() + "/buku?status=deleted");
         } else if ("edit".equals(action)) {
             int id = Integer.parseInt(request.getParameter("id"));
             Buku buku = dao.getBukuById(id);
@@ -77,6 +77,6 @@ public class BukuServlet extends HttpServlet {
             dao.insert(buku);
         }
 
-        response.sendRedirect(request.getContextPath() + "/buku");
+        response.sendRedirect(request.getContextPath() + "/buku?status=success");
     }
 }

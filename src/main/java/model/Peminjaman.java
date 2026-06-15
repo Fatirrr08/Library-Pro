@@ -8,12 +8,15 @@ public class Peminjaman {
     private int idBuku;
     private Date tanggalPinjam;
     private Date tanggalKembali;
+    private Date tanggalTenggat;
     private String status;
 
     // Join fields for UI display
+    private double denda;
     private String username;
     private String namaLengkap;
     private String judulBuku;
+
 
     public Peminjaman() {}
 
@@ -88,4 +91,10 @@ public class Peminjaman {
     public void setJudulBuku(String judulBuku) {
         this.judulBuku = judulBuku;
     }
+
+    public double getDenda() { return denda; }
+    public void setDenda(double denda) { this.denda = denda; }
+
+    public Date getTanggalTenggat() { return tanggalTenggat; }
+    public void setTanggalTenggat(Date tanggalTenggat) { this.tanggalTenggat = tanggalTenggat; }
 }

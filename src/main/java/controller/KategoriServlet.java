@@ -22,9 +22,20 @@ public class KategoriServlet extends HttpServlet {
         String action = request.getParameter("action");
 
         if ("delete".equals(action)) {
-            int id = Integer.parseInt(request.getParameter("id"));
-            dao.delete(id);
-            response.sendRedirect(request.getContextPath() + "/kategori");
+            try {
+                int id = Integer.parseInt(request.getParameter("id"));
+                boolean success = dao.delete(id); // Asumsi method delete mengembalikan boolean
+                
+                if (success) {
+                    response.sendRedirect(request.getContextPath() + "/kategori?status=deleted");
+                } else {
+                    response.sendRedirect(request.getContextPath() + "/kategori?status=fail");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                // Mengarahkan ke status fail jika gagal (misal data integrity constraint dsb)
+                response.sendRedirect(request.getContextPath() + "/kategori?status=fail");
+            }
         } else if ("edit".equals(action)) {
             int id = Integer.parseInt(request.getParameter("id"));
             Kategori kategori = dao.getKategoriById(id);
@@ -51,15 +62,27 @@ public class KategoriServlet extends HttpServlet {
 
         Kategori kategori = new Kategori();
         kategori.setNamaKategori(namaKategori);
+        
+        boolean isSuccess = false;
 
-        if ("update".equals(action) || (idStr != null && !idStr.isEmpty())) {
-            int id = Integer.parseInt(idStr);
-            kategori.setIdKategori(id);
-            dao.update(kategori);
-        } else {
-            dao.insert(kategori);
+        try {
+            if ("update".equals(action) || (idStr != null && !idStr.isEmpty())) {
+                int id = Integer.parseInt(idStr);
+                kategori.setIdKategori(id);
+                isSuccess = dao.update(kategori); // Asumsi method update mengembalikan boolean
+            } else {
+                isSuccess = dao.insert(kategori); // Asumsi method insert mengembalikan boolean
+            }
+            
+            if (isSuccess) {
+                response.sendRedirect(request.getContextPath() + "/kategori?status=success");
+            } else {
+                response.sendRedirect(request.getContextPath() + "/kategori?status=fail");
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.sendRedirect(request.getContextPath() + "/kategori?status=fail");
         }
-
-        response.sendRedirect(request.getContextPath() + "/kategori");
     }
 }

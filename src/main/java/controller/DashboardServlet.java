@@ -41,11 +41,17 @@ public class DashboardServlet extends HttpServlet {
             int totalPeminjaman = peminjamanDAO.getTotalPeminjaman();
             List<Buku> daftarBuku = bukuDAO.getLatestBuku(5); // 5 recent books
 
+            // Tambahkan hitungan baru untuk memenuhi kebutuhan statistik dashboard taktis:
+            int totalActivePeminjaman = peminjamanDAO.getTotalActivePeminjaman(); // Status 'disetujui'
+            int totalMenungguValidasi = peminjamanDAO.getTotalMenungguValidasi(); // Status 'menunggu'
+
             request.setAttribute("totalBuku", totalBuku);
             request.setAttribute("totalKategori", totalKategori);
             request.setAttribute("totalUser", totalUser);
             request.setAttribute("totalPeminjaman", totalPeminjaman);
             request.setAttribute("daftarBuku", daftarBuku);
+            request.setAttribute("totalActivePeminjaman", totalActivePeminjaman);
+            request.setAttribute("totalMenungguValidasi", totalMenungguValidasi);
 
             request.getRequestDispatcher("/admin/dashboard.jsp").forward(request, response);
         } else if ("anggota".equalsIgnoreCase(user.getLevel())) {
