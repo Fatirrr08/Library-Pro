@@ -41,7 +41,9 @@ public class AuthFilter implements Filter {
             return;
         }
 
-        // Check page authorization
+        // ==================== CHECK PAGE AUTHORIZATION ====================
+        
+        // 1. Proteksi Halaman Khusus Admin
         if (path.startsWith("/admin/") || path.equals("/buku") || path.equals("/kategori") || path.equals("/user")) {
             if (!"admin".equalsIgnoreCase(user.getLevel())) {
                 res.sendError(HttpServletResponse.SC_FORBIDDEN, "Access Denied: Admin role required.");
@@ -49,10 +51,21 @@ public class AuthFilter implements Filter {
             }
         }
 
-        if (path.startsWith("/anggota/") || path.equals("/favorit") || path.equals("/ulasan")) {
+        // 2. Proteksi Halaman Khusus Anggota (Kecuali path /ulasan)
+        // 🌟 PERBAIKAN: path.equals("/ulasan") dicopot dari sini karena boleh diakses Admin & Anggota
+        if (path.startsWith("/anggota/") || path.equals("/favorit")) {
             if (!"anggota".equalsIgnoreCase(user.getLevel())) {
-                // Admin trying to view member page -> redirect to dashboard
+                // Admin mencoba membuka halaman eksklusif anggota -> kembalikan ke dashboard admin
                 res.sendRedirect(req.getContextPath() + "/dashboard");
+                return;
+            }
+        }
+
+        // 3. Otorisasi Bersama untuk Modul Ulasan
+        if (path.equals("/ulasan")) {
+            // Memastikan pengguna yang mengakses adalah salah satu dari role yang valid
+            if (!"admin".equalsIgnoreCase(user.getLevel()) && !"anggota".equalsIgnoreCase(user.getLevel())) {
+                res.sendRedirect(req.getContextPath() + "/login.jsp");
                 return;
             }
         }

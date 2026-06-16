@@ -19,208 +19,64 @@
         }
 
         .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            user-select: none;
-            padding: 6px 12px;
-            border-radius: 8px;
-            transition: background-color 0.3s ease;
+            display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; padding: 6px 12px; border-radius: 8px; transition: background-color 0.3s ease;
         }
-
-        .user-profile:hover {
-            background-color: #f1f5f9;
-        }
-
-        .user-profile img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .user-profile span {
-            font-weight: 500;
-            color: #334155;
-        }
+        .user-profile:hover { background-color: #f1f5f9; }
+        .user-profile img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+        .user-profile span { font-weight: 500; color: #334155; }
 
         /* Menu Dropdown Profil di Topbar */
         .dropdown-menu {
-            position: absolute;
-            right: 0;
-            top: 55px;
-            background-color: #ffffff;
-            min-width: 180px;
-            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            padding: 8px 0;
-            list-style: none;
-            z-index: 1000;
-            border: 1px solid #e2e8f0;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-10px);
-            transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+            position: absolute; right: 0; top: 55px; background-color: #ffffff; min-width: 180px; box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1); border-radius: 8px; padding: 8px 0; list-style: none; z-index: 1000; border: 1px solid #e2e8f0; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
         }
-
-        .dropdown-menu.show {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-
-        .dropdown-menu li a {
-            color: #334155;
-            padding: 10px 15px;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 14px;
-            transition: background-color 0.2s, color 0.2s;
-        }
-
-        .dropdown-menu li a:hover {
-            background-color: #f8fafc;
-            color: #2563eb;
-        }
-
-        .dropdown-menu li a.logout-link:hover {
-            background-color: #fef2f2;
-            color: #dc2626;
-        }
-
-        .dropdown-menu .divider {
-            height: 1px;
-            background-color: #e2e8f0;
-            margin: 6px 0;
-        }
+        .dropdown-menu.show { opacity: 1; visibility: visible; transform: translateY(0); }
+        .dropdown-menu li a { color: #334155; padding: 10px 15px; text-decoration: none; display: flex; align-items: center; gap: 10px; font-size: 14px; transition: background-color 0.2s, color 0.2s; }
+        .dropdown-menu li a:hover { background-color: #f8fafc; color: #2563eb; }
+        .dropdown-menu li a.logout-link:hover { background-color: #fef2f2; color: #dc2626; }
+        .dropdown-menu .divider { height: 1px; background-color: #e2e8f0; margin: 6px 0; }
 
         /* ==================== STYLE ANIMASI POP-UP TOAST ==================== */
         .toast-notification {
-            position: fixed;
-            top: 25px;
-            right: 25px;
-            background: #ffffff;
-            padding: 16px 22px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            z-index: 9999;
-            border-left: 6px solid #10b981; /* Default sukses (Hijau) */
-            
-            /* Animasi geser masuk dari kanan */
-            transform: translateX(120%);
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: fixed; top: 25px; right: 25px; background: #ffffff; padding: 16px 22px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); display: flex; align-items: center; gap: 12px; z-index: 9999; border-left: 6px solid #10b981; transform: translateX(120%); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        
-        .toast-notification.toast-error {
-            border-left-color: #ef4444; /* Gagal (Merah) */
-        }
+        .toast-notification.toast-error { border-left-color: #ef4444; }
+        .toast-notification.show { transform: translateX(0); }
+        .toast-icon { font-size: 20px; }
+        .toast-message { font-size: 14px; font-weight: 600; color: #1e293b; }
 
-        .toast-notification.show {
-            transform: translateX(0);
-        }
-
-        .toast-icon {
-            font-size: 20px;
-        }
-        .toast-success .toast-icon { color: #10b981; }
-        .toast-error .toast-icon { color: #ef4444; }
-
-        .toast-message {
-            font-size: 14px;
-            font-weight: 600;
-            color: #1e293b;
-        }
-
-        /* ==================== DIATUR: STYLE OVERLAY MODAL BASE ==================== */
+        /* ==================== STYLE OVERLAY & MODAL BOX KUSTOM ==================== */
         .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(4px);
-            display: flex; align-items: center; justify-content: center;
-            z-index: 2000;
-            opacity: 0; visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 2000; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease;
         }
-        .modal-overlay.show {
-            opacity: 1; visibility: visible;
+        .modal-overlay.show { opacity: 1; visibility: visible; }
+        .action-modal-box {
+            background: #ffffff; width: 90%; max-width: 400px; border-radius: 14px; padding: 24px; text-align: center; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); transform: scale(0.9); transition: transform 0.25s ease;
         }
-
-        /* ==================== STYLE MODAL KONFIRMASI LOGOUT ==================== */
-        .logout-modal-box {
-            background: #ffffff;
-            width: 90%;
-            max-width: 400px;
-            border-radius: 14px;
-            padding: 24px;
-            text-align: center;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            transform: scale(0.9);
-            transition: transform 0.25s ease;
-        }
-        .modal-overlay.show .logout-modal-box {
-            transform: scale(1);
-        }
-        .logout-warning-icon {
-            font-size: 44px;
-            color: #ef4444;
-            background: #fef2f2;
-            width: 80px;
-            height: 80px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            margin-bottom: 16px;
-        }
-        .logout-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: #1e293b;
-            margin-bottom: 8px;
-        }
-        .logout-desc {
-            font-size: 14px;
-            color: #64748b;
-            line-height: 1.5;
-            margin-bottom: 24px;
-        }
-        .logout-btn-container {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-        }
-        .btn-confirm-logout {
-            background-color: #ef4444;
-            color: white !important;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 14px;
-            text-decoration: none;
-            transition: background-color 0.2s;
-            flex: 1;
-        }
+        .modal-overlay.show .action-modal-box { transform: scale(1); }
+        .logout-warning-icon { font-size: 44px; color: #ef4444; background: #fef2f2; width: 80px; height: 80px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; margin-bottom: 16px; }
+        .logout-title { font-size: 18px; font-weight: 700; color: #1e293b; margin-bottom: 8px; }
+        .logout-desc { font-size: 14px; color: #64748b; line-height: 1.5; margin-bottom: 24px; }
+        .logout-btn-container { display: flex; gap: 12px; justify-content: center; }
+        .btn-confirm-logout { background-color: #ef4444; color: white !important; padding: 10px 20px; border-radius: 8px; font-weight: 600; font-size: 14px; text-decoration: none; transition: background-color 0.2s; flex: 1; }
         .btn-confirm-logout:hover { background-color: #dc2626; }
-        .btn-cancel-logout {
-            background-color: #f1f5f9;
-            color: #334155;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 14px;
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            flex: 1;
-        }
+        .btn-cancel-logout { background-color: #f1f5f9; color: #334155; padding: 10px 20px; border-radius: 8px; font-weight: 600; font-size: 14px; border: none; cursor: pointer; transition: background-color 0.2s; flex: 1; }
         .btn-cancel-logout:hover { background-color: #e2e8f0; }
+
+        /* ==================== CORE STYLE BADGE STATUS MODERN ==================== */
+        .status-badge {
+            display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 9999px; font-size: 12px; font-weight: 600; line-height: 1; text-transform: capitalize;
+        }
+        .status-badge.badge-waiting { background-color: #fef3c7; color: #d97706; }
+        .status-badge.badge-borrowed { background-color: #e0f2fe; color: #0369a1; }
+        .status-badge.badge-returned { background-color: #dcfce7; color: #15803d; }
+        .status-badge.badge-rejected { background-color: #fef2f2; color: #ef4444; }
+
+        /* Style Tombol Aksi */
+        .btn-action-table {
+            text-decoration: none; display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; border: none; cursor: pointer; transition: all 0.2s ease;
+        }
+        .btn-table-return { background-color: #2563eb; color: #ffffff !important; }
+        .btn-table-return:hover { background-color: #1d4ed8; transform: translateY(-1px); box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2); }
     </style>
 </head>
 <body>
@@ -241,31 +97,11 @@
         <span>LibraryPro</span>
     </div>
     <ul class="menu">
-        <li>
-            <a href="<%=request.getContextPath()%>/dashboard">
-                <i class="fa-solid fa-chart-line"></i> Dashboard
-            </a>
-        </li>
-        <li>
-            <a href="<%=request.getContextPath()%>/anggota/katalog.jsp">
-                <i class="fa-solid fa-book-open"></i> Katalog Buku
-            </a>
-        </li>
-        <li>
-            <a href="<%=request.getContextPath()%>/peminjaman" class="active">
-                <i class="fa-solid fa-clock-rotate-left"></i> Riwayat Peminjaman
-            </a>
-        </li>
-        <li>
-            <a href="<%=request.getContextPath()%>/favorit">
-                <i class="fa-solid fa-star"></i> Favorit Saya
-            </a>
-        </li>
-        <li>
-            <a href="<%=request.getContextPath()%>/ulasan">
-                <i class="fa-solid fa-comments"></i> Ulasan & Rating Saya
-            </a>
-        </li>
+        <li><a href="<%=request.getContextPath()%>/dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a></li>
+        <li><a href="<%=request.getContextPath()%>/anggota/katalog.jsp"><i class="fa-solid fa-book-open"></i> Katalog Buku</a></li>
+        <li><a href="<%=request.getContextPath()%>/peminjaman" class="active"><i class="fa-solid fa-clock-rotate-left"></i> Riwayat Peminjaman</a></li>
+        <li><a href="<%=request.getContextPath()%>/favorit"><i class="fa-solid fa-star"></i> Favorit Saya</a></li>
+        <li><a href="<%=request.getContextPath()%>/ulasan"><i class="fa-solid fa-comments"></i> Ulasan & Rating Saya</a></li>
     </ul>
 </div>
 
@@ -281,17 +117,9 @@
             </div>
             
             <ul class="dropdown-menu" id="dropdownMenu">
-                <li>
-                    <a href="<%=request.getContextPath()%>/profile">
-                        <i class="fa-solid fa-user-gear"></i> Profil Saya
-                    </a>
-                </li>
+                <li><a href="<%=request.getContextPath()%>/profile"><i class="fa-solid fa-user-gear"></i> Profil Saya</a></li>
                 <li class="divider"></li>
-                <li>
-                    <a href="#" class="logout-link" id="logoutTrigger">
-                        <i class="fa-solid fa-right-from-bracket"></i> Logout
-                    </a>
-                </li>
+                <li><a href="#" class="logout-link" id="logoutTrigger"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
             </ul>
         </div>
     </div>
@@ -306,15 +134,15 @@
             String statusParam = request.getParameter("status");
             if ("success".equals(statusParam)) {
         %>
-            <div class="toast-notification toast-success" id="popupToast">
-                <div class="toast-icon"><i class="fa-solid fa-circle-check"></i></div>
-                <div class="toast-message">Peminjaman buku berhasil dicatat! Selamat membaca!</div>
+            <div class="toast-notification" id="popupToast" style="border-left-color: #10b981;">
+                <div class="toast-icon" style="color: #10b981;"><i class="fa-solid fa-circle-check"></i></div>
+                <div class="toast-message">Peminjaman buku berhasil dicatat! Mohon tunggu verifikasi admin.</div>
             </div>
         <%
             } else if ("fail".equals(statusParam)) {
         %>
             <div class="toast-notification toast-error" id="popupToast">
-                <div class="toast-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                <div class="toast-icon" style="color: #ef4444;"><i class="fa-solid fa-triangle-exclamation"></i></div>
                 <div class="toast-message">Gagal melakukan peminjaman. Stok buku habis!</div>
             </div>
         <%
@@ -331,7 +159,8 @@
                     <th>ID Pinjam</th>
                     <th>Judul Buku</th>
                     <th>Tanggal Pinjam</th>
-                    <th>Tanggal Pengembalian</th>
+                    <th style="color: #e28743;">Batas Pengembalian</th>
+                    <th>Tanggal Kembali</th>
                     <th>Status</th>
                     <th>Aksi</th>
                 </tr>
@@ -343,23 +172,38 @@
                 %>
                 <tr>
                     <td><%= p.getIdPeminjaman() %></td>
-                    <td style="font-weight: 600;"><%= p.getJudulBuku() %></td>
-                    <td><%= p.getTanggalPinjam() %></td>
+                    <td style="font-weight: 600; color: #1e293b;"><%= p.getJudulBuku() %></td>
+                    <td><%= p.getTanggalPinjam() != null ? p.getTanggalPinjam() : "-" %></td>
+                    <td style="font-weight: 600; color: #475569;"><%= p.getTanggalTenggat() != null ? p.getTanggalTenggat() : "-" %></td>
                     <td><%= p.getTanggalKembali() != null ? p.getTanggalKembali() : "-" %></td>
                     <td>
-                        <% if ("dipinjam".equalsIgnoreCase(p.getStatus())) { %>
-                            <span class="status borrowed">Sedang Dipinjam</span>
+                        <% if ("menunggu".equalsIgnoreCase(p.getStatus())) { %>
+                            <span class="status-badge badge-waiting">
+                                <i class="fa-regular fa-clock"></i> Menunggu Validasi
+                            </span>
+                        <% } else if ("disetujui".equalsIgnoreCase(p.getStatus())) { %>
+                            <span class="status-badge badge-borrowed">
+                                <i class="fa-solid fa-book-reader"></i> Sedang Dipinjam
+                            </span>
+                        <% } else if ("ditolak".equalsIgnoreCase(p.getStatus())) { %>
+                            <span class="status-badge badge-rejected">
+                                <i class="fa-solid fa-circle-xmark"></i> Ditolak Admin
+                            </span>
                         <% } else { %>
-                            <span class="status returned">Sudah Dikembalikan</span>
+                            <span class="status-badge badge-returned">
+                                <i class="fa-solid fa-circle-check"></i> Dikembalikan
+                            </span>
                         <% } %>
                     </td>
                     <td>
-                        <% if ("dipinjam".equalsIgnoreCase(p.getStatus())) { %>
-                            <a href="<%=request.getContextPath()%>/peminjaman?action=kembalikan&id=<%= p.getIdPeminjaman() %>" class="btn-sm btn-success" style="text-decoration: none;">
+                        <% if ("disetujui".equalsIgnoreCase(p.getStatus())) { %>
+                            <a href="<%=request.getContextPath()%>/peminjaman?action=kembalikan&id=<%= p.getIdPeminjaman() %>" class="btn-action-table btn-table-return">
                                 <i class="fa-solid fa-arrow-left-long"></i> Kembalikan Buku
                             </a>
+                        <% } else if ("menunggu".equalsIgnoreCase(p.getStatus())) { %>
+                            <span style="color: #a8a29e; font-size: 0.85rem;"><i class="fa-solid fa-hourglass-start"></i> Diproses</span>
                         <% } else { %>
-                            <span style="color: var(--text-muted); font-size: 0.85rem;"><i class="fa-solid fa-circle-check"></i> Selesai</span>
+                            <span style="color: #10b981; font-size: 0.85rem; font-weight: 600;"><i class="fa-solid fa-circle-check"></i> Selesai</span>
                         <% } %>
                     </td>
                 </tr>
@@ -368,7 +212,7 @@
                     } else {
                 %>
                 <tr>
-                    <td colspan="6" class="empty">Anda belum meminjam buku apa pun. Silakan cari buku di katalog.</td>
+                    <td colspan="7" class="empty">Anda belum meminjam buku apa pun. Silakan cari buku di katalog.</td>
                 </tr>
                 <%
                     }
@@ -380,20 +224,18 @@
 </div>
 
 <div class="modal-overlay" id="logoutModal">
-    <div class="logout-modal-box">
+    <div class="action-modal-box">
         <div class="logout-warning-icon">
             <i class="fa-solid fa-triangle-exclamation"></i>
         </div>
         <div class="logout-title">Konfirmasi Logout</div>
-        <div class="logout-desc">Apakah Anda yakin ingin keluar dari akun LibraryPro saat ini? Anda harus login kembali untuk mengakses layanan.</div>
+        <div class="logout-desc">Apakah Anda yakin ingin keluar dari akun LibraryPro saat ini? Anda harus login kembali untuk mengakses layanan perpustakaan.</div>
         <div class="logout-btn-container">
-            <button class="btn-cancel-logout" id="btnCancelLogout">Batal</button>
+            <button type="button" class="btn-cancel-logout" id="btnCancelLogout">Batal</button>
             <a href="<%=request.getContextPath()%>/logout" class="btn-confirm-logout">Ya, Keluar</a>
         </div>
     </div>
 </div>
-
-<script src="<%=request.getContextPath()%>/js/script.js"></script>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -414,38 +256,38 @@
             });
         }
 
-        // 2. LOGIKA ANIMASI POP-UP TOAST SLIDE IN-OUT
+        // 2. Logika Animasi Pop-up Toast Slide In-Out
         const popupToast = document.getElementById("popupToast");
         if (popupToast) {
-            // Memunculkan pop-up dengan delay halus (100ms) setelah page load
             setTimeout(() => {
                 popupToast.classList.add("show");
             }, 100);
 
-            // Menyembunyikan pop-up kembali setelah 4 detik (4000ms)
             setTimeout(() => {
                 popupToast.classList.remove("show");
+                // Bersihkan parameter status di URL agar rapih tanpa reload
+                const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+                window.history.replaceState({path: cleanUrl}, '', cleanUrl);
             }, 4000);
         }
 
-        // 3. LOGIKA INTERAKTIF MODAL KONFIRMASI LOGOUT
+        // 3. Logika Interaktif Modal Konfirmasi Logout
         const logoutTrigger = document.getElementById("logoutTrigger");
         const logoutModal = document.getElementById("logoutModal");
         const btnCancelLogout = document.getElementById("btnCancelLogout");
 
         if (logoutTrigger && logoutModal && btnCancelLogout) {
             logoutTrigger.addEventListener("click", function (e) {
-                e.preventDefault(); // Menahan link '#' agar tidak scroll ke atas
-                dropdownMenu.classList.remove("show"); // Sembunyikan menu dropdown profil terlebih dahulu
-                logoutModal.classList.add("show"); // Tampilkan pop-up konfirmasi logout
+                e.preventDefault();
+                dropdownMenu.classList.remove("show");
+                logoutModal.classList.add("show");
             });
 
             btnCancelLogout.addEventListener("click", function () {
-                logoutModal.classList.remove("show"); // Sembunyikan pop-up jika menekan tombol Batal
+                logoutModal.classList.remove("show");
             });
         }
 
-        // Global Event: Klik area luar untuk menutup modal apa pun yang sedang aktif
         window.addEventListener("click", function (e) {
             if (e.target === logoutModal) {
                 logoutModal.classList.remove("show");

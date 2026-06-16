@@ -75,6 +75,17 @@
         .btn-confirm-logout { background-color: #ef4444; color: white !important; padding: 10px 20px; border-radius: 8px; font-weight: 600; font-size: 14px; text-decoration: none; flex: 1; text-align: center; }
         .btn-cancel-logout { background-color: #f1f5f9; color: #334155; padding: 10px 20px; border-radius: 8px; font-weight: 600; font-size: 14px; border: none; cursor: pointer; flex: 1; }
         .btn-cancel-logout:hover { background-color: #e2e8f0; }
+        
+        /* Grid Penyesuaian Responsif untuk 5 Cards */
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            width: 100%;
+            position: relative;
+            clear: both;
+            z-index: 10; /* Memastikan boks card berada di layer yang benar */
+        }
     </style>
 </head>
 <body>
@@ -116,6 +127,11 @@
         <li>
             <a href="<%=request.getContextPath()%>/peminjaman">
                 <i class="fa-solid fa-arrow-right-arrow-left"></i> Peminjaman
+            </a>
+        </li>
+        <li>
+            <a href="<%=request.getContextPath()%>/ulasan">
+                <i class="fa-solid fa-comments"></i> Lihat Ulasan User
             </a>
         </li>
     </ul>
@@ -194,6 +210,16 @@
                     <h1><%= request.getAttribute("totalPeminjaman") == null ? 0 : request.getAttribute("totalPeminjaman") %></h1>
                 </div>
             </div>
+
+            <div class="card" onclick="window.location.href='<%=request.getContextPath()%>/ulasan';">
+                <div class="card-icon" style="background-color: #fae8ff; color: #a21caf;">
+                    <i class="fa-solid fa-comments"></i>
+                </div>
+                <div>
+                    <h4>Ulasan User</h4>
+                    <h1><%= request.getAttribute("totalSemuaUlasan") == null ? 0 : request.getAttribute("totalSemuaUlasan") %></h1>
+                </div>
+            </div>
         </div>
 
         <div class="table-container" style="margin-top: 32px;">
@@ -264,7 +290,6 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        // 1. Logika Dropdown Profil Atas
         const profileTrigger = document.getElementById("profileTrigger");
         const dropdownMenu = document.getElementById("dropdownMenu");
 
@@ -280,7 +305,6 @@
             });
         }
 
-        // 2. Logika Pop-up Modal Konfirmasi Logout
         const logoutTrigger = document.getElementById("logoutTrigger");
         const logoutModal = document.getElementById("logoutModal");
         const btnCancelLogout = document.getElementById("btnCancelLogout");
@@ -296,7 +320,6 @@
             });
         }
 
-        // Klik area luar untuk menutup modal
         window.addEventListener("click", function (e) {
             if (e.target === logoutModal) {
                 logoutModal.classList.remove("show");

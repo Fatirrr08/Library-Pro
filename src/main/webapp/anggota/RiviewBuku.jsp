@@ -13,6 +13,27 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="<%=request.getContextPath()%>/css/style.css">
     <style>
+        .profile-dropdown-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .user-profile {
+            display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; padding: 6px 12px; border-radius: 8px; transition: background-color 0.3s ease;
+        }
+        .user-profile:hover { background-color: #f1f5f9; }
+        .user-profile img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+        .user-profile span { font-weight: 500; color: #334155; }
+
+        .dropdown-menu {
+            position: absolute; right: 0; top: 55px; background-color: #ffffff; min-width: 180px; box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1); border-radius: 8px; padding: 8px 0; list-style: none; z-index: 1000; border: 1px solid #e2e8f0; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+        }
+        .dropdown-menu.show { opacity: 1; visibility: visible; transform: translateY(0); }
+        .dropdown-menu li a { color: #334155; padding: 10px 15px; text-decoration: none; display: flex; align-items: center; gap: 10px; font-size: 14px; transition: background-color 0.2s, color 0.2s; }
+        .dropdown-menu li a:hover { background-color: #f8fafc; color: #2563eb; }
+        .dropdown-menu li a.logout-link:hover { background-color: #fef2f2; color: #dc2626; }
+        .dropdown-menu .divider { height: 1px; background-color: #e2e8f0; margin: 6px 0; }
+
         .stars-orange { color: #eab308; display: inline-flex; gap: 2px; }
         .review-card {
             background: #ffffff; padding: 20px; border-radius: 10px;
@@ -26,7 +47,16 @@
             border-radius: 6px; font-weight: 700; display: inline-block; margin-bottom: 15px;
         }
 
-        /* ==================== DIATUR: STYLE OVERLAY MODAL BASE ==================== */
+        /* Hover Kustom Tombol Header */
+        .btn-add {
+            text-decoration: none; display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; border: none; cursor: pointer; transition: all 0.2s ease;
+        }
+        .btn-add:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
+        }
+
+        /* ==================== CORE BASE OVERLAY MODAL SYSTEM ==================== */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -41,74 +71,17 @@
             opacity: 1; visibility: visible;
         }
 
-        /* ==================== STYLE MODAL KONFIRMASI LOGOUT ==================== */
-        .logout-modal-box {
-            background: #ffffff;
-            width: 90%;
-            max-width: 400px;
-            border-radius: 14px;
-            padding: 24px;
-            text-align: center;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            transform: scale(0.9);
-            transition: transform 0.25s ease;
+        .action-modal-box {
+            background: #ffffff; width: 90%; max-width: 400px; border-radius: 14px; padding: 24px; text-align: center;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); transform: scale(0.9); transition: transform 0.25s ease;
         }
-        .modal-overlay.show .logout-modal-box {
-            transform: scale(1);
-        }
-        .logout-warning-icon {
-            font-size: 44px;
-            color: #ef4444;
-            background: #fef2f2;
-            width: 80px;
-            height: 80px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            margin-bottom: 16px;
-        }
-        .logout-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: #1e293b;
-            margin-bottom: 8px;
-        }
-        .logout-desc {
-            font-size: 14px;
-            color: #64748b;
-            line-height: 1.5;
-            margin-bottom: 24px;
-        }
-        .logout-btn-container {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-        }
-        .btn-confirm-logout {
-            background-color: #ef4444;
-            color: white !important;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 14px;
-            text-decoration: none;
-            transition: background-color 0.2s;
-            flex: 1;
-        }
-        .btn-confirm-logout:hover { background-color: #dc2626; }
-        .btn-cancel-logout {
-            background-color: #f1f5f9;
-            color: #334155;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 14px;
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            flex: 1;
-        }
+        .modal-overlay.show .action-modal-box { transform: scale(1); }
+        .logout-warning-icon { font-size: 44px; color: #ef4444; background: #fef2f2; width: 80px; height: 80px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; margin-bottom: 16px; }
+        .logout-title { font-size: 18px; font-weight: 700; color: #1e293b; margin-bottom: 8px; }
+        .logout-desc { font-size: 14px; color: #64748b; line-height: 1.5; margin-bottom: 24px; }
+        .logout-btn-container { display: flex; gap: 12px; justify-content: center; }
+        .btn-confirm-logout { background-color: #ef4444; color: white !important; padding: 10px 20px; border-radius: 8px; font-weight: 600; font-size: 14px; text-decoration: none; flex: 1; text-align: center; }
+        .btn-cancel-logout { background-color: #f1f5f9; color: #334155; padding: 10px 20px; border-radius: 8px; font-weight: 600; font-size: 14px; border: none; cursor: pointer; flex: 1; }
         .btn-cancel-logout:hover { background-color: #e2e8f0; }
     </style>
 </head>
@@ -150,11 +123,7 @@
             <ul class="dropdown-menu" id="dropdownMenu">
                 <li><a href="<%=request.getContextPath()%>/profile"><i class="fa-solid fa-user-gear"></i> Profil Saya</a></li>
                 <li class="divider"></li>
-                <li>
-                    <a href="#" class="logout-link" id="logoutTrigger">
-                        <i class="fa-solid fa-right-from-bracket"></i> Logout
-                    </a>
-                </li>
+                <li><a href="#" class="logout-link" id="logoutTrigger"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
             </ul>
         </div>
     </div>
@@ -218,14 +187,14 @@
 </div>
 
 <div class="modal-overlay" id="logoutModal">
-    <div class="logout-modal-box">
+    <div class="action-modal-box">
         <div class="logout-warning-icon">
             <i class="fa-solid fa-triangle-exclamation"></i>
         </div>
         <div class="logout-title">Konfirmasi Logout</div>
         <div class="logout-desc">Apakah Anda yakin ingin keluar dari akun LibraryPro saat ini? Anda harus login kembali untuk mengakses layanan.</div>
         <div class="logout-btn-container">
-            <button class="btn-cancel-logout" id="btnCancelLogout">Batal</button>
+            <button type="button" class="btn-cancel-logout" id="btnCancelLogout">Batal</button>
             <a href="<%=request.getContextPath()%>/logout" class="btn-confirm-logout">Ya, Keluar</a>
         </div>
     </div>
@@ -233,23 +202,40 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
+        // 1. FIXED LOGIKA: Mengaktifkan fungsionalitas dropdown menu profil harian
+        const profileTrigger = document.getElementById("profileTrigger");
+        const dropdownMenu = document.getElementById("dropdownMenu");
+
+        if (profileTrigger && dropdownMenu) {
+            profileTrigger.addEventListener("click", function (event) {
+                event.stopPropagation();
+                dropdownMenu.classList.toggle("show");
+            });
+
+            document.addEventListener("click", function (event) {
+                if (!profileTrigger.contains(event.target) && !dropdownMenu.contains(event.target)) {
+                    dropdownMenu.classList.remove("show");
+                }
+            });
+        }
+
+        // 2. Logika Modal Konfirmasi Logout
         const logoutTrigger = document.getElementById("logoutTrigger");
         const logoutModal = document.getElementById("logoutModal");
         const btnCancelLogout = document.getElementById("btnCancelLogout");
 
         if (logoutTrigger && logoutModal && btnCancelLogout) {
             logoutTrigger.addEventListener("click", function (e) {
-                e.preventDefault(); // Menahan link '#' agar tidak scroll ke atas
-                dropdownMenu.classList.remove("show"); // Sembunyikan menu dropdown profil terlebih dahulu
-                logoutModal.classList.add("show"); // Tampilkan pop-up konfirmasi logout
+                e.preventDefault();
+                dropdownMenu.classList.remove("show");
+                logoutModal.classList.add("show");
             });
 
             btnCancelLogout.addEventListener("click", function () {
-                logoutModal.classList.remove("show"); // Sembunyikan pop-up jika menekan tombol Batal
+                logoutModal.classList.remove("show");
             });
         }
 
-        // Global Event: Klik area luar untuk menutup modal apa pun yang sedang aktif
         window.addEventListener("click", function (e) {
             if (e.target === logoutModal) {
                 logoutModal.classList.remove("show");

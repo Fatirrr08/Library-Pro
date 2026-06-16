@@ -123,18 +123,23 @@ public class BukuDAO {
         return success;
     }
 
-    public void delete(int id) {
+    public boolean delete(int id) {
+        boolean success = false;
         try {
             Connection conn = DBConnection.getConnection();
             String sql = "DELETE FROM buku WHERE id_buku=?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, id);
-            ps.executeUpdate();
+            int rows = ps.executeUpdate();
+            if (rows > 0) {
+                success = true;
+            }
             ps.close();
             conn.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return success;
     }
 
     public List<Buku> searchBuku(String query) {

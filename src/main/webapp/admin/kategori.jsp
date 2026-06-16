@@ -140,6 +140,7 @@
         <li><a href="<%=request.getContextPath()%>/kategori" class="active"><i class="fa-solid fa-layer-group"></i> Kategori</a></li>
         <li><a href="<%=request.getContextPath()%>/user"><i class="fa-solid fa-users"></i> User</a></li>
         <li><a href="<%=request.getContextPath()%>/peminjaman"><i class="fa-solid fa-arrow-right-arrow-left"></i> Peminjaman</a></li>
+        <li><a href="<%=request.getContextPath()%>/ulasan"><i class="fa-solid fa-comments"></i> Lihat Ulasan User</a></li>
     </ul>
 </div>
 

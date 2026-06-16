@@ -115,6 +115,43 @@
             justify-content: center;
             gap: 8px;
         }
+
+        /* Core Styling untuk Badge Status Modern */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 9999px; /* Membuat bentuk pil/capsule sempurna */
+            font-size: 12px;
+            font-weight: 600;
+            line-height: 1;
+            text-transform: capitalize;
+        }
+
+        /* 1. Status: Menunggu Validasi (Kuning Amber Pastel) */
+        .status-badge.badge-waiting {
+            background-color: #fef3c7;
+            color: #d97706;
+        }
+
+        /* 2. Status: Sedang Dipinjam / Aktif (Biru Sky Pastel) */
+        .status-badge.badge-borrowed {
+            background-color: #e0f2fe;
+            color: #0369a1;
+        }
+
+        /* 3. Status: Dikembalikan / Tersedia (Hijau Emerald Pastel) */
+        .status-badge.badge-returned {
+            background-color: #dcfce7;
+            color: #15803d;
+        }
+
+        /* 4. Status: Ditolak / Stok Habis (Merah Rose Pastel) */
+        .status-badge.badge-rejected {
+            background-color: #fef2f2;
+            color: #ef4444;
+        }
     </style>
 </head>
 <body>
@@ -142,6 +179,7 @@
         <li><a href="<%=request.getContextPath()%>/kategori"><i class="fa-solid fa-layer-group"></i> Kategori</a></li>
         <li><a href="<%=request.getContextPath()%>/user"><i class="fa-solid fa-users"></i> User</a></li>
         <li><a href="<%=request.getContextPath()%>/peminjaman"><i class="fa-solid fa-arrow-right-arrow-left"></i> Peminjaman</a></li>
+        <li><a href="<%=request.getContextPath()%>/ulasan"><i class="fa-solid fa-comments"></i> Lihat Ulasan User</a></li>
     </ul>
 </div>
 
@@ -273,9 +311,13 @@
                     <td><%= b.getTahunTerbit() %></td>
                     <td>
                         <% if (b.getJmlBuku() > 0) { %>
-                            <span class="status available">Tersedia (<%= b.getJmlBuku() %>)</span>
+                            <span class="status-badge badge-returned">
+                                <i class="fa-solid fa-box"></i> Tersedia (<%= b.getJmlBuku() %>)
+                            </span>
                         <% } else { %>
-                            <span class="status borrowed">Habis</span>
+                            <span class="status-badge badge-rejected">
+                                <i class="fa-solid fa-triangle-exclamation"></i> Stok Habis
+                            </span>
                         <% } %>
                     </td>
                     <td>

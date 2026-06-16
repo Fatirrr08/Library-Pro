@@ -28,8 +28,12 @@ public class BukuServlet extends HttpServlet {
 
         if ("delete".equals(action)) {
             int id = Integer.parseInt(request.getParameter("id"));
-            dao.delete(id);
-            response.sendRedirect(request.getContextPath() + "/buku?status=deleted");
+            boolean deleted = dao.delete(id);
+            if (deleted) {
+                response.sendRedirect(request.getContextPath() + "/buku?status=deleted");
+            } else {
+                response.sendRedirect(request.getContextPath() + "/buku?status=fail");
+            }
         } else if ("edit".equals(action)) {
             int id = Integer.parseInt(request.getParameter("id"));
             Buku buku = dao.getBukuById(id);
@@ -61,6 +65,7 @@ public class BukuServlet extends HttpServlet {
         String action = request.getParameter("action");
         String idStr = request.getParameter("idBuku");
 
+        // Pembuatan objek model Buku
         Buku buku = new Buku();
         buku.setJudul(request.getParameter("judul"));
         buku.setPenulis(request.getParameter("penulis"));
@@ -68,15 +73,32 @@ public class BukuServlet extends HttpServlet {
         buku.setTahunTerbit(Integer.parseInt(request.getParameter("tahun")));
         buku.setJmlBuku(Integer.parseInt(request.getParameter("jumlah")));
         buku.setIdKategori(Integer.parseInt(request.getParameter("idKategori")));
+        
+        // 🌟 PERBAIKAN: Tangkap parameter form jsp dan masukkan ke dalam objek buku
+        buku.setIsbn(request.getParameter("isbn"));
+        buku.setAbstraksi(request.getParameter("abstraksi"));
 
-        if ("update".equals(action) || (idStr != null && !idStr.isEmpty())) {
-            int id = Integer.parseInt(idStr);
-            buku.setIdBuku(id);
-            dao.update(buku);
-        } else {
-            dao.insert(buku);
+        try {
+            if ("update".equals(action) || (idStr != null && !idStr.isEmpty())) {
+                int id = Integer.parseInt(idStr);
+                buku.setIdBuku(id);
+                
+                // Karena update() di BukuDAO mengembalikan boolean
+                boolean updated = dao.update(buku);
+                if (updated) {
+                    response.sendRedirect(request.getContextPath() + "/buku?status=success");
+                } else {
+                    response.sendRedirect(request.getContextPath() + "/buku?status=fail");
+                }
+            } else {
+                // Karena insert() di BukuDAO bertipe void, kita asumsikan sukses jika tidak melempar Exception
+                dao.insert(buku);
+                response.sendRedirect(request.getContextPath() + "/buku?status=success");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Jika terjadi kegagalan sistem/SQL Error, alihkan ke pop-up merah
+            response.sendRedirect(request.getContextPath() + "/buku?status=fail");
         }
-
-        response.sendRedirect(request.getContextPath() + "/buku?status=success");
     }
 }

@@ -11,7 +11,6 @@ import java.util.List;
 
 public class UlasanDAO {
 
-    // DIPERBAIKI/DISESUAIKAN: Menggunakan nama insertUlasan agar cocok dengan UlasanServlet Anda
     public boolean insertUlasan(Ulasan ulasan) {
         return addUlasan(ulasan);
     }
@@ -38,12 +37,36 @@ public class UlasanDAO {
         return success;
     }
 
-    // TAMBAHAN METHOD BARU: Mengambil semua ulasan yang pernah diposting oleh USER tertentu
+    public Ulasan getUlasanByUserAndBuku(int idUser, int idBuku) {
+        Ulasan ulasan = null;
+        try {
+            Connection conn = DBConnection.getConnection();
+            String sql = "SELECT * FROM ulasan WHERE id_user = ? AND id_buku = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, idUser);
+            ps.setInt(2, idBuku);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                ulasan = new Ulasan();
+                ulasan.setIdUlasan(rs.getInt("id_ulasan"));
+                ulasan.setIdUser(rs.getInt("id_user"));
+                ulasan.setIdBuku(rs.getInt("id_buku"));
+                ulasan.setUlasan(rs.getString("ulasan"));
+                ulasan.setRating(rs.getInt("rating"));
+            }
+            rs.close();
+            ps.close();
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ulasan;
+    }
+
     public List<Ulasan> getUlasanByUser(int idUser) {
         List<Ulasan> list = new ArrayList<>();
         try {
             Connection conn = DBConnection.getConnection();
-            // Melakukan JOIN ke tabel buku untuk mendapatkan judul buku yang diulas
             String sql = "SELECT ul.*, b.judul AS judul_buku " +
                          "FROM ulasan ul " +
                          "JOIN buku b ON ul.id_buku = b.id_buku " +
@@ -59,7 +82,40 @@ public class UlasanDAO {
                 ulasan.setIdBuku(rs.getInt("id_buku"));
                 ulasan.setUlasan(rs.getString("ulasan"));
                 ulasan.setRating(rs.getInt("rating"));
-                ulasan.setJudulBuku(rs.getString("judul_buku")); // Set judul buku ke model ulasan
+                ulasan.setJudulBuku(rs.getString("judul_buku"));
+                list.add(ulasan);
+            }
+            rs.close();
+            ps.close();
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    // 🌟 TAMBAHAN BARU UTK ADMIN: Mengambil ulasan dari seluruh pengguna beserta data relasi User & Buku
+    public List<Ulasan> getAllUlasan() {
+        List<Ulasan> list = new ArrayList<>();
+        try {
+            Connection conn = DBConnection.getConnection();
+            String sql = "SELECT ul.*, u.username, u.nama_lengkap, b.judul AS judul_buku " +
+                         "FROM ulasan ul " +
+                         "JOIN user u ON ul.id_user = u.id_user " +
+                         "JOIN buku b ON ul.id_buku = b.id_buku " +
+                         "ORDER BY ul.id_ulasan DESC";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Ulasan ulasan = new Ulasan();
+                ulasan.setIdUlasan(rs.getInt("id_ulasan"));
+                ulasan.setIdUser(rs.getInt("id_user"));
+                ulasan.setIdBuku(rs.getInt("id_buku"));
+                ulasan.setUlasan(rs.getString("ulasan"));
+                ulasan.setRating(rs.getInt("rating"));
+                ulasan.setUsername(rs.getString("username"));
+                ulasan.setNamaLengkap(rs.getString("nama_lengkap"));
+                ulasan.setJudulBuku(rs.getString("judul_buku"));
                 list.add(ulasan);
             }
             rs.close();
@@ -75,12 +131,11 @@ public class UlasanDAO {
         boolean success = false;
         try {
             Connection conn = DBConnection.getConnection();
-            String sql = "UPDATE ulasan SET ulasan = ?, rating = ? WHERE id_ulasan = ? AND id_user = ?";
+            String sql = "UPDATE ulasan SET ulasan = ?, rating = ? WHERE id_ulasan = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, ulasan.getUlasan());
             ps.setInt(2, ulasan.getRating());
             ps.setInt(3, ulasan.getIdUlasan());
-            ps.setInt(4, ulasan.getIdUser());
             int rows = ps.executeUpdate();
             if (rows > 0) {
                 success = true;
@@ -93,14 +148,13 @@ public class UlasanDAO {
         return success;
     }
 
-    public boolean deleteUlasan(int idUlasan, int idUser) {
+    public boolean deleteUlasan(int idUlasan) {
         boolean success = false;
         try {
             Connection conn = DBConnection.getConnection();
-            String sql = "DELETE FROM ulasan WHERE id_ulasan = ? AND id_user = ?";
+            String sql = "DELETE FROM ulasan WHERE id_ulasan = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, idUlasan);
-            ps.setInt(2, idUser);
             int rows = ps.executeUpdate();
             if (rows > 0) {
                 success = true;

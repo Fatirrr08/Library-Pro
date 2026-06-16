@@ -35,57 +35,59 @@
         .dropdown-menu li a:hover { background-color: #f8fafc; color: #2563eb; }
         .dropdown-menu li a.logout-link:hover { background-color: #fef2f2; color: #dc2626; }
         .dropdown-menu .divider { height: 1px; background-color: #e2e8f0; margin: 6px 0; }
-
-        /* Custom Badge Warna Status Verifikasi & Sirkulasi */
-        .status.waiting { background-color: #fef3c7; color: #d97706; } /* Kuning Mas */
-        .status.rejected { background-color: #fee2e2; color: #ef4444; } /* Merah Cerah */
         
-        .btn-action-container { display: flex; gap: 6px; }
+        .btn-action-container { display: flex; gap: 6px; justify-content: center; }
         .denda-active { color: #dc2626; font-weight: 700; }
 
-        /* Efek Hover Kustom untuk Tombol Setujui (Hijau) */
+        /* ==================== STYLING GENERAL UNTUK TOMBOL AKSI TABEL ==================== */
+        .btn-action-table {
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        /* Tombol Setujui (Hijau Emerald) */
         .btn-action-setujui {
-            text-decoration: none; 
-            background-color: #10b981; 
-            color: #ffffff !important; 
-            padding: 6px 12px; 
-            border-radius: 6px; 
-            font-weight: 600; 
-            font-size: 13px; 
-            display: inline-flex; 
-            align-items: center; 
-            gap: 4px; 
-            border: none;
-            transition: background-color 0.2s ease, transform 0.1s ease;
+            background-color: #10b981;
+            color: #ffffff !important;
         }
-
         .btn-action-setujui:hover {
-            background-color: #059669 !important; /* Warna hijau berubah lebih gelap saat di-hover */
-            transform: translateY(-1px); /* Efek sedikit terangkat */
+            background-color: #059669 !important;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.2);
         }
 
-        /* Efek Hover Kustom untuk Tombol Tolak (Merah) */
+        /* Tombol Tolak (Merah Rose) */
         .btn-action-tolak {
-            text-decoration: none; 
-            background-color: #ef4444; 
-            color: #ffffff !important; 
-            padding: 6px 12px; 
-            border-radius: 6px; 
-            font-weight: 600; 
-            font-size: 13px; 
-            display: inline-flex; 
-            align-items: center; 
-            gap: 4px; 
-            border: none;
-            transition: background-color 0.2s ease, transform 0.1s ease;
+            background-color: #ef4444;
+            color: #ffffff !important;
         }
-
         .btn-action-tolak:hover {
-            background-color: #dc2626 !important; /* Warna merah berubah lebih gelap saat di-hover */
-            transform: translateY(-1px); /* Efek sedikit terangkat */
+            background-color: #dc2626 !important;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.2);
         }
 
-        /* Style Modal Konfirmasi Logout */
+        /* Tombol Tandai Kembali (Biru Indigo / Sukses Pastel) */
+        .btn-table-return {
+            background-color: #2563eb;
+            color: #ffffff !important;
+        }
+        .btn-table-return:hover {
+            background-color: #1d4ed8;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+        }
+
+        /* ==================== STYLING MODAL KONFIRMASI SIRKULASI ==================== */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px);
@@ -94,18 +96,45 @@
             transition: opacity 0.3s ease, visibility 0.3s ease;
         }
         .modal-overlay.show { opacity: 1; visibility: visible; }
-        .logout-modal-box {
-            background: #ffffff; width: 90%; max-width: 400px; border-radius: 14px; padding: 24px; text-align: center;
+        .action-modal-box {
+            background: #ffffff; width: 90%; max-width: 420px; border-radius: 14px; padding: 24px; text-align: center;
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); transform: scale(0.9); transition: transform 0.25s ease;
         }
-        .modal-overlay.show .logout-modal-box { transform: scale(1); }
-        .logout-warning-icon { font-size: 44px; color: #ef4444; background: #fef2f2; width: 80px; height: 80px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; margin-bottom: 16px; }
-        .logout-title { font-size: 18px; font-weight: 700; color: #1e293b; margin-bottom: 8px; }
-        .logout-desc { font-size: 14px; color: #64748b; line-height: 1.5; margin-bottom: 24px; }
-        .logout-btn-container { display: flex; gap: 12px; justify-content: center; }
-        .btn-confirm-logout { background-color: #ef4444; color: white !important; padding: 10px 20px; border-radius: 8px; font-weight: 600; font-size: 14px; text-decoration: none; flex: 1; text-align: center; }
-        .btn-cancel-logout { background-color: #f1f5f9; color: #334155; padding: 10px 20px; border-radius: 8px; font-weight: 600; font-size: 14px; border: none; cursor: pointer; flex: 1; }
-        .btn-cancel-logout:hover { background-color: #e2e8f0; }
+        .modal-overlay.show .action-modal-box { transform: scale(1); }
+
+        .modal-action-icon { 
+            font-size: 44px; width: 80px; height: 80px; 
+            display: inline-flex; align-items: center; justify-content: center; 
+            border-radius: 50%; margin-bottom: 16px; 
+        }
+        .modal-action-icon.icon-reject { color: #ef4444; background: #fef2f2; }
+        .modal-action-icon.icon-approve { color: #10b981; background: #dcfce7; }
+
+        .modal-action-title { font-size: 18px; font-weight: 700; color: #1e293b; margin-bottom: 8px; }
+        .modal-action-desc { font-size: 14px; color: #64748b; line-height: 1.6; margin-bottom: 20px; text-align: left; background: #f8fafc; padding: 12px 16px; border-radius: 8px; border: 1px solid #f1f5f9; }
+        .modal-action-desc strong { color: #1e293b; font-weight: 600; }
+
+        .modal-btn-container { display: flex; gap: 12px; justify-content: center; margin-top: 24px; }
+        .btn-modal-confirm { padding: 10px 20px; border-radius: 8px; font-weight: 600; font-size: 14px; text-decoration: none; flex: 1; text-align: center; color: white !important; }
+        .btn-modal-cancel { background-color: #f1f5f9; color: #334155; padding: 10px 20px; border-radius: 8px; font-weight: 600; font-size: 14px; border: none; cursor: pointer; flex: 1; transition: background-color 0.2s; }
+        .btn-modal-cancel:hover { background-color: #e2e8f0; }
+
+        /* Core Styling untuk Badge Status Modern */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 600;
+            line-height: 1;
+            text-transform: capitalize;
+        }
+        .status-badge.badge-waiting { background-color: #fef3c7; color: #d97706; }
+        .status-badge.badge-borrowed { background-color: #e0f2fe; color: #0369a1; }
+        .status-badge.badge-returned { background-color: #dcfce7; color: #15803d; }
+        .status-badge.badge-rejected { background-color: #fef2f2; color: #ef4444; }
     </style>
 </head>
 <body>
@@ -121,7 +150,6 @@
     List<Buku> daftarBuku = (List<Buku>) request.getAttribute("daftarBuku");
     List<User> daftarUser = (List<User>) request.getAttribute("daftarUser");
     
-    // Format Mata Uang Rupiah
     NumberFormat rpFormat = NumberFormat.getCurrencyInstance(new Locale("id", "ID"));
 %>
 
@@ -136,6 +164,7 @@
         <li><a href="<%=request.getContextPath()%>/kategori"><i class="fa-solid fa-layer-group"></i> Kategori</a></li>
         <li><a href="<%=request.getContextPath()%>/user"><i class="fa-solid fa-users"></i> User</a></li>
         <li><a href="<%=request.getContextPath()%>/peminjaman" class="active"><i class="fa-solid fa-arrow-right-arrow-left"></i> Peminjaman</a></li>
+        <li><a href="<%=request.getContextPath()%>/ulasan"><i class="fa-solid fa-comments"></i> Lihat Ulasan User</a></li>
     </ul>
 </div>
 
@@ -152,11 +181,7 @@
             <ul class="dropdown-menu" id="dropdownMenu">
                 <li><a href="<%=request.getContextPath()%>/profile"><i class="fa-solid fa-user-gear"></i> Profil Saya</a></li>
                 <li class="divider"></li>
-                <li>
-                    <a href="#" class="logout-link" id="logoutTrigger">
-                        <i class="fa-solid fa-right-from-bracket"></i> Logout
-                    </a>
-                </li>
+                <li><a href="#" class="logout-link" id="logoutTrigger"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
             </ul>
         </div>
     </div>
@@ -225,7 +250,8 @@
                     <th>Nama Anggota</th>
                     <th>Judul Buku</th>
                     <th>Tanggal Pinjam</th>
-                    <th style="color: #e28743;">Batas Pengembalian</th> <th>Tanggal Kembali</th>    
+                    <th style="color: #e28743;">Batas Pengembalian</th> 
+                    <th>Tanggal Kembali</th>    
                     <th>Status</th>
                     <th>Total Denda</th>
                     <th style="text-align: center;">Aksi Otoritas</th>
@@ -239,21 +265,30 @@
                 <tr>
                     <td><%= p.getIdPeminjaman() %></td>
                     <td>
-                        <span style="font-weight: 600;"><%= p.getNamaLengkap() %></span><br>
+                        <span style="font-weight: 600; color: #1e293b;"><%= p.getNamaLengkap() %></span><br>
                         <small style="color: var(--text-muted);">@<%= p.getUsername() %></small>
                     </td>
                     <td style="font-weight: 500;"><%= p.getJudulBuku() %></td>
                     <td><%= p.getTanggalPinjam() != null ? p.getTanggalPinjam() : "-" %></td>
-                    <td style="font-weight: 600; color: #334155;"><%= p.getTanggalTenggat() != null ? p.getTanggalTenggat() : "-" %></td> <td><%= p.getTanggalKembali() != null ? p.getTanggalKembali() : "-" %></td>
+                    <td style="font-weight: 600; color: #334155;"><%= p.getTanggalTenggat() != null ? p.getTanggalTenggat() : "-" %></td> 
+                    <td><%= p.getTanggalKembali() != null ? p.getTanggalKembali() : "-" %></td>
                     <td>
                         <% if ("menunggu".equalsIgnoreCase(p.getStatus())) { %>
-                            <span class="status waiting">Menunggu Validasi</span>
+                            <span class="status-badge badge-waiting">
+                                <i class="fa-regular fa-clock"></i> Menunggu Validasi
+                            </span>
                         <% } else if ("disetujui".equalsIgnoreCase(p.getStatus())) { %>
-                            <span class="status borrowed">Sedang Dipinjam</span>
+                            <span class="status-badge badge-borrowed">
+                                <i class="fa-solid fa-book-reader"></i> Sedang Dipinjam
+                            </span>
                         <% } else if ("ditolak".equalsIgnoreCase(p.getStatus())) { %>
-                            <span class="status rejected">Ditolak Admin</span>
+                            <span class="status-badge badge-rejected">
+                                <i class="fa-solid fa-circle-xmark"></i> Ditolak Admin
+                            </span>
                         <% } else { %>
-                            <span class="status returned">Dikembalikan</span>
+                            <span class="status-badge badge-returned">
+                                <i class="fa-solid fa-circle-check"></i> Dikembalikan
+                            </span>
                         <% } %>
                     </td>
                     <td>
@@ -263,20 +298,26 @@
                     </td>
                     <td style="text-align: center;">
                         <% if ("menunggu".equalsIgnoreCase(p.getStatus())) { %>
-                            <div class="btn-action-container" style="display: flex; gap: 6px; justify-content: center;">
-                                <a href="<%=request.getContextPath()%>/peminjaman?action=setujui&id=<%= p.getIdPeminjaman() %>" 
-                                class="btn-action-setujui"
-                                onclick="return confirm('Apakah Anda yakin ingin MENYETUJUI permintaan peminjaman buku untuk \nAnggota: <%= p.getNamaLengkap() %> \nBuku: <%= p.getJudulBuku() %>?');">
+                            <div class="btn-action-container">
+                                <button type="button" 
+                                        class="btn-action-table btn-action-setujui btn-approve-modal-trigger"
+                                        data-id="<%= p.getIdPeminjaman() %>"
+                                        data-anggota="<%= p.getNamaLengkap() %>"
+                                        data-buku="<%= p.getJudulBuku() %>">
                                     <i class="fa-solid fa-check"></i> Setujui
-                                </a>
-                                <a href="<%=request.getContextPath()%>/peminjaman?action=tolak&id=<%= p.getIdPeminjaman() %>" 
-                                class="btn-action-tolak"
-                                onclick="return confirm('Apakah Anda yakin ingin MENOLAK permintaan peminjaman buku untuk \nAnggota: <%= p.getNamaLengkap() %> \nBuku: <%= p.getJudulBuku() %>?');">
+                                </button>
+                                
+                                <button type="button" 
+                                        class="btn-action-table btn-action-tolak btn-reject-modal-trigger"
+                                        data-id="<%= p.getIdPeminjaman() %>"
+                                        data-anggota="<%= p.getNamaLengkap() %>"
+                                        data-buku="<%= p.getJudulBuku() %>">
                                     <i class="fa-solid fa-xmark"></i> Tolak
-                                </a>
+                                </button>
                             </div>
                         <% } else if ("disetujui".equalsIgnoreCase(p.getStatus())) { %>
-                            <a href="<%=request.getContextPath()%>/peminjaman?action=kembalikan&id=<%= p.getIdPeminjaman() %>" class="btn-sm btn-success" style="text-decoration: none;">
+                            <a href="<%=request.getContextPath()%>/peminjaman?action=kembalikan&id=<%= p.getIdPeminjaman() %>" 
+                               class="btn-action-table btn-table-return">
                                 <i class="fa-solid fa-arrow-left-long"></i> Tandai Kembali
                             </a>
                         <% } else { %>
@@ -300,14 +341,61 @@
     </div>
 </div>
 
+<div class="modal-overlay" id="approveModal">
+    <div class="action-modal-box">
+        <div class="modal-action-icon icon-approve">
+            <i class="fa-solid fa-clipboard-check"></i>
+        </div>
+        <div class="modal-action-title">Setujui Peminjaman Buku?</div>
+        <div class="modal-action-desc">
+            Konfirmasi otorisasi peminjaman buku untuk:<br>
+            • Anggota: <strong id="approveTargetAnggota">-</strong><br>
+            • Judul Buku: <strong id="approveTargetBuku">-</strong>
+        </div>
+        <div style="font-size: 12px; color: #64748b; margin-bottom: 12px; text-align: left; padding: 0 16px;">
+            * Stok buku otomatis terpotong 1 buah dan batas pengembalian (+1 Bulan) dihitung dinamis dari tanggal hari ini.
+        </div>
+        <div class="modal-btn-container">
+            <button type="button" class="btn-modal-cancel" id="btnCancelApprove">Batal</button>
+            <a href="#" class="btn-modal-confirm" id="btnConfirmApprove" style="background-color: #10b981;">Ya, Setujui</a>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="rejectModal">
+    <div class="action-modal-box">
+        <div class="modal-action-icon icon-reject">
+            <i class="fa-solid fa-ban"></i>
+        </div>
+        <div class="modal-action-title">Tolak Pengajuan Buku?</div>
+        <div class="modal-action-desc">
+            Apakah Anda yakin ingin <strong style="color: #ef4444;">MENOLAK</strong> permintaan dari:<br>
+            • Anggota: <strong id="rejectTargetAnggota">-</strong><br>
+            • Judul Buku: <strong id="rejectTargetBuku">-</strong>
+        </div>
+        <div style="font-size: 12px; color: #64748b; margin-bottom: 12px; text-align: left; padding: 0 16px;">
+            * Permintaan akan dibatalkan, status dialihkan menjadi ditolak, dan tidak memotong stok inventaris buku.
+        </div>
+        <div class="modal-btn-container">
+            <button type="button" class="btn-modal-cancel" id="btnCancelReject">Batal</button>
+            <a href="#" class="btn-modal-confirm" id="btnConfirmReject" style="background-color: #ef4444;">Ya, Tolak</a>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL CONFIRMATION LOGOUT (FIXED) -->
 <div class="modal-overlay" id="logoutModal">
-    <div class="logout-modal-box">
-        <div class="logout-warning-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
-        <div class="logout-title">Konfirmasi Logout</div>
-        <div class="logout-desc">Apakah Anda yakin ingin keluar dari panel admin LibraryPro?</div>
-        <div class="logout-btn-container">
-            <button class="btn-cancel-logout" id="btnCancelLogout">Batal</button>
-            <a href="<%=request.getContextPath()%>/logout" class="btn-confirm-logout">Ya, Keluar</a>
+    <div class="action-modal-box">
+        <div class="modal-action-icon icon-reject">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+        <div class="modal-action-title">Konfirmasi Logout</div>
+        <div class="modal-action-desc" style="text-align: center;">
+            Apakah Anda yakin ingin keluar dari panel admin LibraryPro?
+        </div>
+        <div class="modal-btn-container">
+            <button type="button" class="btn-modal-cancel" id="btnCancelLogout">Batal</button>
+            <a href="<%=request.getContextPath()%>/logout" class="btn-modal-confirm" id="btnConfirmLogout" style="background-color: #ef4444;">Ya, Keluar</a>
         </div>
     </div>
 </div>
@@ -330,7 +418,7 @@
             });
         }
 
-        // 2. Logika Pop-up Dialog Konfirmasi Logout
+        // 2. Logika Dialog Pop-up Konfirmasi Logout
         const logoutTrigger = document.getElementById("logoutTrigger");
         const logoutModal = document.getElementById("logoutModal");
         const btnCancelLogout = document.getElementById("btnCancelLogout");
@@ -346,11 +434,63 @@
             });
         }
 
-        // Klik Area Luar untuk Menutup Modal
+        // 3. Logika Modal Kustom: SETUJUI PEMINJAMAN
+        const approveTriggers = document.querySelectorAll(".btn-approve-modal-trigger");
+        const approveModal = document.getElementById("approveModal");
+        const approveTargetAnggota = document.getElementById("approveTargetAnggota");
+        const approveTargetBuku = document.getElementById("approveTargetBuku");
+        const btnConfirmApprove = document.getElementById("btnConfirmApprove");
+        const btnCancelApprove = document.getElementById("btnCancelApprove");
+
+        approveTriggers.forEach(btn => {
+            btn.addEventListener("click", function() {
+                const id = this.getAttribute("data-id");
+                const anggota = this.getAttribute("data-anggota");
+                const buku = this.getAttribute("data-buku");
+
+                approveTargetAnggota.innerText = anggota;
+                approveTargetBuku.innerText = "« " + buku + " »";
+                btnConfirmApprove.setAttribute("href", "<%=request.getContextPath()%>/peminjaman?action=setujui&id=" + id);
+                
+                approveModal.classList.add("show");
+            });
+        });
+
+        if (btnCancelApprove) {
+            btnCancelApprove.addEventListener("click", () => approveModal.classList.remove("show"));
+        }
+
+        // 4. Logika Modal Kustom: TOLAK PEMINJAMAN
+        const rejectTriggers = document.querySelectorAll(".btn-reject-modal-trigger");
+        const rejectModal = document.getElementById("rejectModal");
+        const rejectTargetAnggota = document.getElementById("rejectTargetAnggota");
+        const rejectTargetBuku = document.getElementById("rejectTargetBuku");
+        const btnConfirmReject = document.getElementById("btnConfirmReject");
+        const btnCancelReject = document.getElementById("btnCancelReject");
+
+        rejectTriggers.forEach(btn => {
+            btn.addEventListener("click", function() {
+                const id = this.getAttribute("data-id");
+                const anggota = this.getAttribute("data-anggota");
+                const buku = this.getAttribute("data-buku");
+
+                rejectTargetAnggota.innerText = anggota;
+                rejectTargetBuku.innerText = "« " + buku + " »";
+                btnConfirmReject.setAttribute("href", "<%=request.getContextPath()%>/peminjaman?action=tolak&id=" + id);
+                
+                rejectModal.classList.add("show");
+            });
+        });
+
+        if (btnCancelReject) {
+            btnCancelReject.addEventListener("click", () => rejectModal.classList.remove("show"));
+        }
+
+        // Global Click Event: Klik area luar boks untuk meruntuhkan/menutup modal aktif
         window.addEventListener("click", function (e) {
-            if (e.target === logoutModal) {
-                logoutModal.classList.remove("show");
-            }
+            if (e.target === logoutModal) logoutModal.classList.remove("show");
+            if (e.target === approveModal) approveModal.classList.remove("show");
+            if (e.target === rejectModal) rejectModal.classList.remove("show");
         });
     });
 </script>
