@@ -135,6 +135,16 @@
         .status-badge.badge-borrowed { background-color: #e0f2fe; color: #0369a1; }
         .status-badge.badge-returned { background-color: #dcfce7; color: #15803d; }
         .status-badge.badge-rejected { background-color: #fef2f2; color: #ef4444; }
+        /* Tombol Sudah Dibayar (Orange Amber dengan Efek Hover Kustom) */
+        .btn-action-dibayar {
+            background-color: #ea580c;
+            color: #ffffff !important;
+        }
+        .btn-action-dibayar:hover {
+            background-color: #c2410c !important; /* Warna orange agak gelap saat di-hover */
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgba(234, 88, 12, 0.2);
+        }
     </style>
 </head>
 <body>
@@ -261,6 +271,8 @@
                 <%
                     if (daftarPeminjaman != null && !daftarPeminjaman.isEmpty()) {
                         for (Peminjaman p : daftarPeminjaman) {
+                            // 🌟 SOLUSI OPTIMASI: Definisi variabel warna denda untuk membersihkan warning editor
+                            String warnaDenda = (p.getDenda() > 0) ? "#ef4444" : "#64748b";
                 %>
                 <tr>
                     <td><%= p.getIdPeminjaman() %></td>
@@ -270,14 +282,16 @@
                     </td>
                     <td style="font-weight: 500;"><%= p.getJudulBuku() %></td>
                     <td><%= p.getTanggalPinjam() != null ? p.getTanggalPinjam() : "-" %></td>
-                    <td style="font-weight: 600; color: #334155;"><%= p.getTanggalTenggat() != null ? p.getTanggalTenggat() : "-" %></td> 
+                    <td style="font-weight: 600; color: #ea580c;">
+                        <%= p.getTanggalTenggat() != null ? p.getTanggalTenggat() : "-" %>
+                    </td> 
                     <td><%= p.getTanggalKembali() != null ? p.getTanggalKembali() : "-" %></td>
                     <td>
                         <% if ("menunggu".equalsIgnoreCase(p.getStatus())) { %>
                             <span class="status-badge badge-waiting">
                                 <i class="fa-regular fa-clock"></i> Menunggu Validasi
                             </span>
-                        <% } else if ("disetujui".equalsIgnoreCase(p.getStatus())) { %>
+                        <% } else if ("disetujui".equalsIgnoreCase(p.getStatus()) || "dipinjam".equalsIgnoreCase(p.getStatus())) { %>
                             <span class="status-badge badge-borrowed">
                                 <i class="fa-solid fa-book-reader"></i> Sedang Dipinjam
                             </span>
@@ -315,11 +329,18 @@
                                     <i class="fa-solid fa-xmark"></i> Tolak
                                 </button>
                             </div>
-                        <% } else if ("disetujui".equalsIgnoreCase(p.getStatus())) { %>
-                            <a href="<%=request.getContextPath()%>/peminjaman?action=kembalikan&id=<%= p.getIdPeminjaman() %>" 
-                               class="btn-action-table btn-table-return">
-                                <i class="fa-solid fa-arrow-left-long"></i> Tandai Kembali
-                            </a>
+                        <% } else if ("disetujui".equalsIgnoreCase(p.getStatus()) || "dipinjam".equalsIgnoreCase(p.getStatus())) { %>
+                            <% if (p.getDenda() > 0) { %>
+                                <a href="<%=request.getContextPath()%>/peminjaman?action=kembalikan&id=<%= p.getIdPeminjaman() %>" 
+                                class="btn-action-table btn-action-dibayar">
+                                    <i class="fa-solid fa-money-bill-wave"></i> Sudah Dibayar
+                                </a>
+                            <% } else { %>
+                                <a href="<%=request.getContextPath()%>/peminjaman?action=kembalikan&id=<%= p.getIdPeminjaman() %>" 
+                                class="btn-action-table btn-table-return">
+                                    <i class="fa-solid fa-arrow-left-long"></i> Tandai Kembali
+                                </a>
+                            <% } %>
                         <% } else { %>
                             <span style="color: var(--text-muted); font-size: 0.85rem;"><i class="fa-solid fa-lock"></i> Selesai</span>
                         <% } %>
@@ -383,7 +404,6 @@
     </div>
 </div>
 
-<!-- MODAL CONFIRMATION LOGOUT (FIXED) -->
 <div class="modal-overlay" id="logoutModal">
     <div class="action-modal-box">
         <div class="modal-action-icon icon-reject">

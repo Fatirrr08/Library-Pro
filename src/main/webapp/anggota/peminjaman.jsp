@@ -2,6 +2,8 @@
 <%@ page import="java.util.List" %>
 <%@ page import="model.Peminjaman" %>
 <%@ page import="model.User" %>
+<%@ page import="java.text.NumberFormat" %>
+<%@ page import="java.util.Locale" %>
 
 <!DOCTYPE html>
 <html>
@@ -77,6 +79,9 @@
         }
         .btn-table-return { background-color: #2563eb; color: #ffffff !important; }
         .btn-table-return:hover { background-color: #1d4ed8; transform: translateY(-1px); box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2); }
+        
+        /* Penentu teks warna merah denda */
+        .denda-active { color: #ef4444 !important; font-weight: 700; }
     </style>
 </head>
 <body>
@@ -89,6 +94,9 @@
     }
 
     List<Peminjaman> daftarPeminjaman = (List<Peminjaman>) request.getAttribute("daftarPeminjaman");
+    
+    // Format Rupiah lokal Indonesia untuk menyamakan UI dengan admin
+    NumberFormat rpFormat = NumberFormat.getCurrencyInstance(new Locale("id", "ID"));
 %>
 
 <div class="sidebar">
@@ -162,6 +170,7 @@
                     <th style="color: #e28743;">Batas Pengembalian</th>
                     <th>Tanggal Kembali</th>
                     <th>Status</th>
+                    <th>Total Denda</th>
                     <th>Aksi</th>
                 </tr>
                 </thead>
@@ -169,19 +178,21 @@
                 <%
                     if (daftarPeminjaman != null && !daftarPeminjaman.isEmpty()) {
                         for (Peminjaman p : daftarPeminjaman) {
+                            // Definisikan penentu warna teks denda agar editor murni terhindar dari property warning
+                            String warnaDenda = (p.getDenda() > 0) ? "#ef4444" : "#64748b";
                 %>
                 <tr>
                     <td><%= p.getIdPeminjaman() %></td>
                     <td style="font-weight: 600; color: #1e293b;"><%= p.getJudulBuku() %></td>
                     <td><%= p.getTanggalPinjam() != null ? p.getTanggalPinjam() : "-" %></td>
-                    <td style="font-weight: 600; color: #475569;"><%= p.getTanggalTenggat() != null ? p.getTanggalTenggat() : "-" %></td>
+                    <td style="font-weight: 600; color: #ea580c;"><%= p.getTanggalTenggat() != null ? p.getTanggalTenggat() : "-" %></td>
                     <td><%= p.getTanggalKembali() != null ? p.getTanggalKembali() : "-" %></td>
                     <td>
                         <% if ("menunggu".equalsIgnoreCase(p.getStatus())) { %>
                             <span class="status-badge badge-waiting">
                                 <i class="fa-regular fa-clock"></i> Menunggu Validasi
                             </span>
-                        <% } else if ("disetujui".equalsIgnoreCase(p.getStatus())) { %>
+                        <% } else if ("disetujui".equalsIgnoreCase(p.getStatus()) || "dipinjam".equalsIgnoreCase(p.getStatus())) { %>
                             <span class="status-badge badge-borrowed">
                                 <i class="fa-solid fa-book-reader"></i> Sedang Dipinjam
                             </span>
@@ -196,10 +207,21 @@
                         <% } %>
                     </td>
                     <td>
-                        <% if ("disetujui".equalsIgnoreCase(p.getStatus())) { %>
-                            <a href="<%=request.getContextPath()%>/peminjaman?action=kembalikan&id=<%= p.getIdPeminjaman() %>" class="btn-action-table btn-table-return">
-                                <i class="fa-solid fa-arrow-left-long"></i> Kembalikan Buku
-                            </a>
+                        <span class="<%= (p.getDenda() > 0) ? "denda-active" : "" %>">
+                            <%= rpFormat.format(p.getDenda()) %>
+                        </span>
+                    </td>
+                    <td>
+                        <% if ("disetujui".equalsIgnoreCase(p.getStatus()) || "dipinjam".equalsIgnoreCase(p.getStatus())) { %>
+                            <% if (p.getDenda() > 0) { %>
+                                <span style="color: #ef4444; font-weight: 600; font-size: 0.9rem;">
+                                    <i class="fa-solid fa-circle-exclamation"></i> Bayar Denda!
+                                </span>
+                            <% } else { %>
+                                <a href="<%=request.getContextPath()%>/peminjaman?action=kembalikan&id=<%= p.getIdPeminjaman() %>" class="btn-action-table btn-table-return">
+                                    <i class="fa-solid fa-arrow-left-long"></i> Kembalikan Buku
+                                </a>
+                            <% } %>
                         <% } else if ("menunggu".equalsIgnoreCase(p.getStatus())) { %>
                             <span style="color: #a8a29e; font-size: 0.85rem;"><i class="fa-solid fa-hourglass-start"></i> Diproses</span>
                         <% } else { %>
@@ -212,7 +234,7 @@
                     } else {
                 %>
                 <tr>
-                    <td colspan="7" class="empty">Anda belum meminjam buku apa pun. Silakan cari buku di katalog.</td>
+                    <td colspan="8" class="empty">Anda belum meminjam buku apa pun. Silakan cari buku di katalog.</td>
                 </tr>
                 <%
                     }
@@ -265,7 +287,6 @@
 
             setTimeout(() => {
                 popupToast.classList.remove("show");
-                // Bersihkan parameter status di URL agar rapih tanpa reload
                 const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
                 window.history.replaceState({path: cleanUrl}, '', cleanUrl);
             }, 4000);

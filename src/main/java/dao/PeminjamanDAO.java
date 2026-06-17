@@ -39,7 +39,6 @@ public class PeminjamanDAO implements Transaksi {
             ps.close();
 
             if (stokBuku > 0) {
-                // SEKARANG: tanggal_pinjam langsung diisi CURRENT_DATE saat mengajukan
                 String insertBorrowSql = "INSERT INTO peminjaman (id_user, id_buku, tanggal_pinjam, tanggal_tenggat, tanggal_kembali, status, denda) VALUES (?, ?, CURRENT_DATE, NULL, NULL, 'menunggu', 0)";
                 ps = conn.prepareStatement(insertBorrowSql);
                 ps.setInt(1, idUser);
@@ -64,7 +63,6 @@ public class PeminjamanDAO implements Transaksi {
         return success;
     }
 
-    // Fungsi Otoritas Verifikasi untuk Admin (Setujui / Tolak)
     public boolean verifikasiPeminjaman(int idPeminjaman, String statusBaru) {
         Connection conn = null;
         PreparedStatement ps = null;
@@ -75,7 +73,7 @@ public class PeminjamanDAO implements Transaksi {
             conn = DBConnection.getConnection();
             conn.setAutoCommit(false);
 
-            if ("disetujui".equalsIgnoreCase(statusBaru)) {
+            if ("disetujui".equalsIgnoreCase(statusBaru) || "dipinjam".equalsIgnoreCase(statusBaru)) {
                 String getBukuSql = "SELECT id_buku FROM peminjaman WHERE id_peminjaman = ?";
                 ps = conn.prepareStatement(getBukuSql);
                 ps.setInt(1, idPeminjaman);
@@ -96,22 +94,19 @@ public class PeminjamanDAO implements Transaksi {
                     }
                 }
                 
-                // ALUR BARU: Ambil tanggal hari ini (saat admin ACC)
                 LocalDate tanggalAccHariIni = LocalDate.now();
-                LocalDate batasKembali = tanggalAccHariIni.plusMonths(1); // Tenggat dihitung dari tanggal ACC
+                LocalDate batasKembali = tanggalAccHariIni.plusMonths(1); 
 
-                // Jalankan UPDATE untuk memperbarui tanggal_pinjam lama menjadi tanggal_pinjam baru (waktu ACC)
                 String updateStatusSql = "UPDATE peminjaman SET status = ?, tanggal_pinjam = ?, tanggal_tenggat = ? WHERE id_peminjaman = ?";
                 PreparedStatement psStatus = conn.prepareStatement(updateStatusSql);
                 psStatus.setString(1, statusBaru.toLowerCase());
-                psStatus.setDate(2, Date.valueOf(tanggalAccHariIni)); // Mengganti tanggal pengajuan dengan tanggal ACC
+                psStatus.setDate(2, Date.valueOf(tanggalAccHariIni)); 
                 psStatus.setDate(3, Date.valueOf(batasKembali));
                 psStatus.setInt(4, idPeminjaman);
                 psStatus.executeUpdate();
                 psStatus.close();
 
             } else {
-                // Jika ditolak, cukup ubah status menjadi ditolak tanpa merubah tanggal pengajuan awal
                 String updateStatusSql = "UPDATE peminjaman SET status = ? WHERE id_peminjaman = ?";
                 PreparedStatement psStatus = conn.prepareStatement(updateStatusSql);
                 psStatus.setString(1, statusBaru.toLowerCase());
@@ -146,9 +141,8 @@ public class PeminjamanDAO implements Transaksi {
 
         try {
             conn = DBConnection.getConnection();
-            conn.setAutoCommit(false); // Begin Transaction
+            conn.setAutoCommit(false); 
 
-            // 1. Ambil info peminjaman (ambil id_buku, tanggal_tenggat untuk mengunci denda akhir)
             String getBorrowInfoSql = "SELECT id_buku, tanggal_tenggat, status FROM peminjaman WHERE id_peminjaman = ?";
             ps = conn.prepareStatement(getBorrowInfoSql);
             ps.setInt(1, idPeminjaman);
@@ -159,37 +153,34 @@ public class PeminjamanDAO implements Transaksi {
                 int idBuku = rs.getInt("id_buku");
                 Date tglTenggat = rs.getDate("tanggal_tenggat");
 
-                // Hanya buku berstatus 'disetujui' yang bisa dikembalikan
-                if ("disetujui".equalsIgnoreCase(status)) {
+                // 🌟 SINKRONISASI STATUS: Izinkan pengembalian untuk status 'disetujui' maupun 'dipinjam'
+                if ("disetujui".equalsIgnoreCase(status) || "dipinjam".equalsIgnoreCase(status)) {
                     
-                    // Hitung denda final saat dikembalikan berdasarkan kolom tanggal_tenggat database
-                    double dendaFinal = 0;
+                    long dendaFinal = 0;
                     if (tglTenggat != null) {
                         LocalDate batasKembali = tglTenggat.toLocalDate();
                         LocalDate hariIni = LocalDate.now();
                         
                         if (hariIni.isAfter(batasKembali)) {
                             long selisihHari = ChronoUnit.DAYS.between(batasKembali, hariIni);
-                            dendaFinal = selisihHari * 1000.0; // Rp 1.000 per hari terlambat
+                            dendaFinal = selisihHari * 1000; 
                         }
                     }
 
-                    // 2. Update record peminjaman (tanggal_kembali = CURRENT_DATE, status = 'dikembalikan', denda dikunci)
                     String updateBorrowSql = "UPDATE peminjaman SET tanggal_kembali = CURRENT_DATE, status = 'dikembalikan', denda = ? WHERE id_peminjaman = ?";
                     PreparedStatement psUpdateBorrow = conn.prepareStatement(updateBorrowSql);
-                    psUpdateBorrow.setDouble(1, dendaFinal);
+                    psUpdateBorrow.setLong(1, dendaFinal); // Menggunakan setLong pasca-sinkronisasi tipe data model
                     psUpdateBorrow.setInt(2, idPeminjaman);
                     psUpdateBorrow.executeUpdate();
                     psUpdateBorrow.close();
 
-                    // 3. Kembalikan jumlah stok buku perpustakaan (+1)
                     String updateStockSql = "UPDATE buku SET jml_buku = jml_buku + 1 WHERE id_buku = ?";
                     PreparedStatement psUpdateStock = conn.prepareStatement(updateStockSql);
                     psUpdateStock.setInt(1, idBuku);
                     psUpdateStock.executeUpdate();
                     psUpdateStock.close();
 
-                    conn.commit(); // Commit Transaction
+                    conn.commit(); 
                     success = true;
                 }
             }
@@ -234,18 +225,17 @@ public class PeminjamanDAO implements Transaksi {
                 p.setNamaLengkap(rs.getString("nama_lengkap"));
                 p.setJudulBuku(rs.getString("judul_buku"));
                 
-                // PEMBARUAN: Ambil data tanggal_tenggat langsung dari database
                 p.setTanggalTenggat(rs.getDate("tanggal_tenggat"));
                 
-                double dendaTampil = rs.getDouble("denda");
+                long dendaTampil = rs.getLong("denda"); // Menggunakan getLong sesuai struktur baru
 
-                // HITUNG DENDA OTOMATIS BERJALAN (REAL-TIME) JIKA SEDANG DIPINJAM & LEWAT TENGGAT
-                if ("disetujui".equalsIgnoreCase(p.getStatus()) && p.getTanggalTenggat() != null) {
+                // 🌟 FIX UNTUK BENCHMARK DENDA MANUAL: Mengakomodasi status 'disetujui' dan status 'dipinjam' database Anda
+                if (("disetujui".equalsIgnoreCase(p.getStatus()) || "dipinjam".equalsIgnoreCase(p.getStatus())) && p.getTanggalTenggat() != null) {
                     LocalDate batasKembali = p.getTanggalTenggat().toLocalDate();
                     
                     if (hariIni.isAfter(batasKembali)) {
                         long selisihHari = ChronoUnit.DAYS.between(batasKembali, hariIni);
-                        dendaTampil = selisihHari * 1000.0;
+                        dendaTampil = selisihHari * 1000;
                     }
                 }
 
@@ -287,18 +277,17 @@ public class PeminjamanDAO implements Transaksi {
                 p.setNamaLengkap(rs.getString("nama_lengkap"));
                 p.setJudulBuku(rs.getString("judul_buku"));
                 
-                // PEMBARUAN: Ambil data tanggal_tenggat langsung dari database
                 p.setTanggalTenggat(rs.getDate("tanggal_tenggat"));
                 
-                double dendaTampil = rs.getDouble("denda");
+                long dendaTampil = rs.getLong("denda");
 
-                // Hitung denda real-time agar user juga bisa melihat denda berjalan mereka di dashboard-nya
-                if ("disetujui".equalsIgnoreCase(p.getStatus()) && p.getTanggalTenggat() != null) {
+                // 🌟 SINKRONISASI STATUS UNTUK HALAMAN DASHBOARD USER
+                if (("disetujui".equalsIgnoreCase(p.getStatus()) || "dipinjam".equalsIgnoreCase(p.getStatus())) && p.getTanggalTenggat() != null) {
                     LocalDate batasKembali = p.getTanggalTenggat().toLocalDate();
                     
                     if (hariIni.isAfter(batasKembali)) {
                         long selisihHari = ChronoUnit.DAYS.between(batasKembali, hariIni);
-                        dendaTampil = selisihHari * 1000.0;
+                        dendaTampil = selisihHari * 1000;
                     }
                 }
 
@@ -333,7 +322,7 @@ public class PeminjamanDAO implements Transaksi {
         int total = 0;
         try {
             Connection conn = DBConnection.getConnection();
-            String sql = "SELECT COUNT(*) AS total FROM peminjaman WHERE id_user = ? AND status = 'disetujui'";
+            String sql = "SELECT COUNT(*) AS total FROM peminjaman WHERE id_user = ? AND (status = 'disetujui' OR status = 'dipinjam')";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, idUser);
             ResultSet rs = ps.executeQuery();
@@ -347,7 +336,6 @@ public class PeminjamanDAO implements Transaksi {
         return total;
     }
 
-    // Method untuk menghitung total buku yang SEDANG DIPINJAM (Status: disetujui)
     public int getTotalActivePeminjaman() {
         int total = 0;
         Connection conn = null;
@@ -355,7 +343,7 @@ public class PeminjamanDAO implements Transaksi {
         ResultSet rs = null;
         try {
             conn = DBConnection.getConnection();
-            String sql = "SELECT COUNT(*) AS total FROM peminjaman WHERE status = 'disetujui'";
+            String sql = "SELECT COUNT(*) AS total FROM peminjaman WHERE status = 'disetujui' OR status = 'dipinjam'";
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
             if (rs.next()) {
@@ -375,7 +363,6 @@ public class PeminjamanDAO implements Transaksi {
         return total;
     }
 
-    // Method untuk menghitung total pengajuan yang BELUM DI-ACC (Status: menunggu)
     public int getTotalMenungguValidasi() {
         int total = 0;
         Connection conn = null;

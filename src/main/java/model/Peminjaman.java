@@ -8,15 +8,14 @@ public class Peminjaman {
     private int idBuku;
     private Date tanggalPinjam;
     private Date tanggalKembali;
-    private Date tanggalTenggat;
+    private Date tanggalTenggat; // 🌟 Digunakan untuk menampung batas pengembalian
     private String status;
 
     // Join fields for UI display
-    private double denda;
+    private long denda; // 🌟 Diubah ke long agar kalkulasi hari perkalian Rp1.000 presisi
     private String username;
     private String namaLengkap;
     private String judulBuku;
-
 
     public Peminjaman() {}
 
@@ -92,9 +91,19 @@ public class Peminjaman {
         this.judulBuku = judulBuku;
     }
 
-    public double getDenda() { return denda; }
-    public void setDenda(double denda) { this.denda = denda; }
+    public long getDenda() { 
+        return denda; 
+    }
+    
+    public void setDenda(long denda) { 
+        this.denda = denda; 
+    }
 
-    public Date getTanggalTenggat() { return tanggalTenggat; }
-    public void setTanggalTenggat(Date tanggalTenggat) { this.tanggalTenggat = tanggalTenggat; }
+    public Date getTanggalTenggat() { 
+        return tanggalTenggat; 
+    }
+    
+    public void setTanggalTenggat(Date tanggalTenggat) { 
+        this.tanggalTenggat = tanggalTenggat; 
+    }
 }
