@@ -21,8 +21,8 @@ public class BukuDAO {
             ps.setInt(4, buku.getTahunTerbit());
             ps.setInt(5, buku.getJmlBuku());
             ps.setInt(6, buku.getIdKategori());
-            ps.setString(7, buku.getIsbn());       // Ditambahkan untuk admin insert
-            ps.setString(8, buku.getAbstraksi()); // Ditambahkan untuk admin insert
+            ps.setString(7, buku.getIsbn());       
+            ps.setString(8, buku.getAbstraksi()); 
 
             int hasil = ps.executeUpdate();
             System.out.println("Data berhasil disimpan : " + hasil);
@@ -49,11 +49,8 @@ public class BukuDAO {
                 buku.setTahunTerbit(rs.getInt("tahun_terbit"));
                 buku.setJmlBuku(rs.getInt("jml_buku"));
                 buku.setIdKategori(rs.getInt("id_kategori"));
-                
-                // DISESUAIKAN: Menarik kolom baru dari database
                 buku.setIsbn(rs.getString("isbn"));
                 buku.setAbstraksi(rs.getString("abstraksi"));
-                
                 list.add(buku);
             }
             rs.close();
@@ -82,8 +79,6 @@ public class BukuDAO {
                 buku.setTahunTerbit(rs.getInt("tahun_terbit"));
                 buku.setJmlBuku(rs.getInt("jml_buku"));
                 buku.setIdKategori(rs.getInt("id_kategori"));
-                
-                // DISESUAIKAN: Menarik kolom baru dari database
                 buku.setIsbn(rs.getString("isbn"));
                 buku.setAbstraksi(rs.getString("abstraksi"));
             }
@@ -108,8 +103,8 @@ public class BukuDAO {
             ps.setInt(4, buku.getTahunTerbit());
             ps.setInt(5, buku.getJmlBuku());
             ps.setInt(6, buku.getIdKategori());
-            ps.setString(7, buku.getIsbn());       // Ditambahkan untuk admin update
-            ps.setString(8, buku.getAbstraksi()); // Ditambahkan untuk admin update
+            ps.setString(7, buku.getIsbn());       
+            ps.setString(8, buku.getAbstraksi()); 
             ps.setInt(9, buku.getIdBuku());
             int rows = ps.executeUpdate();
             if (rows > 0) {
@@ -123,21 +118,58 @@ public class BukuDAO {
         return success;
     }
 
+    // 🌟 SELESAI DISESUAIKAN: Menghapus data transaksional anak terlebih dahulu
     public boolean delete(int id) {
         boolean success = false;
+        Connection conn = null;
+        PreparedStatement psUlasan = null;
+        PreparedStatement psFavorit = null;
+        PreparedStatement psPeminjaman = null;
+        PreparedStatement psBuku = null;
+
         try {
-            Connection conn = DBConnection.getConnection();
-            String sql = "DELETE FROM buku WHERE id_buku=?";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, id);
-            int rows = ps.executeUpdate();
+            conn = DBConnection.getConnection();
+            
+            // 1. Bersihkan tabel ulasan yang mereferensikan id_buku ini
+            String sqlUlasan = "DELETE FROM ulasan WHERE id_buku=?";
+            psUlasan = conn.prepareStatement(sqlUlasan);
+            psUlasan.setInt(1, id);
+            psUlasan.executeUpdate();
+
+            // 2. Bersihkan tabel favorit yang mereferensikan id_buku ini
+            String sqlFavorit = "DELETE FROM favorit WHERE id_buku=?";
+            psFavorit = conn.prepareStatement(sqlFavorit);
+            psFavorit.setInt(1, id);
+            psFavorit.executeUpdate();
+
+            // 3. Bersihkan histori peminjaman yang mereferensikan id_buku ini
+            String sqlPeminjaman = "DELETE FROM peminjaman WHERE id_buku=?";
+            psPeminjaman = conn.prepareStatement(sqlPeminjaman);
+            psPeminjaman.setInt(1, id);
+            psPeminjaman.executeUpdate();
+
+            // 4. Baru eksekusi penghapusan data buku utama
+            String sqlBuku = "DELETE FROM buku WHERE id_buku=?";
+            psBuku = conn.prepareStatement(sqlBuku);
+            psBuku.setInt(1, id);
+            
+            int rows = psBuku.executeUpdate();
             if (rows > 0) {
                 success = true;
             }
-            ps.close();
-            conn.close();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            // Memastikan penutupan resource stream secara aman
+            try {
+                if (psUlasan != null) psUlasan.close();
+                if (psFavorit != null) psFavorit.close();
+                if (psPeminjaman != null) psPeminjaman.close();
+                if (psBuku != null) psBuku.close();
+                if (conn != null) conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return success;
     }
@@ -162,11 +194,8 @@ public class BukuDAO {
                 buku.setTahunTerbit(rs.getInt("tahun_terbit"));
                 buku.setJmlBuku(rs.getInt("jml_buku"));
                 buku.setIdKategori(rs.getInt("id_kategori"));
-                
-                // DISESUAIKAN: Menarik kolom baru dari database
                 buku.setIsbn(rs.getString("isbn"));
                 buku.setAbstraksi(rs.getString("abstraksi"));
-                
                 list.add(buku);
             }
             rs.close();
@@ -195,11 +224,8 @@ public class BukuDAO {
                 buku.setTahunTerbit(rs.getInt("tahun_terbit"));
                 buku.setJmlBuku(rs.getInt("jml_buku"));
                 buku.setIdKategori(rs.getInt("id_kategori"));
-                
-                // DISESUAIKAN: Menarik kolom baru dari database
                 buku.setIsbn(rs.getString("isbn"));
                 buku.setAbstraksi(rs.getString("abstraksi"));
-                
                 list.add(buku);
             }
             rs.close();
