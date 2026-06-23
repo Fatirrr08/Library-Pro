@@ -186,6 +186,7 @@
 
 <div class="main-content">
     <div class="topbar">
+        <button class="sidebar-toggle-btn" id="sidebarToggle" type="button"><i class="fa-solid fa-bars"></i></button>
         <h2>Library Management System</h2>
         <div class="profile-dropdown-container">
             <div class="user-profile" id="profileTrigger">
@@ -490,5 +491,6 @@
     });
 </script>
 
+<script src="<%=request.getContextPath()%>/js/script.js"></script>
 </body>
 </html>

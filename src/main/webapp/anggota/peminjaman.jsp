@@ -116,6 +116,7 @@
 
 <div class="main-content">
     <div class="topbar">
+        <button class="sidebar-toggle-btn" id="sidebarToggle" type="button"><i class="fa-solid fa-bars"></i></button>
         <h2>Riwayat Peminjaman Anda</h2>
         
         <div class="profile-dropdown-container">
@@ -318,5 +319,6 @@
     });
 </script>
 
+<script src="<%=request.getContextPath()%>/js/script.js"></script>
 </body>
 </html>
