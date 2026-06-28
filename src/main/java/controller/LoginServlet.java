@@ -2,6 +2,8 @@ package controller;
 
 import dao.UserDAO;
 import model.User;
+import model.Admin;
+import model.Anggota;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
@@ -35,7 +37,18 @@ public class LoginServlet extends HttpServlet {
         if (user != null) {
             HttpSession session = request.getSession(true);
             session.setAttribute("user", user);
-            response.sendRedirect(request.getContextPath() + "/dashboard");
+            session.setAttribute("level", user.getLevel()); // pertahankan yang sudah ada
+
+            // [OOP: Polymorphism] Cek tipe runtime untuk routing yang tepat
+            if (user instanceof Admin) {
+                Admin admin = (Admin) user; // [OOP: Downcasting]
+                session.setAttribute("canManageBooks", admin.canManageBooks());
+                response.sendRedirect(request.getContextPath() + admin.getDashboardPath());
+            } else if (user instanceof Anggota) {
+                Anggota anggota = (Anggota) user; // [OOP: Downcasting]
+                session.setAttribute("maxBorrow", anggota.getMaxBorrowLimit());
+                response.sendRedirect(request.getContextPath() + anggota.getDashboardPath());
+            }
         } else {
             request.setAttribute("error", "Username atau password salah!");
             request.getRequestDispatcher("/login.jsp").forward(request, response);

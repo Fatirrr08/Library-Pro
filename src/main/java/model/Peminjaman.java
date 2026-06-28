@@ -106,4 +106,11 @@ public class Peminjaman {
     public void setTanggalTenggat(Date tanggalTenggat) { 
         this.tanggalTenggat = tanggalTenggat; 
     }
+
+    // [OOP: Method Overriding] Override toString() dari Object untuk representasi bermakna
+    @Override
+    public String toString() {
+        return "Peminjaman{id=" + idPeminjaman + ", idUser=" + idUser +
+               ", idBuku=" + idBuku + ", status='" + status + "'}";
+    }
 }

@@ -77,4 +77,10 @@ public class Ulasan {
     public void setJudulBuku(String judulBuku) {
         this.judulBuku = judulBuku;
     }
+
+    // [OOP: Method Overriding] Override toString() dari Object untuk representasi bermakna
+    @Override
+    public String toString() {
+        return "Ulasan{id=" + idUlasan + ", idBuku=" + idBuku + ", rating=" + rating + "}";
+    }
 }

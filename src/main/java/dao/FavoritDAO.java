@@ -9,7 +9,12 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FavoritDAO {
+public class FavoritDAO extends BaseDAO { // [OOP: Inheritance] FavoritDAO mewarisi BaseDAO
+
+    @Override
+    public String getEntityName() {
+        return "Favorit"; // [OOP: Abstract Method Implementation] wajib diimplementasi subclass
+    }
 
     public boolean addFavorit(int idUser, int idBuku) {
         boolean success = false;

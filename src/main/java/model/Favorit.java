@@ -59,4 +59,10 @@ public class Favorit {
     public void setPenerbit(String penerbit) {
         this.penerbit = penerbit;
     }
+
+    // [OOP: Method Overriding] Override toString() dari Object untuk representasi bermakna
+    @Override
+    public String toString() {
+        return "Favorit{id=" + idFavorit + ", idUser=" + idUser + ", idBuku=" + idBuku + "}";
+    }
 }

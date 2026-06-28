@@ -9,7 +9,12 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UlasanDAO {
+public class UlasanDAO extends BaseDAO { // [OOP: Inheritance] UlasanDAO mewarisi BaseDAO
+
+    @Override
+    public String getEntityName() {
+        return "Ulasan"; // [OOP: Abstract Method Implementation] wajib diimplementasi subclass
+    }
 
     public boolean insertUlasan(Ulasan ulasan) {
         return addUlasan(ulasan);

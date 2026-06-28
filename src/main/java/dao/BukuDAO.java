@@ -3,11 +3,17 @@ package dao;
 import config.DBConnection;
 import model.Buku;
 
+import exception.BookNotFoundException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BukuDAO {
+public class BukuDAO extends BaseDAO { // [OOP: Inheritance] BukuDAO mewarisi BaseDAO
+
+    @Override
+    public String getEntityName() {
+        return "Buku"; // [OOP: Abstract Method Implementation] wajib diimplementasi subclass
+    }
 
     public void insert(Buku buku) {
         System.out.println("INSERT BUKU DIJALANKAN");
@@ -87,6 +93,10 @@ public class BukuDAO {
             conn.close();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        // [OOP: Custom Exception] lempar jika buku tidak ditemukan
+        if (buku == null) {
+            throw new BookNotFoundException(id);
         }
         return buku;
     }

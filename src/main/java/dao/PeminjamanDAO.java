@@ -3,14 +3,21 @@ package dao;
 import config.DBConnection;
 import interfaces.Transaksi;
 import model.Peminjaman;
-
+import model.enums.StatusPeminjaman;
+import exception.BookNotFoundException;
+import exception.InsufficientStockException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
-public class PeminjamanDAO implements Transaksi {
+public class PeminjamanDAO extends BaseDAO implements Transaksi { // [OOP: Inheritance] PeminjamanDAO mewarisi BaseDAO
+
+    @Override
+    public String getEntityName() {
+        return "Peminjaman"; // [OOP: Abstract Method Implementation] wajib diimplementasi subclass
+    }
 
     private BukuDAO bukuDAO = new BukuDAO();
 
@@ -30,19 +37,24 @@ public class PeminjamanDAO implements Transaksi {
             ps.setInt(1, idBuku);
             rs = ps.executeQuery();
 
-            int stokBuku = 0;
-            if (rs.next()) {
-                stokBuku = rs.getInt("jml_buku");
+            if (!rs.next()) {
+                throw new BookNotFoundException(idBuku); // [OOP: Custom Exception usage]
+            }
+            
+            int stokBuku = rs.getInt("jml_buku");
+            if (stokBuku <= 0) {
+                throw new InsufficientStockException(idBuku, stokBuku); // [OOP: Custom Exception usage]
             }
             
             rs.close();
             ps.close();
 
             if (stokBuku > 0) {
-                String insertBorrowSql = "INSERT INTO peminjaman (id_user, id_buku, tanggal_pinjam, tanggal_tenggat, tanggal_kembali, status, denda) VALUES (?, ?, CURRENT_DATE, NULL, NULL, 'menunggu', 0)";
+                String insertBorrowSql = "INSERT INTO peminjaman (id_user, id_buku, tanggal_pinjam, tanggal_tenggat, tanggal_kembali, status, denda) VALUES (?, ?, CURRENT_DATE, NULL, NULL, ?, 0)";
                 ps = conn.prepareStatement(insertBorrowSql);
                 ps.setInt(1, idUser);
                 ps.setInt(2, idBuku);
+                ps.setString(3, StatusPeminjaman.MENUNGGU.getValue()); // [OOP: Enum usage]
                 ps.executeUpdate();
 
                 conn.commit();
@@ -99,7 +111,7 @@ public class PeminjamanDAO implements Transaksi {
 
                 String updateStatusSql = "UPDATE peminjaman SET status = ?, tanggal_pinjam = ?, tanggal_tenggat = ? WHERE id_peminjaman = ?";
                 PreparedStatement psStatus = conn.prepareStatement(updateStatusSql);
-                psStatus.setString(1, statusBaru.toLowerCase());
+                psStatus.setString(1, StatusPeminjaman.fromValue(statusBaru).getValue()); // [OOP: Enum usage]
                 psStatus.setDate(2, Date.valueOf(tanggalAccHariIni)); 
                 psStatus.setDate(3, Date.valueOf(batasKembali));
                 psStatus.setInt(4, idPeminjaman);
@@ -109,7 +121,7 @@ public class PeminjamanDAO implements Transaksi {
             } else {
                 String updateStatusSql = "UPDATE peminjaman SET status = ? WHERE id_peminjaman = ?";
                 PreparedStatement psStatus = conn.prepareStatement(updateStatusSql);
-                psStatus.setString(1, statusBaru.toLowerCase());
+                psStatus.setString(1, StatusPeminjaman.fromValue(statusBaru).getValue()); // [OOP: Enum usage]
                 psStatus.setInt(2, idPeminjaman);
                 psStatus.executeUpdate();
                 psStatus.close();
@@ -167,10 +179,11 @@ public class PeminjamanDAO implements Transaksi {
                         }
                     }
 
-                    String updateBorrowSql = "UPDATE peminjaman SET tanggal_kembali = CURRENT_DATE, status = 'dikembalikan', denda = ? WHERE id_peminjaman = ?";
+                    String updateBorrowSql = "UPDATE peminjaman SET tanggal_kembali = CURRENT_DATE, status = ?, denda = ? WHERE id_peminjaman = ?";
                     PreparedStatement psUpdateBorrow = conn.prepareStatement(updateBorrowSql);
-                    psUpdateBorrow.setLong(1, dendaFinal); // Menggunakan setLong pasca-sinkronisasi tipe data model
-                    psUpdateBorrow.setInt(2, idPeminjaman);
+                    psUpdateBorrow.setString(1, StatusPeminjaman.DIKEMBALIKAN.getValue()); // [OOP: Enum usage]
+                    psUpdateBorrow.setLong(2, dendaFinal); // Menggunakan setLong pasca-sinkronisasi tipe data model
+                    psUpdateBorrow.setInt(3, idPeminjaman);
                     psUpdateBorrow.executeUpdate();
                     psUpdateBorrow.close();
 

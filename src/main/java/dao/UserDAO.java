@@ -2,6 +2,9 @@ package dao;
 
 import config.DBConnection;
 import model.User;
+import model.Admin;
+import model.Anggota;
+import model.enums.UserLevel;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,7 +13,12 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserDAO {
+public class UserDAO extends BaseDAO { // [OOP: Inheritance] UserDAO mewarisi BaseDAO
+
+    @Override
+    public String getEntityName() {
+        return "User"; // [OOP: Abstract Method Implementation] wajib diimplementasi subclass
+    }
 
     public User login(String username, String password) {
         User user = null;
@@ -22,7 +30,13 @@ public class UserDAO {
             ps.setString(2, password);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                user = new User();
+                String levelStr = rs.getString("level");
+                // [OOP: Polymorphism] Instantiate subclass yang tepat berdasarkan level
+                if (UserLevel.ADMIN.getValue().equalsIgnoreCase(levelStr)) {
+                    user = new Admin(); // [OOP: Inheritance aktif]
+                } else {
+                    user = new Anggota(); // [OOP: Inheritance aktif]
+                }
                 user.setIdUser(rs.getInt("id_user"));
                 user.setUsername(rs.getString("username"));
                 user.setPassword(rs.getString("password"));

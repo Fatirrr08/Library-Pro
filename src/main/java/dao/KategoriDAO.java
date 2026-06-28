@@ -7,7 +7,12 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class KategoriDAO {
+public class KategoriDAO extends BaseDAO { // [OOP: Inheritance] KategoriDAO mewarisi BaseDAO
+
+    @Override
+    public String getEntityName() {
+        return "Kategori"; // [OOP: Abstract Method Implementation] wajib diimplementasi subclass
+    }
 
     public boolean insert(Kategori kategori) {
         boolean success = false;

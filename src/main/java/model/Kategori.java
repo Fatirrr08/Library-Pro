@@ -26,4 +26,10 @@ public class Kategori {
     public void setNamaKategori(String namaKategori) {
         this.namaKategori = namaKategori;
     }
+
+    // [OOP: Method Overriding] Override toString() dari Object untuk representasi bermakna
+    @Override
+    public String toString() {
+        return "Kategori{id=" + idKategori + ", nama='" + namaKategori + "'}";
+    }
 }

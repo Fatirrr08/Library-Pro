@@ -84,4 +84,10 @@ public class Buku {
     public void setIsbn(String isbn) {
         this.isbn = isbn;
     }
+
+    // [OOP: Method Overriding] Override toString() dari Object untuk representasi bermakna
+    @Override
+    public String toString() {
+        return "Buku{id=" + idBuku + ", judul='" + judul + "', penulis='" + penulis + "'}";
+    }
 }

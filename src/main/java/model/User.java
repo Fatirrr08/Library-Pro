@@ -77,4 +77,10 @@ public class User {
     public void setFotoProfil(String fotoProfil) {
         this.fotoProfil = fotoProfil;
     }
+
+    // [OOP: Method Overriding] Override toString() dari Object untuk representasi bermakna
+    @Override
+    public String toString() {
+        return "User{id=" + idUser + ", username='" + username + "', level='" + level + "'}";
+    }
 }
