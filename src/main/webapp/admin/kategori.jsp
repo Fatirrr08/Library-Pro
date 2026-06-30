@@ -2,6 +2,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="model.Kategori" %>
 <%@ page import="model.User" %>
+<%@ page import="util.StringUtils" %>
 
 <!DOCTYPE html>
 <html>
@@ -152,7 +153,7 @@
         <div class="profile-dropdown-container">
             <div class="user-profile" id="profileTrigger">
                 <img src="<%= (loggedUser.getFotoProfil() != null && !loggedUser.getFotoProfil().isEmpty()) ? request.getContextPath() + "/uploads/profile/" + loggedUser.getFotoProfil() : request.getContextPath() + "/uploads/profile/default.png" %>" alt="Admin">
-                <span><%= loggedUser.getNamaLengkap() %></span>
+                <span><%= StringUtils.escapeHtml(loggedUser.getNamaLengkap()) %></span>
                 <i class="fa-solid fa-chevron-down" style="font-size: 11px; color: #64748b;"></i>
             </div>
             <ul class="dropdown-menu" id="dropdownMenu">
@@ -182,7 +183,7 @@
 
                 <div class="form-group">
                     <label>Nama Kategori</label>
-                    <input type="text" name="namaKategori" value="<%= editKategori != null ? editKategori.getNamaKategori() : "" %>" required placeholder="Contoh: Fiksi Sains">
+                    <input type="text" name="namaKategori" value="<%= StringUtils.escapeHtml(editKategori != null ? editKategori.getNamaKategori() : "") %>" required placeholder="Contoh: Fiksi Sains">
                 </div>
 
                 <div style="display: flex; gap: 10px; margin-top: 20px;">
@@ -217,7 +218,7 @@
                 %>
                 <tr>
                     <td><%= k.getIdKategori() %></td>
-                    <td style="font-weight: 600; color: #1e293b;"><%= k.getNamaKategori() %></td>
+                    <td style="font-weight: 600; color: #1e293b;"><%= StringUtils.escapeHtml(k.getNamaKategori()) %></td>
                     <td>
                         <div class="action-cell-container">
                             <a href="<%=request.getContextPath()%>/kategori?action=edit&id=<%= k.getIdKategori() %>" 
@@ -228,7 +229,7 @@
                             <button type="button" 
                                     class="btn-action-table btn-table-delete btn-delete-kategori-trigger" 
                                     data-id="<%= k.getIdKategori() %>" 
-                                    data-nama="<%= k.getNamaKategori() %>">
+                                    data-nama="<%= StringUtils.escapeHtml(k.getNamaKategori()) %>">
                                 <i class="fa-solid fa-trash"></i> Hapus
                             </button>
                         </div>

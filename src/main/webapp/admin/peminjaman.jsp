@@ -5,6 +5,7 @@
 <%@ page import="model.User" %>
 <%@ page import="java.text.NumberFormat" %>
 <%@ page import="java.util.Locale" %>
+<%@ page import="util.StringUtils" %>
 
 <!DOCTYPE html>
 <html>
@@ -187,7 +188,7 @@
         <div class="profile-dropdown-container">
             <div class="user-profile" id="profileTrigger">
                 <img src="<%= (loggedUser.getFotoProfil() != null && !loggedUser.getFotoProfil().isEmpty()) ? request.getContextPath() + "/uploads/profile/" + loggedUser.getFotoProfil() : request.getContextPath() + "/uploads/profile/default.png" %>" alt="Admin">
-                <span><%= loggedUser.getNamaLengkap() %></span>
+                <span><%= StringUtils.escapeHtml(loggedUser.getNamaLengkap()) %></span>
                 <i class="fa-solid fa-chevron-down" style="font-size: 11px; color: #64748b;"></i>
             </div>
             <ul class="dropdown-menu" id="dropdownMenu">
@@ -217,7 +218,7 @@
                                     for (User u : daftarUser) {
                                         if ("anggota".equalsIgnoreCase(u.getLevel())) {
                             %>
-                                <option value="<%= u.getIdUser() %>"><%= u.getNamaLengkap() %> (<%= u.getUsername() %>)</option>
+                                <option value="<%= u.getIdUser() %>"><%= StringUtils.escapeHtml(u.getNamaLengkap()) %> (<%= StringUtils.escapeHtml(u.getUsername()) %>)</option>
                             <% 
                                         }
                                     }
@@ -235,7 +236,7 @@
                                     for (Buku b : daftarBuku) {
                             %>
                                 <option value="<%= b.getIdBuku() %>" <%= b.getJmlBuku() <= 0 ? "disabled" : "" %>>
-                                    <%= b.getJudul() %> <%= b.getJmlBuku() <= 0 ? "[STOK HABIS]" : "(Stok: " + b.getJmlBuku() + ")" %>
+                                    <%= StringUtils.escapeHtml(b.getJudul()) %> <%= b.getJmlBuku() <= 0 ? "[STOK HABIS]" : "(Stok: " + b.getJmlBuku() + ")" %>
                                 </option>
                             <% 
                                     }
@@ -279,15 +280,15 @@
                 <tr>
                     <td><%= p.getIdPeminjaman() %></td>
                     <td>
-                        <span style="font-weight: 600; color: #1e293b;"><%= p.getNamaLengkap() %></span><br>
-                        <small style="color: var(--text-muted);">@<%= p.getUsername() %></small>
+                        <span style="font-weight: 600; color: #1e293b;"><%= StringUtils.escapeHtml(p.getNamaLengkap()) %></span><br>
+                        <small style="color: var(--text-muted);">@<%= StringUtils.escapeHtml(p.getUsername()) %></small>
                     </td>
-                    <td style="font-weight: 500;"><%= p.getJudulBuku() %></td>
-                    <td><%= p.getTanggalPinjam() != null ? p.getTanggalPinjam() : "-" %></td>
+                    <td style="font-weight: 500;"><%= StringUtils.escapeHtml(p.getJudulBuku()) %></td>
+                    <td><%= StringUtils.escapeHtml(p.getTanggalPinjam() != null ? p.getTanggalPinjam() : "-") %></td>
                     <td style="font-weight: 600; color: #ea580c;">
-                        <%= p.getTanggalTenggat() != null ? p.getTanggalTenggat() : "-" %>
+                        <%= StringUtils.escapeHtml(p.getTanggalTenggat() != null ? p.getTanggalTenggat() : "-") %>
                     </td> 
-                    <td><%= p.getTanggalKembali() != null ? p.getTanggalKembali() : "-" %></td>
+                    <td><%= StringUtils.escapeHtml(p.getTanggalKembali() != null ? p.getTanggalKembali() : "-") %></td>
                     <td>
                         <% if ("menunggu".equalsIgnoreCase(p.getStatus())) { %>
                             <span class="status-badge badge-waiting">
@@ -318,16 +319,16 @@
                                 <button type="button" 
                                         class="btn-action-table btn-action-setujui btn-approve-modal-trigger"
                                         data-id="<%= p.getIdPeminjaman() %>"
-                                        data-anggota="<%= p.getNamaLengkap() %>"
-                                        data-buku="<%= p.getJudulBuku() %>">
+                                        data-anggota="<%= StringUtils.escapeHtml(p.getNamaLengkap()) %>"
+                                        data-buku="<%= StringUtils.escapeHtml(p.getJudulBuku()) %>">
                                     <i class="fa-solid fa-check"></i> Setujui
                                 </button>
                                 
                                 <button type="button" 
                                         class="btn-action-table btn-action-tolak btn-reject-modal-trigger"
                                         data-id="<%= p.getIdPeminjaman() %>"
-                                        data-anggota="<%= p.getNamaLengkap() %>"
-                                        data-buku="<%= p.getJudulBuku() %>">
+                                        data-anggota="<%= StringUtils.escapeHtml(p.getNamaLengkap()) %>"
+                                        data-buku="<%= StringUtils.escapeHtml(p.getJudulBuku()) %>">
                                     <i class="fa-solid fa-xmark"></i> Tolak
                                 </button>
                             </div>

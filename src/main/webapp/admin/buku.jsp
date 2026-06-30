@@ -3,6 +3,7 @@
 <%@ page import="model.Buku" %>
 <%@ page import="model.Kategori" %>
 <%@ page import="model.User" %>
+<%@ page import="util.StringUtils" %>
 
 <!DOCTYPE html>
 <html>
@@ -191,7 +192,7 @@
         <div class="profile-dropdown-container">
             <div class="user-profile" id="profileTrigger">
                 <img src="<%= (loggedUser.getFotoProfil() != null && !loggedUser.getFotoProfil().isEmpty()) ? request.getContextPath() + "/uploads/profile/" + loggedUser.getFotoProfil() : request.getContextPath() + "/uploads/profile/default.png" %>" alt="Admin">
-                <span><%= loggedUser.getNamaLengkap() %></span>
+                <span><%= StringUtils.escapeHtml(loggedUser.getNamaLengkap()) %></span>
                 <i class="fa-solid fa-chevron-down" style="font-size: 11px; color: #64748b;"></i>
             </div>
             <ul class="dropdown-menu" id="dropdownMenu">
@@ -222,18 +223,18 @@
                 <div class="form-grid">
                     <div class="form-group">
                         <label>Judul Buku</label>
-                        <input type="text" name="judul" value="<%= editBuku != null ? editBuku.getJudul() : "" %>" required placeholder="Contoh: Belajar Java Dasar">
+                        <input type="text" name="judul" value="<%= StringUtils.escapeHtml(editBuku != null ? editBuku.getJudul() : "") %>" required placeholder="Contoh: Belajar Java Dasar">
                     </div>
                     <div class="form-group">
                         <label>Penulis</label>
-                        <input type="text" name="penulis" value="<%= editBuku != null ? editBuku.getPenulis() : "" %>" required placeholder="Contoh: Rinaldi Munir">
+                        <input type="text" name="penulis" value="<%= StringUtils.escapeHtml(editBuku != null ? editBuku.getPenulis() : "") %>" required placeholder="Contoh: Rinaldi Munir">
                     </div>
                 </div>
 
                 <div class="form-grid">
                     <div class="form-group">
                         <label>Penerbit</label>
-                        <input type="text" name="penerbit" value="<%= editBuku != null ? editBuku.getPenerbit() : "" %>" required placeholder="Contoh: Penerbit Informatika">
+                        <input type="text" name="penerbit" value="<%= StringUtils.escapeHtml(editBuku != null ? editBuku.getPenerbit() : "") %>" required placeholder="Contoh: Penerbit Informatika">
                     </div>
                     <div class="form-group">
                         <label>Tahun Terbit</label>
@@ -248,7 +249,7 @@
                     </div>
                     <div class="form-group">
                         <label>Nomor ISBN / ISSN</label>
-                        <input type="text" name="isbn" value="<%= editBuku != null ? (editBuku.getIsbn() != null ? editBuku.getIsbn() : "") : "" %>" placeholder="Contoh: 978-602-03-3160-7">
+                        <input type="text" name="isbn" value="<%= StringUtils.escapeHtml(editBuku != null ? (editBuku.getIsbn() != null ? editBuku.getIsbn() : "") : "") %>" placeholder="Contoh: 978-602-03-3160-7">
                     </div>
                     <div class="form-group">
                         <label>Kategori</label>
@@ -259,7 +260,7 @@
                                     for (Kategori k : daftarKategori) {
                                         boolean selected = editBuku != null && editBuku.getIdKategori() == k.getIdKategori();
                             %>
-                                <option value="<%= k.getIdKategori() %>" <%= selected ? "selected" : "" %>><%= k.getNamaKategori() %></option>
+                                <option value="<%= k.getIdKategori() %>" <%= selected ? "selected" : "" %>><%= StringUtils.escapeHtml(k.getNamaKategori()) %></option>
                             <% 
                                     }
                                 }
@@ -270,7 +271,7 @@
 
                 <div class="form-group" style="margin-top: 15px;">
                     <label>Abstraksi / Sinopsis Buku</label>
-                    <textarea name="abstraksi" rows="4" placeholder="Ketik ringkasan abstrak cerita atau sinopsis buku di sini secara mendalam..." style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-family: inherit; font-size: 14px; resize: vertical;"><%= editBuku != null ? (editBuku.getAbstraksi() != null ? editBuku.getAbstraksi() : "") : "" %></textarea>
+                    <textarea name="abstraksi" rows="4" placeholder="Ketik ringkasan abstrak cerita atau sinopsis buku di sini secara mendalam..." style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-family: inherit; font-size: 14px; resize: vertical;"><%= StringUtils.escapeHtml(editBuku != null ? (editBuku.getAbstraksi() != null ? editBuku.getAbstraksi() : "") : "") %></textarea>
                 </div>
 
                 <div style="display: flex; gap: 10px; margin-top: 20px;">
@@ -307,9 +308,9 @@
                 %>
                 <tr>
                     <td><%= b.getIdBuku() %></td>
-                    <td style="font-weight: 600; color: #1e293b;"><%= b.getJudul() %></td>
-                    <td><%= b.getPenulis() %></td>
-                    <td><%= b.getPenerbit() %></td>
+                    <td style="font-weight: 600; color: #1e293b;"><%= StringUtils.escapeHtml(b.getJudul()) %></td>
+                    <td><%= StringUtils.escapeHtml(b.getPenulis()) %></td>
+                    <td><%= StringUtils.escapeHtml(b.getPenerbit()) %></td>
                     <td><%= b.getTahunTerbit() %></td>
                     <td>
                         <% if (b.getJmlBuku() > 0) { %>
@@ -332,7 +333,7 @@
                             <button type="button" 
                                     class="btn-action-table btn-table-delete btn-delete-trigger" 
                                     data-id="<%= b.getIdBuku() %>" 
-                                    data-judul="<%= b.getJudul() %>">
+                                    data-judul="<%= StringUtils.escapeHtml(b.getJudul()) %>">
                                 <i class="fa-solid fa-trash"></i> Hapus
                             </button>
                         </div>

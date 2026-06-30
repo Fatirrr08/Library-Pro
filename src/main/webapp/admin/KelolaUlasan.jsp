@@ -2,6 +2,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="model.Ulasan" %>
 <%@ page import="model.User" %>
+<%@ page import="util.StringUtils" %>
 
 <!DOCTYPE html>
 <html>
@@ -118,7 +119,7 @@
         <div class="profile-dropdown-container">
             <div class="user-profile" id="profileTrigger">
                 <img src="<%= (loggedUser.getFotoProfil() != null && !loggedUser.getFotoProfil().isEmpty()) ? request.getContextPath() + "/uploads/profile/" + loggedUser.getFotoProfil() : request.getContextPath() + "/uploads/profile/default.png" %>" alt="Admin">
-                <span><%= loggedUser.getNamaLengkap() %></span>
+                <span><%= StringUtils.escapeHtml(loggedUser.getNamaLengkap()) %></span>
                 <i class="fa-solid fa-chevron-down" style="font-size: 11px; color: #64748b;"></i>
             </div>
             <ul class="dropdown-menu" id="dropdownMenu">
@@ -161,9 +162,9 @@
                     <td style="text-align: center;"><%= no++ %></td>
                     <td style="font-weight: 600; color: #1e293b;">
                         <i class="fa-regular fa-user" style="font-size: 12px; color: #64748b; margin-right: 4px;"></i>
-                        <%= u.getNamaLengkap() != null ? u.getNamaLengkap() : u.getUsername() %>
+                        <%= StringUtils.escapeHtml(u.getNamaLengkap() != null ? u.getNamaLengkap() : u.getUsername()) %>
                     </td>
-                    <td style="font-weight: 500; color: #2563eb;"><%= u.getJudulBuku() %></td>
+                    <td style="font-weight: 500; color: #2563eb;"><%= StringUtils.escapeHtml(u.getJudulBuku()) %></td>
                     <td>
                         <div class="stars-orange">
                             <% for(int i = 1; i <= u.getRating(); i++) { %><i class="fa-solid fa-star"></i><% } %>
@@ -171,7 +172,7 @@
                         </div>
                     </td>
                     <td style="color: #475569; font-style: italic; max-width: 350px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                        "<%= u.getUlasan() %>"
+                        "<%= StringUtils.escapeHtml(u.getUlasan()) %>"
                     </td>
                     <td style="text-align: center;">
                         <button type="button" 

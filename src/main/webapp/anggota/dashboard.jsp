@@ -3,6 +3,7 @@
 <%@ page import="model.Buku" %>
 <%@ page import="model.User" %>
 <%@ page import="dao.FavoritDAO" %>
+<%@ page import="util.StringUtils" %>
 
 <!DOCTYPE html>
 <html>
@@ -283,7 +284,7 @@
         <div class="profile-dropdown-container">
             <div class="user-profile" id="profileTrigger">
                 <img src="<%= (loggedUser.getFotoProfil() != null && !loggedUser.getFotoProfil().isEmpty()) ? request.getContextPath() + "/uploads/profile/" + loggedUser.getFotoProfil() : request.getContextPath() + "/uploads/profile/default.png" %>" alt="Anggota">
-                <span><%= loggedUser.getNamaLengkap() %></span>
+                <span><%= StringUtils.escapeHtml(loggedUser.getNamaLengkap()) %></span>
                 <i class="fa-solid fa-chevron-down" style="font-size: 11px; color: #64748b;"></i>
             </div>
             
@@ -301,7 +302,7 @@
 
     <div class="dashboard-content">
         <div class="welcome">
-            <h1>Selamat Datang, <%= loggedUser.getNamaLengkap() %>!</h1>
+            <h1>Selamat Datang, <%= StringUtils.escapeHtml(loggedUser.getNamaLengkap()) %>!</h1>
             <p>Temukan ribuan buku berkualitas dan catat peminjaman Anda di sini.</p>
         </div>
 
@@ -358,11 +359,11 @@
                         String absText = (b.getAbstraksi() != null) ? b.getAbstraksi().replace("\"", "&quot;") : "Abstraksi belum tersedia untuk buku ini.";
                         String isbnText = (b.getIsbn() != null && !b.getIsbn().isEmpty()) ? b.getIsbn() : "-";
             %>
-            <div class="book-card" data-realjudul="<%= b.getJudul() %>" data-penulis="<%= b.getPenulis() %>" data-penerbit="<%= b.getPenerbit() %>" data-tahun="<%= b.getTahunTerbit() %>" data-isbn="<%= isbnText %>" data-abstraksi="<%= absText %>">
+            <div class="book-card" data-realjudul="<%= StringUtils.escapeHtml(b.getJudul()) %>" data-penulis="<%= StringUtils.escapeHtml(b.getPenulis()) %>" data-penerbit="<%= StringUtils.escapeHtml(b.getPenerbit()) %>" data-tahun="<%= b.getTahunTerbit() %>" data-isbn="<%= StringUtils.escapeHtml(isbnText) %>" data-abstraksi="<%= StringUtils.escapeHtml(absText) %>">
                 <div class="book-info">
-                    <div class="book-title"><%= b.getJudul() %></div>
-                    <div class="book-meta">Penulis: <span><%= b.getPenulis() %></span></div>
-                    <div class="book-meta">Penerbit: <span><%= b.getPenerbit() %></span></div>
+                    <div class="book-title"><%= StringUtils.escapeHtml(b.getJudul()) %></div>
+                    <div class="book-meta">Penulis: <span><%= StringUtils.escapeHtml(b.getPenulis()) %></span></div>
+                    <div class="book-meta">Penerbit: <span><%= StringUtils.escapeHtml(b.getPenerbit()) %></span></div>
                     <div class="book-meta">Tahun: <span><%= b.getTahunTerbit() %></span></div>
                 </div>
                 <div class="book-actions">

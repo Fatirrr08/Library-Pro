@@ -12,11 +12,11 @@ import java.util.List;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
-public class PeminjamanDAO extends BaseDAO implements Transaksi { // [OOP: Inheritance] PeminjamanDAO mewarisi BaseDAO
+public class PeminjamanDAO extends BaseDAO implements Transaksi {
 
     @Override
     public String getEntityName() {
-        return "Peminjaman"; // [OOP: Abstract Method Implementation] wajib diimplementasi subclass
+        return "Peminjaman";
     }
 
     private BukuDAO bukuDAO = new BukuDAO();
@@ -30,6 +30,7 @@ public class PeminjamanDAO extends BaseDAO implements Transaksi { // [OOP: Inher
 
         try {
             conn = DBConnection.getConnection();
+            if (conn == null) return false;
             conn.setAutoCommit(false);
 
             String checkStockSql = "SELECT jml_buku FROM buku WHERE id_buku = ?";
@@ -38,12 +39,12 @@ public class PeminjamanDAO extends BaseDAO implements Transaksi { // [OOP: Inher
             rs = ps.executeQuery();
 
             if (!rs.next()) {
-                throw new BookNotFoundException(idBuku); // [OOP: Custom Exception usage]
+                throw new BookNotFoundException(idBuku);
             }
             
             int stokBuku = rs.getInt("jml_buku");
             if (stokBuku <= 0) {
-                throw new InsufficientStockException(idBuku, stokBuku); // [OOP: Custom Exception usage]
+                throw new InsufficientStockException(idBuku, stokBuku);
             }
             
             rs.close();
@@ -54,7 +55,7 @@ public class PeminjamanDAO extends BaseDAO implements Transaksi { // [OOP: Inher
                 ps = conn.prepareStatement(insertBorrowSql);
                 ps.setInt(1, idUser);
                 ps.setInt(2, idBuku);
-                ps.setString(3, StatusPeminjaman.MENUNGGU.getValue()); // [OOP: Enum usage]
+                ps.setString(3, StatusPeminjaman.MENUNGGU.getValue());
                 ps.executeUpdate();
 
                 conn.commit();
@@ -83,6 +84,7 @@ public class PeminjamanDAO extends BaseDAO implements Transaksi { // [OOP: Inher
 
         try {
             conn = DBConnection.getConnection();
+            if (conn == null) return false;
             conn.setAutoCommit(false);
 
             if ("disetujui".equalsIgnoreCase(statusBaru) || "dipinjam".equalsIgnoreCase(statusBaru)) {
@@ -111,7 +113,7 @@ public class PeminjamanDAO extends BaseDAO implements Transaksi { // [OOP: Inher
 
                 String updateStatusSql = "UPDATE peminjaman SET status = ?, tanggal_pinjam = ?, tanggal_tenggat = ? WHERE id_peminjaman = ?";
                 PreparedStatement psStatus = conn.prepareStatement(updateStatusSql);
-                psStatus.setString(1, StatusPeminjaman.fromValue(statusBaru).getValue()); // [OOP: Enum usage]
+                psStatus.setString(1, StatusPeminjaman.fromValue(statusBaru).getValue());
                 psStatus.setDate(2, Date.valueOf(tanggalAccHariIni)); 
                 psStatus.setDate(3, Date.valueOf(batasKembali));
                 psStatus.setInt(4, idPeminjaman);
@@ -121,7 +123,7 @@ public class PeminjamanDAO extends BaseDAO implements Transaksi { // [OOP: Inher
             } else {
                 String updateStatusSql = "UPDATE peminjaman SET status = ? WHERE id_peminjaman = ?";
                 PreparedStatement psStatus = conn.prepareStatement(updateStatusSql);
-                psStatus.setString(1, StatusPeminjaman.fromValue(statusBaru).getValue()); // [OOP: Enum usage]
+                psStatus.setString(1, StatusPeminjaman.fromValue(statusBaru).getValue());
                 psStatus.setInt(2, idPeminjaman);
                 psStatus.executeUpdate();
                 psStatus.close();
@@ -153,6 +155,7 @@ public class PeminjamanDAO extends BaseDAO implements Transaksi { // [OOP: Inher
 
         try {
             conn = DBConnection.getConnection();
+            if (conn == null) return false;
             conn.setAutoCommit(false); 
 
             String getBorrowInfoSql = "SELECT id_buku, tanggal_tenggat, status FROM peminjaman WHERE id_peminjaman = ?";
@@ -165,7 +168,6 @@ public class PeminjamanDAO extends BaseDAO implements Transaksi { // [OOP: Inher
                 int idBuku = rs.getInt("id_buku");
                 Date tglTenggat = rs.getDate("tanggal_tenggat");
 
-                // 🌟 SINKRONISASI STATUS: Izinkan pengembalian untuk status 'disetujui' maupun 'dipinjam'
                 if ("disetujui".equalsIgnoreCase(status) || "dipinjam".equalsIgnoreCase(status)) {
                     
                     long dendaFinal = 0;
@@ -181,8 +183,8 @@ public class PeminjamanDAO extends BaseDAO implements Transaksi { // [OOP: Inher
 
                     String updateBorrowSql = "UPDATE peminjaman SET tanggal_kembali = CURRENT_DATE, status = ?, denda = ? WHERE id_peminjaman = ?";
                     PreparedStatement psUpdateBorrow = conn.prepareStatement(updateBorrowSql);
-                    psUpdateBorrow.setString(1, StatusPeminjaman.DIKEMBALIKAN.getValue()); // [OOP: Enum usage]
-                    psUpdateBorrow.setLong(2, dendaFinal); // Menggunakan setLong pasca-sinkronisasi tipe data model
+                    psUpdateBorrow.setString(1, StatusPeminjaman.DIKEMBALIKAN.getValue());
+                    psUpdateBorrow.setLong(2, dendaFinal);
                     psUpdateBorrow.setInt(3, idPeminjaman);
                     psUpdateBorrow.executeUpdate();
                     psUpdateBorrow.close();
@@ -214,48 +216,47 @@ public class PeminjamanDAO extends BaseDAO implements Transaksi { // [OOP: Inher
 
     public List<Peminjaman> getAllPeminjaman() {
         List<Peminjaman> list = new ArrayList<>();
-        try {
-            Connection conn = DBConnection.getConnection();
-            String sql = "SELECT p.*, u.username, u.nama_lengkap, b.judul AS judul_buku " +
-                        "FROM peminjaman p " +
-                        "JOIN user u ON p.id_user = u.id_user " +
-                        "JOIN buku b ON p.id_buku = b.id_buku " +
-                        "ORDER BY p.id_peminjaman DESC";
-            Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery(sql);
-            
-            LocalDate hariIni = LocalDate.now();
-
-            while (rs.next()) {
-                Peminjaman p = new Peminjaman();
-                p.setIdPeminjaman(rs.getInt("id_peminjaman"));
-                p.setIdUser(rs.getInt("id_user"));
-                p.setIdBuku(rs.getInt("id_buku"));
-                p.setTanggalPinjam(rs.getDate("tanggal_pinjam"));
-                p.setTanggalKembali(rs.getDate("tanggal_kembali"));
-                p.setStatus(rs.getString("status"));
-                p.setUsername(rs.getString("username"));
-                p.setNamaLengkap(rs.getString("nama_lengkap"));
-                p.setJudulBuku(rs.getString("judul_buku"));
+        String sql = "SELECT p.*, u.username, u.nama_lengkap, b.judul AS judul_buku " +
+                    "FROM peminjaman p " +
+                    "JOIN user u ON p.id_user = u.id_user " +
+                    "JOIN buku b ON p.id_buku = b.id_buku " +
+                    "ORDER BY p.id_peminjaman DESC";
+        try (Connection conn = DBConnection.getConnection()) {
+            if (conn == null) return list;
+            try (Statement st = conn.createStatement();
+                 ResultSet rs = st.executeQuery(sql)) {
                 
-                p.setTanggalTenggat(rs.getDate("tanggal_tenggat"));
-                
-                long dendaTampil = rs.getLong("denda"); // Menggunakan getLong sesuai struktur baru
+                LocalDate hariIni = LocalDate.now();
 
-                // 🌟 FIX UNTUK BENCHMARK DENDA MANUAL: Mengakomodasi status 'disetujui' dan status 'dipinjam' database Anda
-                if (("disetujui".equalsIgnoreCase(p.getStatus()) || "dipinjam".equalsIgnoreCase(p.getStatus())) && p.getTanggalTenggat() != null) {
-                    LocalDate batasKembali = p.getTanggalTenggat().toLocalDate();
+                while (rs.next()) {
+                    Peminjaman p = new Peminjaman();
+                    p.setIdPeminjaman(rs.getInt("id_peminjaman"));
+                    p.setIdUser(rs.getInt("id_user"));
+                    p.setIdBuku(rs.getInt("id_buku"));
+                    p.setTanggalPinjam(rs.getDate("tanggal_pinjam"));
+                    p.setTanggalKembali(rs.getDate("tanggal_kembali"));
+                    p.setStatus(rs.getString("status"));
+                    p.setUsername(rs.getString("username"));
+                    p.setNamaLengkap(rs.getString("nama_lengkap"));
+                    p.setJudulBuku(rs.getString("judul_buku"));
                     
-                    if (hariIni.isAfter(batasKembali)) {
-                        long selisihHari = ChronoUnit.DAYS.between(batasKembali, hariIni);
-                        dendaTampil = selisihHari * 1000;
-                    }
-                }
+                    p.setTanggalTenggat(rs.getDate("tanggal_tenggat"));
+                    
+                    long dendaTampil = rs.getLong("denda");
 
-                p.setDenda(dendaTampil);
-                list.add(p);
+                    if (("disetujui".equalsIgnoreCase(p.getStatus()) || "dipinjam".equalsIgnoreCase(p.getStatus())) && p.getTanggalTenggat() != null) {
+                        LocalDate batasKembali = p.getTanggalTenggat().toLocalDate();
+                        
+                        if (hariIni.isAfter(batasKembali)) {
+                            long selisihHari = ChronoUnit.DAYS.between(batasKembali, hariIni);
+                            dendaTampil = selisihHari * 1000;
+                        }
+                    }
+
+                    p.setDenda(dendaTampil);
+                    list.add(p);
+                }
             }
-            rs.close(); st.close(); conn.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -264,50 +265,50 @@ public class PeminjamanDAO extends BaseDAO implements Transaksi { // [OOP: Inher
 
     public List<Peminjaman> getPeminjamanByUser(int idUser) {
         List<Peminjaman> list = new ArrayList<>();
-        try {
-            Connection conn = DBConnection.getConnection();
-            String sql = "SELECT p.*, u.username, u.nama_lengkap, b.judul AS judul_buku " +
-                        "FROM peminjaman p " +
-                        "JOIN user u ON p.id_user = u.id_user " +
-                        "JOIN buku b ON p.id_buku = b.id_buku " +
-                        "WHERE p.id_user = ? " +
-                        "ORDER BY p.id_peminjaman DESC";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, idUser);
-            ResultSet rs = ps.executeQuery();
-            
-            LocalDate hariIni = LocalDate.now();
-
-            while (rs.next()) {
-                Peminjaman p = new Peminjaman();
-                p.setIdPeminjaman(rs.getInt("id_peminjaman"));
-                p.setIdUser(rs.getInt("id_user"));
-                p.setIdBuku(rs.getInt("id_buku"));
-                p.setTanggalPinjam(rs.getDate("tanggal_pinjam"));
-                p.setTanggalKembali(rs.getDate("tanggal_kembali"));
-                p.setStatus(rs.getString("status"));
-                p.setUsername(rs.getString("username"));
-                p.setNamaLengkap(rs.getString("nama_lengkap"));
-                p.setJudulBuku(rs.getString("judul_buku"));
-                
-                p.setTanggalTenggat(rs.getDate("tanggal_tenggat"));
-                
-                long dendaTampil = rs.getLong("denda");
-
-                // 🌟 SINKRONISASI STATUS UNTUK HALAMAN DASHBOARD USER
-                if (("disetujui".equalsIgnoreCase(p.getStatus()) || "dipinjam".equalsIgnoreCase(p.getStatus())) && p.getTanggalTenggat() != null) {
-                    LocalDate batasKembali = p.getTanggalTenggat().toLocalDate();
+        String sql = "SELECT p.*, u.username, u.nama_lengkap, b.judul AS judul_buku " +
+                    "FROM peminjaman p " +
+                    "JOIN user u ON p.id_user = u.id_user " +
+                    "JOIN buku b ON p.id_buku = b.id_buku " +
+                    "WHERE p.id_user = ? " +
+                    "ORDER BY p.id_peminjaman DESC";
+        try (Connection conn = DBConnection.getConnection()) {
+            if (conn == null) return list;
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setInt(1, idUser);
+                try (ResultSet rs = ps.executeQuery()) {
                     
-                    if (hariIni.isAfter(batasKembali)) {
-                        long selisihHari = ChronoUnit.DAYS.between(batasKembali, hariIni);
-                        dendaTampil = selisihHari * 1000;
+                    LocalDate hariIni = LocalDate.now();
+
+                    while (rs.next()) {
+                        Peminjaman p = new Peminjaman();
+                        p.setIdPeminjaman(rs.getInt("id_peminjaman"));
+                        p.setIdUser(rs.getInt("id_user"));
+                        p.setIdBuku(rs.getInt("id_buku"));
+                        p.setTanggalPinjam(rs.getDate("tanggal_pinjam"));
+                        p.setTanggalKembali(rs.getDate("tanggal_kembali"));
+                        p.setStatus(rs.getString("status"));
+                        p.setUsername(rs.getString("username"));
+                        p.setNamaLengkap(rs.getString("nama_lengkap"));
+                        p.setJudulBuku(rs.getString("judul_buku"));
+                        
+                        p.setTanggalTenggat(rs.getDate("tanggal_tenggat"));
+                        
+                        long dendaTampil = rs.getLong("denda");
+
+                        if (("disetujui".equalsIgnoreCase(p.getStatus()) || "dipinjam".equalsIgnoreCase(p.getStatus())) && p.getTanggalTenggat() != null) {
+                            LocalDate batasKembali = p.getTanggalTenggat().toLocalDate();
+                            
+                            if (hariIni.isAfter(batasKembali)) {
+                                long selisihHari = ChronoUnit.DAYS.between(batasKembali, hariIni);
+                                dendaTampil = selisihHari * 1000;
+                            }
+                        }
+
+                        p.setDenda(dendaTampil);
+                        list.add(p);
                     }
                 }
-
-                p.setDenda(dendaTampil);
-                list.add(p);
             }
-            rs.close(); ps.close(); conn.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -316,15 +317,15 @@ public class PeminjamanDAO extends BaseDAO implements Transaksi { // [OOP: Inher
 
     public int getTotalPeminjaman() {
         int total = 0;
-        try {
-            Connection conn = DBConnection.getConnection();
-            String sql = "SELECT COUNT(*) AS total FROM peminjaman";
-            Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery(sql);
-            if (rs.next()) {
-                total = rs.getInt("total");
+        String sql = "SELECT COUNT(*) AS total FROM peminjaman";
+        try (Connection conn = DBConnection.getConnection()) {
+            if (conn == null) return 0;
+            try (Statement st = conn.createStatement();
+                 ResultSet rs = st.executeQuery(sql)) {
+                if (rs.next()) {
+                    total = rs.getInt("total");
+                }
             }
-            rs.close(); st.close(); conn.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -333,16 +334,17 @@ public class PeminjamanDAO extends BaseDAO implements Transaksi { // [OOP: Inher
 
     public int getTotalActivePeminjamanByUser(int idUser) {
         int total = 0;
-        try {
-            Connection conn = DBConnection.getConnection();
-            String sql = "SELECT COUNT(*) AS total FROM peminjaman WHERE id_user = ? AND (status = 'disetujui' OR status = 'dipinjam')";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, idUser);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                total = rs.getInt("total");
+        String sql = "SELECT COUNT(*) AS total FROM peminjaman WHERE id_user = ? AND (status = 'disetujui' OR status = 'dipinjam')";
+        try (Connection conn = DBConnection.getConnection()) {
+            if (conn == null) return 0;
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setInt(1, idUser);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        total = rs.getInt("total");
+                    }
+                }
             }
-            rs.close(); ps.close(); conn.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -351,54 +353,34 @@ public class PeminjamanDAO extends BaseDAO implements Transaksi { // [OOP: Inher
 
     public int getTotalActivePeminjaman() {
         int total = 0;
-        Connection conn = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try {
-            conn = DBConnection.getConnection();
-            String sql = "SELECT COUNT(*) AS total FROM peminjaman WHERE status = 'disetujui' OR status = 'dipinjam'";
-            ps = conn.prepareStatement(sql);
-            rs = ps.executeQuery();
-            if (rs.next()) {
-                total = rs.getInt("total");
+        String sql = "SELECT COUNT(*) AS total FROM peminjaman WHERE status = 'disetujui' OR status = 'dipinjam'";
+        try (Connection conn = DBConnection.getConnection()) {
+            if (conn == null) return 0;
+            try (PreparedStatement ps = conn.prepareStatement(sql);
+                 ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    total = rs.getInt("total");
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (rs != null) rs.close();
-                if (ps != null) ps.close();
-                if (conn != null) conn.close();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
         }
         return total;
     }
 
     public int getTotalMenungguValidasi() {
         int total = 0;
-        Connection conn = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try {
-            conn = DBConnection.getConnection();
-            String sql = "SELECT COUNT(*) AS total FROM peminjaman WHERE status = 'menunggu'";
-            ps = conn.prepareStatement(sql);
-            rs = ps.executeQuery();
-            if (rs.next()) {
-                total = rs.getInt("total");
+        String sql = "SELECT COUNT(*) AS total FROM peminjaman WHERE status = 'menunggu'";
+        try (Connection conn = DBConnection.getConnection()) {
+            if (conn == null) return 0;
+            try (PreparedStatement ps = conn.prepareStatement(sql);
+                 ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    total = rs.getInt("total");
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (rs != null) rs.close();
-                if (ps != null) ps.close();
-                if (conn != null) conn.close();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
         }
         return total;
     }

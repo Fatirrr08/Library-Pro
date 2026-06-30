@@ -2,6 +2,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="model.Favorit" %>
 <%@ page import="model.User" %>
+<%@ page import="util.StringUtils" %>
 
 <!DOCTYPE html>
 <html>
@@ -323,7 +324,7 @@
         <div class="profile-dropdown-container">
             <div class="user-profile" id="profileTrigger">
                 <img src="<%= (loggedUser.getFotoProfil() != null && !loggedUser.getFotoProfil().isEmpty()) ? request.getContextPath() + "/uploads/profile/" + loggedUser.getFotoProfil() : request.getContextPath() + "/uploads/profile/default.png" %>" alt="Anggota">
-                <span><%= loggedUser.getNamaLengkap() %></span>
+                <span><%= StringUtils.escapeHtml(loggedUser.getNamaLengkap()) %></span>
                 <i class="fa-solid fa-chevron-down" style="font-size: 11px; color: #64748b;"></i>
             </div>
             
@@ -356,9 +357,9 @@
             %>
             <div class="book-card">
                 <div class="book-info">
-                    <div class="book-title"><%= f.getJudulBuku() %></div>
-                    <div class="book-meta">Penulis: <span><%= f.getPenulis() %></span></div>
-                    <div class="book-meta">Penerbit: <span><%= f.getPenerbit() %></span></div>
+                    <div class="book-title"><%= StringUtils.escapeHtml(f.getJudulBuku()) %></div>
+                    <div class="book-meta">Penulis: <span><%= StringUtils.escapeHtml(f.getPenulis()) %></span></div>
+                    <div class="book-meta">Penerbit: <span><%= StringUtils.escapeHtml(f.getPenerbit()) %></span></div>
                     
                     <div style="margin-top: 15px; font-size: 0.85rem;">
                         <a href="<%=request.getContextPath()%>/review-buku?idBuku=<%= f.getIdBuku() %>" style="color: var(--primary); text-decoration: none; font-weight: 600;">

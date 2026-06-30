@@ -4,6 +4,7 @@
 <%@ page import="model.User" %>
 <%@ page import="java.text.NumberFormat" %>
 <%@ page import="java.util.Locale" %>
+<%@ page import="util.StringUtils" %>
 
 <!DOCTYPE html>
 <html>
@@ -122,7 +123,7 @@
         <div class="profile-dropdown-container">
             <div class="user-profile" id="profileTrigger">
                 <img src="<%= (loggedUser.getFotoProfil() != null && !loggedUser.getFotoProfil().isEmpty()) ? request.getContextPath() + "/uploads/profile/" + loggedUser.getFotoProfil() : request.getContextPath() + "/uploads/profile/default.png" %>" alt="Anggota">
-                <span><%= loggedUser.getNamaLengkap() %></span>
+                <span><%= StringUtils.escapeHtml(loggedUser.getNamaLengkap()) %></span>
                 <i class="fa-solid fa-chevron-down" style="font-size: 11px; color: #64748b;"></i>
             </div>
             
@@ -185,10 +186,10 @@
                 %>
                 <tr>
                     <td><%= p.getIdPeminjaman() %></td>
-                    <td style="font-weight: 600; color: #1e293b;"><%= p.getJudulBuku() %></td>
-                    <td><%= p.getTanggalPinjam() != null ? p.getTanggalPinjam() : "-" %></td>
-                    <td style="font-weight: 600; color: #ea580c;"><%= p.getTanggalTenggat() != null ? p.getTanggalTenggat() : "-" %></td>
-                    <td><%= p.getTanggalKembali() != null ? p.getTanggalKembali() : "-" %></td>
+                    <td style="font-weight: 600; color: #1e293b;"><%= StringUtils.escapeHtml(p.getJudulBuku()) %></td>
+                    <td><%= StringUtils.escapeHtml(p.getTanggalPinjam() != null ? p.getTanggalPinjam() : "-") %></td>
+                    <td style="font-weight: 600; color: #ea580c;"><%= StringUtils.escapeHtml(p.getTanggalTenggat() != null ? p.getTanggalTenggat() : "-") %></td>
+                    <td><%= StringUtils.escapeHtml(p.getTanggalKembali() != null ? p.getTanggalKembali() : "-") %></td>
                     <td>
                         <% if ("menunggu".equalsIgnoreCase(p.getStatus())) { %>
                             <span class="status-badge badge-waiting">

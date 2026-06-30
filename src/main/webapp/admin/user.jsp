@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.List" %>
 <%@ page import="model.User" %>
+<%@ page import="util.StringUtils" %>
 
 <!DOCTYPE html>
 <html>
@@ -185,7 +186,7 @@
         <div class="profile-dropdown-container">
             <div class="user-profile" id="profileTrigger">
                 <img src="<%= (loggedUser.getFotoProfil() != null && !loggedUser.getFotoProfil().isEmpty()) ? request.getContextPath() + "/uploads/profile/" + loggedUser.getFotoProfil() : request.getContextPath() + "/uploads/profile/default.png" %>" alt="Admin">
-                <span><%= loggedUser.getNamaLengkap() %></span>
+                <span><%= StringUtils.escapeHtml(loggedUser.getNamaLengkap()) %></span>
                 <i class="fa-solid fa-chevron-down" style="font-size: 11px; color: #64748b;"></i>
             </div>
             <ul class="dropdown-menu" id="dropdownMenu">
@@ -216,22 +217,22 @@
                 <div class="form-grid">
                     <div class="form-group">
                         <label>Username</label>
-                        <input type="text" name="username" value="<%= editUser != null ? editUser.getUsername() : "" %>" required placeholder="Contoh: budi123">
+                        <input type="text" name="username" value="<%= StringUtils.escapeHtml(editUser != null ? editUser.getUsername() : "") %>" required placeholder="Contoh: budi123">
                     </div>
                     <div class="form-group">
                         <label>Password</label>
-                        <input type="password" name="password" value="<%= editUser != null ? editUser.getPassword() : "" %>" required placeholder="Masukkan password">
+                        <input type="password" name="password" value="<%= StringUtils.escapeHtml(editUser != null ? editUser.getPassword() : "") %>" required placeholder="Masukkan password">
                     </div>
                 </div>
 
                 <div class="form-grid">
                     <div class="form-group">
                         <label>Nama Lengkap</label>
-                        <input type="text" name="namaLengkap" value="<%= editUser != null ? editUser.getNamaLengkap() : "" %>" required placeholder="Contoh: Budi Santoso">
+                        <input type="text" name="namaLengkap" value="<%= StringUtils.escapeHtml(editUser != null ? editUser.getNamaLengkap() : "") %>" required placeholder="Contoh: Budi Santoso">
                     </div>
                     <div class="form-group">
                         <label>Email</label>
-                        <input type="email" name="email" value="<%= editUser != null ? editUser.getEmail() : "" %>" required placeholder="Contoh: budi@gmail.com">
+                        <input type="email" name="email" value="<%= StringUtils.escapeHtml(editUser != null ? editUser.getEmail() : "") %>" required placeholder="Contoh: budi@gmail.com">
                     </div>
                 </div>
 
@@ -245,7 +246,7 @@
                     </div>
                     <div class="form-group">
                         <label>Alamat</label>
-                        <input type="text" name="alamat" value="<%= editUser != null ? editUser.getAlamat() : "" %>" required placeholder="Contoh: Jl. Telekomunikasi No. 1">
+                        <input type="text" name="alamat" value="<%= StringUtils.escapeHtml(editUser != null ? editUser.getAlamat() : "") %>" required placeholder="Contoh: Jl. Telekomunikasi No. 1">
                     </div>
                 </div>
 
@@ -285,10 +286,10 @@
                 %>
                 <tr>
                     <td><%= u.getIdUser() %></td>
-                    <td style="font-weight: 600; color: #1e293b;"><%= u.getUsername() %></td>
-                    <td><%= u.getNamaLengkap() %></td>
-                    <td><%= u.getEmail() %></td>
-                    <td><%= u.getAlamat() %></td>
+                    <td style="font-weight: 600; color: #1e293b;"><%= StringUtils.escapeHtml(u.getUsername()) %></td>
+                    <td><%= StringUtils.escapeHtml(u.getNamaLengkap()) %></td>
+                    <td><%= StringUtils.escapeHtml(u.getEmail()) %></td>
+                    <td><%= StringUtils.escapeHtml(u.getAlamat()) %></td>
                     <td>
                         <% if ("admin".equalsIgnoreCase(u.getLevel())) { %>
                             <span class="status-badge badge-borrowed">
@@ -308,7 +309,7 @@
                             <button type="button" 
                                     class="btn-action-table btn-table-delete btn-delete-user-trigger" 
                                     data-id="<%= u.getIdUser() %>" 
-                                    data-nama="<%= u.getNamaLengkap() %>">
+                                    data-nama="<%= StringUtils.escapeHtml(u.getNamaLengkap()) %>">
                                 <i class="fa-solid fa-trash"></i> Hapus
                             </button>
                         </div>

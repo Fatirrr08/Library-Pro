@@ -65,8 +65,10 @@ public class DBConnection {
                         return null;
                 }
 
-                // 3. Menyusun URL JDBC menggunakan parameter SSL Mode yang diwajibkan oleh TiDB Cloud
-                String url = "jdbc:mysql://" + host + ":" + port + "/" + db + "?sslMode=REQUIRED&trustServerCertificate=true";
+                // 3. Menyusun URL JDBC — sslMode bisa dikustom via env var (default: PREFERRED)
+                String sslMode = System.getenv("MYSQL_SSL_MODE");
+                if (sslMode == null) sslMode = "PREFERRED";
+                String url = "jdbc:mysql://" + host + ":" + port + "/" + db + "?sslMode=" + sslMode + "&trustServerCertificate=true";
 
                 // 4. Loading Driver dan Membuka Koneksi
                 Class.forName("com.mysql.cj.jdbc.Driver");

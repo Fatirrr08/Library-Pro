@@ -2,6 +2,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="model.Buku" %>
 <%@ page import="model.User" %>
+<%@ page import="util.StringUtils" %>
 
 <!DOCTYPE html>
 <html>
@@ -146,7 +147,7 @@
         <div class="profile-dropdown-container">
             <div class="user-profile" id="profileTrigger">
                 <img src="<%= (loggedUser.getFotoProfil() != null && !loggedUser.getFotoProfil().isEmpty()) ? request.getContextPath() + "/uploads/profile/" + loggedUser.getFotoProfil() : request.getContextPath() + "/uploads/profile/default.png" %>" alt="Admin">
-                <span><%= loggedUser.getNamaLengkap() %></span>
+                <span><%= StringUtils.escapeHtml(loggedUser.getNamaLengkap()) %></span>
                 <i class="fa-solid fa-chevron-down" style="font-size: 11px; color: #64748b;"></i>
             </div>
             <ul class="dropdown-menu" id="dropdownMenu">
@@ -250,9 +251,9 @@
                 %>
                 <tr>
                     <td><%= b.getIdBuku() %></td>
-                    <td style="font-weight: 600; color: #1e293b;"><%= b.getJudul() %></td>
-                    <td><%= b.getPenulis() %></td>
-                    <td><%= b.getPenerbit() %></td>
+                    <td style="font-weight: 600; color: #1e293b;"><%= StringUtils.escapeHtml(b.getJudul()) %></td>
+                    <td><%= StringUtils.escapeHtml(b.getPenulis()) %></td>
+                    <td><%= StringUtils.escapeHtml(b.getPenerbit()) %></td>
                     <td><%= b.getTahunTerbit() %></td>
                     <td>
                         <% if (b.getJmlBuku() > 0) { %>

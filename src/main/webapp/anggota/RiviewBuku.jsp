@@ -3,6 +3,7 @@
 <%@ page import="model.Buku" %>
 <%@ page import="model.Ulasan" %>
 <%@ page import="model.User" %>
+<%@ page import="util.StringUtils" %>
 
 <!DOCTYPE html>
 <html>
@@ -118,7 +119,7 @@
         <div class="profile-dropdown-container">
             <div class="user-profile" id="profileTrigger">
                 <img src="<%= (loggedUser.getFotoProfil() != null && !loggedUser.getFotoProfil().isEmpty()) ? request.getContextPath() + "/uploads/profile/" + loggedUser.getFotoProfil() : request.getContextPath() + "/uploads/profile/default.png" %>" alt="Anggota">
-                <span><%= loggedUser.getNamaLengkap() %></span>
+                <span><%= StringUtils.escapeHtml(loggedUser.getNamaLengkap()) %></span>
                 <i class="fa-solid fa-chevron-down" style="font-size: 11px; color: #64748b;"></i>
             </div>
             
@@ -132,7 +133,7 @@
 
     <div class="dashboard-content">
         <div class="table-header">
-            <div class="table-title"><%= b.getJudul() %></div>
+            <div class="table-title"><%= StringUtils.escapeHtml(b.getJudul()) %></div>
             <a href="<%= request.getContextPath() %>/anggota/katalog.jsp" class="btn-add" style="background-color: #64748b; text-decoration: none;">
                 <i class="fa-solid fa-arrow-left"></i> Kembali ke Katalog
             </a>
@@ -143,14 +144,14 @@
                 <i class="fa-solid fa-star"></i> Komunitas Rating: <%= (rataRata != null && rataRata > 0) ? String.format("%.1f", rataRata) + " / 5.0" : "Belum dinilai" %>
             </div>
             
-            <p style="margin-bottom: 8px;"><b>Penulis:</b> <%= b.getPenulis() %></p>
-            <p style="margin-bottom: 8px;"><b>Penerbit:</b> <%= b.getPenerbit() %></p>
+            <p style="margin-bottom: 8px;"><b>Penulis:</b> <%= StringUtils.escapeHtml(b.getPenulis()) %></p>
+            <p style="margin-bottom: 8px;"><b>Penerbit:</b> <%= StringUtils.escapeHtml(b.getPenerbit()) %></p>
             <p style="margin-bottom: 8px;"><b>Tahun Terbit:</b> <%= b.getTahunTerbit() %></p>
-            <p style="margin-bottom: 18px;"><b>ISBN / ISSN:</b> <%= b.getIsbn() != null ? b.getIsbn() : "-" %></p>
+            <p style="margin-bottom: 18px;"><b>ISBN / ISSN:</b> <%= StringUtils.escapeHtml(b.getIsbn() != null ? b.getIsbn() : "-") %></p>
             
             <div style="border-top: 1px solid #e2e8f0; padding-top: 15px;">
                 <h4 style="margin-bottom: 8px; color: #1e293b;">Abstraksi / Sinopsis:</h4>
-                <p style="color: #475569; line-height: 1.6; font-style: italic;"><%= b.getAbstraksi() != null ? b.getAbstraksi() : "Sinopsis belum tersedia." %></p>
+                <p style="color: #475569; line-height: 1.6; font-style: italic;"><%= StringUtils.escapeHtml(b.getAbstraksi() != null ? b.getAbstraksi() : "Sinopsis belum tersedia.") %></p>
             </div>
         </div>
 
@@ -168,13 +169,13 @@
             %>
                 <div class="review-card">
                     <div class="review-header">
-                        <div class="user-name"><i class="fa-solid fa-circle-user"></i> <%= u.getNamaLengkap() != null ? u.getNamaLengkap() : u.getUsername() %></div>
+                        <div class="user-name"><i class="fa-solid fa-circle-user"></i> <%= StringUtils.escapeHtml(u.getNamaLengkap() != null ? u.getNamaLengkap() : u.getUsername()) %></div>
                         <div class="stars-orange">
                             <% for(int i = 1; i <= u.getRating(); i++) { %><i class="fa-solid fa-star"></i><% } %>
                             <% for(int i = u.getRating() + 1; i <= 5; i++) { %><i class="fa-solid fa-star" style="color: #cbd5e1;"></i><% } %>
                         </div>
                     </div>
-                    <div class="review-text">"<%= u.getUlasan() %>"</div>
+                    <div class="review-text">"<%= StringUtils.escapeHtml(u.getUlasan()) %>"</div>
                 </div>
             <%
                     }

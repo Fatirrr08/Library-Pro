@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="util.StringUtils" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -162,7 +163,7 @@
         if (error != null) {
     %>
         <div class="alert alert-danger" style="margin-bottom: 20px; padding: 10px 15px;">
-            <i class="fa-solid fa-triangle-exclamation"></i> <%= error %>
+            <i class="fa-solid fa-triangle-exclamation"></i> <%= StringUtils.escapeHtml(error) %>
         </div>
     <%
         }

@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="model.User" %>
+<%@ page import="util.StringUtils" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -410,7 +411,7 @@
         <div class="profile-dropdown-container">
             <div class="user-profile" id="profileTrigger">
                 <img src="<%= (loggedUser.getFotoProfil() != null && !loggedUser.getFotoProfil().isEmpty()) ? request.getContextPath() + "/uploads/profile/" + loggedUser.getFotoProfil() : request.getContextPath() + "/uploads/profile/default.png" %>" alt="User">
-                <span><%= loggedUser.getNamaLengkap() %></span>
+                <span><%= StringUtils.escapeHtml(loggedUser.getNamaLengkap()) %></span>
                 <i class="fa-solid fa-chevron-down" style="font-size: 11px; color: #64748b;"></i>
             </div>
             
@@ -489,10 +490,10 @@
                     <img id="avatarPreview" src="<%= (loggedUser.getFotoProfil() != null && !loggedUser.getFotoProfil().isEmpty()) ? request.getContextPath() + "/uploads/profile/" + loggedUser.getFotoProfil() : request.getContextPath() + "/uploads/profile/default.png" %>" alt="Foto Profil">
                 </div>
                 <div>
-                    <div class="profile-name"><%= loggedUser.getNamaLengkap() %></div>
+                    <div class="profile-name"><%= StringUtils.escapeHtml(loggedUser.getNamaLengkap()) %></div>
                     <div style="margin-top: 5px;">
                         <span class="profile-role <%= "admin".equalsIgnoreCase(loggedUser.getLevel()) ? "admin" : "" %>">
-                            <%= loggedUser.getLevel() %>
+                            <%= StringUtils.escapeHtml(loggedUser.getLevel()) %>
                         </span>
                     </div>
                 </div>
@@ -523,22 +524,22 @@
                     <div class="form-grid">
                         <div class="form-group">
                             <label>Username (Tidak dapat diubah)</label>
-                            <input type="text" value="<%= loggedUser.getUsername() %>" disabled style="background-color: #f1f5f9; color: var(--text-muted);">
+                            <input type="text" value="<%= StringUtils.escapeHtml(loggedUser.getUsername()) %>" disabled style="background-color: #f1f5f9; color: var(--text-muted);">
                         </div>
                         <div class="form-group">
                             <label>Role</label>
-                            <input type="text" value="<%= loggedUser.getLevel().toUpperCase() %>" disabled style="background-color: #f1f5f9; color: var(--text-muted);">
+                            <input type="text" value="<%= StringUtils.escapeHtml(loggedUser.getLevel().toUpperCase()) %>" disabled style="background-color: #f1f5f9; color: var(--text-muted);">
                         </div>
                     </div>
 
                     <div class="form-grid">
                         <div class="form-group">
                             <label>Nama Lengkap</label>
-                            <input type="text" name="namaLengkap" value="<%= loggedUser.getNamaLengkap() %>" required placeholder="Masukkan nama lengkap Anda">
+                            <input type="text" name="namaLengkap" value="<%= StringUtils.escapeHtml(loggedUser.getNamaLengkap()) %>" required placeholder="Masukkan nama lengkap Anda">
                         </div>
                         <div class="form-group">
                             <label>Email</label>
-                            <input type="text" name="email" value="<%= loggedUser.getEmail() %>" required placeholder="Masukkan email Anda">
+                            <input type="text" name="email" value="<%= StringUtils.escapeHtml(loggedUser.getEmail()) %>" required placeholder="Masukkan email Anda">
                         </div>
                     </div>
 

@@ -3,6 +3,7 @@
 <%@ page import="model.Ulasan" %>
 <%@ page import="model.Buku" %>
 <%@ page import="model.User" %>
+<%@ page import="util.StringUtils" %>
 
 <!DOCTYPE html>
 <html>
@@ -276,7 +277,7 @@
         <div class="profile-dropdown-container">
             <div class="user-profile" id="profileTrigger">
                 <img src="<%= (loggedUser.getFotoProfil() != null && !loggedUser.getFotoProfil().isEmpty()) ? request.getContextPath() + "/uploads/profile/" + loggedUser.getFotoProfil() : request.getContextPath() + "/uploads/profile/default.png" %>" alt="Anggota">
-                <span><%= loggedUser.getNamaLengkap() %></span>
+                <span><%= StringUtils.escapeHtml(loggedUser.getNamaLengkap()) %></span>
                 <i class="fa-solid fa-chevron-down" style="font-size: 11px; color: #64748b;"></i>
             </div>
             
@@ -296,12 +297,12 @@
             </div>
             
             <div class="form-card" style="margin-top: 20px;">
-                <h3 style="color: #1e293b; margin-bottom: 5px;"><%= bukuMauDiulas.getJudul() %></h3>
-                <p style="color: #64748b; font-size: 14px; margin-bottom: 25px;">Karya: <%= bukuMauDiulas.getPenulis() %></p>
+                <h3 style="color: #1e293b; margin-bottom: 5px;"><%= StringUtils.escapeHtml(bukuMauDiulas.getJudul()) %></h3>
+                <p style="color: #64748b; font-size: 14px; margin-bottom: 25px;">Karya: <%= StringUtils.escapeHtml(bukuMauDiulas.getPenulis()) %></p>
                 
                 <% if (request.getAttribute("errorMessage") != null) { %>
                     <div style="background-color: #fef2f2; color: #dc2626; padding: 12px; border-radius: 8px; margin-bottom: 20px; font-size: 14px;">
-                        <%= request.getAttribute("errorMessage") %>
+                        <%= StringUtils.escapeHtml(request.getAttribute("errorMessage")) %>
                     </div>
                 <% } %>
 
@@ -326,7 +327,7 @@
                     
                     <div class="form-group">
                         <label for="ulasanText">Ulasan / Komentar Anda</label>
-                        <textarea id="ulasanText" name="ulasan" placeholder="Tulis pendapat jujur Anda mengenai isi buku ini..." required><%= (editUlasan != null) ? editUlasan.getUlasan() : "" %></textarea>
+                        <textarea id="ulasanText" name="ulasan" placeholder="Tulis pendapat jujur Anda mengenai isi buku ini..." required><%= StringUtils.escapeHtml(editUlasan != null ? editUlasan.getUlasan() : "") %></textarea>
                     </div>
                     
                     <div style="display: flex; gap: 10px;">
@@ -365,7 +366,7 @@
                         <tr>
                             <td style="text-align: center;"><%= no++ %></td>
                             <td style="font-weight: 600; color: #1e293b;">
-                                <%= u.getJudulBuku() != null ? u.getJudulBuku() : "ID Buku: " + u.getIdBuku() %>
+                                <%= StringUtils.escapeHtml(u.getJudulBuku() != null ? u.getJudulBuku() : "ID Buku: " + u.getIdBuku()) %>
                             </td>
                             <td>
                                 <div class="stars-orange">
@@ -378,7 +379,7 @@
                                 </div>
                             </td>
                             <td style="color: #475569; font-style: italic;">
-                                "<%= u.getUlasan() %>"
+                                "<%= StringUtils.escapeHtml(u.getUlasan()) %>"
                             </td>
                             <td style="text-align: center;">
                                 <a href="<%= request.getContextPath() %>/ulasan?action=edit&idBuku=<%= u.getIdBuku() %>" class="btn-action-table btn-table-edit">

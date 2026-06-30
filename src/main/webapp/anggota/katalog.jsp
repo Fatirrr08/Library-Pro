@@ -8,6 +8,7 @@
 <%@ page import="dao.BukuDAO" %>
 <%@ page import="dao.KategoriDAO" %>
 <%@ page import="dao.FavoritDAO" %>
+<%@ page import="util.StringUtils" %>
 
 <!DOCTYPE html>
 <html>
@@ -233,7 +234,7 @@
         <div class="profile-dropdown-container">
             <div class="user-profile" id="profileTrigger">
                 <img src="<%= (loggedUser.getFotoProfil() != null && !loggedUser.getFotoProfil().isEmpty()) ? request.getContextPath() + "/uploads/profile/" + loggedUser.getFotoProfil() : request.getContextPath() + "/uploads/profile/default.png" %>" alt="Profile">
-                <span><%= loggedUser.getNamaLengkap() %></span>
+                <span><%= StringUtils.escapeHtml(loggedUser.getNamaLengkap()) %></span>
                 <i class="fa-solid fa-chevron-down" style="font-size: 11px; color: #64748b;"></i>
             </div>
             <ul class="dropdown-menu" id="dropdownMenu">
@@ -255,7 +256,7 @@
         </div>
 
         <form action="katalog.jsp" method="get" class="search-container" id="searchForm" style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;" onsubmit="return false;">
-            <input type="text" id="searchInput" name="q" value="<%= query != null ? query : "" %>" placeholder="Ketik satu huruf untuk mencari otomatis..." style="flex: 1; min-width: 250px;">
+            <input type="text" id="searchInput" name="q" value="<%= StringUtils.escapeHtml(query != null ? query : "") %>" placeholder="Ketik satu huruf untuk mencari otomatis..." style="flex: 1; min-width: 250px;">
             <select name="kategori" class="filter-select" onchange="window.location.href='katalog.jsp?kategori=' + this.value;">
                 <option value="all">Semua Kategori</option>
                 <%
@@ -263,7 +264,7 @@
                         for (Kategori k : listKategori) {
                             String selected = (kategoriParam != null && kategoriParam.equals(String.valueOf(k.getIdKategori()))) ? "selected" : "";
                 %>
-                    <option value="<%= k.getIdKategori() %>" <%= selected %>><%= k.getNamaKategori() %></option>
+                    <option value="<%= k.getIdKategori() %>" <%= selected %>><%= StringUtils.escapeHtml(k.getNamaKategori()) %></option>
                 <%
                         }
                     }
@@ -285,20 +286,20 @@
                         String isbnText = (b.getIsbn() != null && !b.getIsbn().isEmpty()) ? b.getIsbn() : "-";
             %>
             <div class="book-card" 
-                 data-judul="<%= b.getJudul().toLowerCase() %>" 
-                 data-realjudul="<%= b.getJudul() %>"
-                 data-penulis="<%= b.getPenulis() %>" 
-                 data-penerbit="<%= b.getPenerbit() %>"
+                 data-judul="<%= StringUtils.escapeHtml(b.getJudul().toLowerCase()) %>" 
+                 data-realjudul="<%= StringUtils.escapeHtml(b.getJudul()) %>"
+                 data-penulis="<%= StringUtils.escapeHtml(b.getPenulis()) %>" 
+                 data-penerbit="<%= StringUtils.escapeHtml(b.getPenerbit()) %>"
                  data-tahun="<%= b.getTahunTerbit() %>"
-                 data-kategori="<%= katNama %>"
-                 data-isbn="<%= isbnText %>"
-                 data-abstraksi="<%= absText %>">
+                 data-kategori="<%= StringUtils.escapeHtml(katNama) %>"
+                 data-isbn="<%= StringUtils.escapeHtml(isbnText) %>"
+                 data-abstraksi="<%= StringUtils.escapeHtml(absText) %>">
                  
                 <div class="book-info">
-                    <div class="book-category"><%= katNama %></div>
-                    <div class="book-title"><%= b.getJudul() %></div>
-                    <div class="book-meta">Penulis: <span><%= b.getPenulis() %></span></div>
-                    <div class="book-meta">Penerbit: <span><%= b.getPenerbit() %></span></div>
+                    <div class="book-category"><%= StringUtils.escapeHtml(katNama) %></div>
+                    <div class="book-title"><%= StringUtils.escapeHtml(b.getJudul()) %></div>
+                    <div class="book-meta">Penulis: <span><%= StringUtils.escapeHtml(b.getPenulis()) %></span></div>
+                    <div class="book-meta">Penerbit: <span><%= StringUtils.escapeHtml(b.getPenerbit()) %></span></div>
                     <div class="book-meta">Tahun: <span><%= b.getTahunTerbit() %></span></div>
                     
                     <div style="margin-top: 15px; font-size: 0.85rem;">
