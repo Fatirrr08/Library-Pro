@@ -6,7 +6,7 @@
   "deploy": {
     "restartPolicyType": "ON_FAILURE",
     "restartPolicyMaxRetries": 5,
-    "healthcheckPath": "/LibraryManagementSystem/dashboard",
+    "healthcheckPath": "/dashboard",
     "healthcheckTimeout": 120
   }
 }

@@ -15,5 +15,5 @@ RUN chmod +x /usr/local/bin/wait-for-mysql.sh
 
 EXPOSE 8080
 
-# Tunggu MySQL siap baru jalankan Tomcat
-CMD ["/usr/local/bin/wait-for-mysql.sh", "$MYSQL_HOST", "$MYSQL_PORT", "catalina.sh", "run"]
+# Tunggu MySQL siap baru jalankan Tomcat (shell form agar env vars diexpand)
+CMD /usr/local/bin/wait-for-mysql.sh "$MYSQL_HOST" "$MYSQL_PORT" catalina.sh run
