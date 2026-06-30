@@ -20,6 +20,8 @@ echo "✅ Menjalankan migrasi database..."
 mysql -h "$host" -P "$port" -u"${MYSQL_USER}" -p"${MYSQL_PASSWORD}" "${MYSQL_DB}" -e "ALTER TABLE buku ADD COLUMN foto_buku VARCHAR(255) DEFAULT NULL AFTER abstraksi;" 2>/dev/null || true
 mysql -h "$host" -P "$port" -u"${MYSQL_USER}" -p"${MYSQL_PASSWORD}" "${MYSQL_DB}" -e "ALTER TABLE user ADD COLUMN security_question VARCHAR(255) DEFAULT NULL AFTER foto_profil;" 2>/dev/null || true
 mysql -h "$host" -P "$port" -u"${MYSQL_USER}" -p"${MYSQL_PASSWORD}" "${MYSQL_DB}" -e "ALTER TABLE user ADD COLUMN security_answer VARCHAR(255) DEFAULT NULL AFTER security_question;" 2>/dev/null || true
+echo "✅ Mengisi default pertanyaan keamanan untuk user yang belum punya..."
+mysql -h "$host" -P "$port" -u"${MYSQL_USER}" -p"${MYSQL_PASSWORD}" "${MYSQL_DB}" -e "UPDATE user SET security_question='Apa nama hewan peliharaan Anda?', security_answer='kucing' WHERE security_question IS NULL OR security_answer IS NULL;" 2>/dev/null || true
 
 echo "✅ Skema siap! Menjalankan: $cmd"
 exec $cmd
