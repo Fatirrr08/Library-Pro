@@ -187,7 +187,7 @@ INSERT INTO `ulasan` (`id_ulasan`, `id_user`, `id_buku`, `ulasan`, `rating`) VAL
 CREATE TABLE `user` (
   `id_user` int(10) NOT NULL,
   `username` varchar(50) NOT NULL,
-  `password` varchar(50) NOT NULL,
+  `password` varchar(255) NOT NULL,
   `email` varchar(50) NOT NULL,
   `nama_lengkap` varchar(50) NOT NULL,
   `alamat` text DEFAULT NULL,
