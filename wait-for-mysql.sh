@@ -13,5 +13,8 @@ until mysql -h "$host" -P "$port" -u"${MYSQL_USER}" -p"${MYSQL_PASSWORD}" "${MYS
   sleep 3
 done
 
-echo "✅ MySQL siap! Menjalankan: $cmd"
+echo "✅ MySQL siap! Mengimpor skema database..."
+mysql -h "$host" -P "$port" -u"${MYSQL_USER}" -p"${MYSQL_PASSWORD}" "${MYSQL_DB}" --force < /schema.sql 2>&1 || echo "⚠️ Beberapa error saat impor skema (mungkin sudah ada)"
+
+echo "✅ Skema siap! Menjalankan: $cmd"
 exec $cmd

@@ -10,6 +10,7 @@ FROM tomcat:10.1-jdk21-openjdk-slim
 RUN apt-get update && apt-get install -y --no-install-recommends default-mysql-client && rm -rf /var/lib/apt/lists/*
 
 COPY --from=build /target/*.war /usr/local/tomcat/webapps/ROOT.war
+COPY librarymanagamentsystem.sql /schema.sql
 COPY wait-for-mysql.sh /usr/local/bin/wait-for-mysql.sh
 RUN chmod +x /usr/local/bin/wait-for-mysql.sh
 
