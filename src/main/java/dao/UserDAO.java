@@ -190,25 +190,27 @@ public class UserDAO extends BaseDAO {
         try (Connection conn = DBConnection.getConnection()) {
             if (conn == null) return false;
             if (user.getPassword() != null && !user.getPassword().isEmpty()) {
-                String sql = "UPDATE user SET password=?, email=?, nama_lengkap=?, foto_profil=? WHERE id_user=?";
+                String sql = "UPDATE user SET password=?, email=?, nama_lengkap=?, alamat=?, foto_profil=? WHERE id_user=?";
                 try (PreparedStatement ps = conn.prepareStatement(sql)) {
                     ps.setString(1, PasswordUtils.isHashed(user.getPassword()) ? user.getPassword() : PasswordUtils.hash(user.getPassword()));
                     ps.setString(2, user.getEmail());
                     ps.setString(3, user.getNamaLengkap());
-                    ps.setString(4, user.getFotoProfil());
-                    ps.setInt(5, user.getIdUser());
+                    ps.setString(4, user.getAlamat());
+                    ps.setString(5, user.getFotoProfil());
+                    ps.setInt(6, user.getIdUser());
                     int rows = ps.executeUpdate();
                     if (rows > 0) {
                         success = true;
                     }
                 }
             } else {
-                String sql = "UPDATE user SET email=?, nama_lengkap=?, foto_profil=? WHERE id_user=?";
+                String sql = "UPDATE user SET email=?, nama_lengkap=?, alamat=?, foto_profil=? WHERE id_user=?";
                 try (PreparedStatement ps = conn.prepareStatement(sql)) {
                     ps.setString(1, user.getEmail());
                     ps.setString(2, user.getNamaLengkap());
-                    ps.setString(3, user.getFotoProfil());
-                    ps.setInt(4, user.getIdUser());
+                    ps.setString(3, user.getAlamat());
+                    ps.setString(4, user.getFotoProfil());
+                    ps.setInt(5, user.getIdUser());
                     int rows = ps.executeUpdate();
                     if (rows > 0) {
                         success = true;

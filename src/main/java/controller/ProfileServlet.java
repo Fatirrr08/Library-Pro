@@ -65,6 +65,7 @@ public class ProfileServlet extends HttpServlet {
         String namaLengkap = request.getParameter("namaLengkap");
         String email = request.getParameter("email");
         String password = request.getParameter("password");
+        String alamat = request.getParameter("alamat");
         String croppedImage = request.getParameter("croppedImage");
 
         if (namaLengkap == null || namaLengkap.trim().isEmpty() || email == null || email.trim().isEmpty()) {
@@ -74,6 +75,7 @@ public class ProfileServlet extends HttpServlet {
 
         user.setNamaLengkap(namaLengkap);
         user.setEmail(email);
+        user.setAlamat(alamat);
         if (password != null && !password.trim().isEmpty()) {
             user.setPassword(password);
         }

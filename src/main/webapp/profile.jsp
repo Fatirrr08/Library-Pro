@@ -504,7 +504,7 @@
                 </div>
                 <div>
                     <div class="profile-name"><%= StringUtils.escapeHtml(loggedUser.getNamaLengkap()) %></div>
-                    <div style="margin-top: 5px;">
+                    <div class="mt-1">
                         <span class="profile-role <%= "admin".equalsIgnoreCase(loggedUser.getLevel()) ? "admin" : "" %>">
                             <%= StringUtils.escapeHtml(loggedUser.getLevel()) %>
                         </span>
@@ -513,14 +513,14 @@
 
                 <div class="profile-actions">
                     <input type="file" id="avatarInput" accept="image/png, image/jpeg, image/jpg" style="display: none;">
-                    <button type="button" class="btn-add" style="justify-content: center; cursor: pointer;" onclick="document.getElementById('avatarInput').click()">
+                    <button type="button" class="btn-add justify-center" onclick="document.getElementById('avatarInput').click()">
                         <i class="fa-solid fa-camera"></i> Pilih Foto Baru
                     </button>
                     
                     <% if (loggedUser.getFotoProfil() != null && !loggedUser.getFotoProfil().isEmpty()) { %>
-                        <form action="<%= request.getContextPath() %>/profile" method="post" style="width: 100%;">
+                        <form action="<%= request.getContextPath() %>/profile" method="post" class="w-full">
                             <input type="hidden" name="action" value="delete_photo">
-                            <button type="submit" class="btn-add" style="background-color: var(--danger-light); color: var(--danger); width: 100%; justify-content: center; box-shadow: none; cursor: pointer;">
+                            <button type="submit" class="btn-add w-full justify-center" style="background-color: var(--danger-light); color: var(--danger); box-shadow: none;">
                                 <i class="fa-solid fa-trash-can"></i> Hapus Foto
                             </button>
                         </form>
@@ -529,7 +529,7 @@
             </div>
 
             <div class="form-box" style="margin-bottom: 0;">
-                <h3 class="table-title" style="margin-bottom: 20px;"><i class="fa-solid fa-user-edit"></i> Edit Informasi Profil</h3>
+                <h3 class="table-title mb-5"><i class="fa-solid fa-user-edit"></i> Edit Informasi Profil</h3>
                 
                 <form action="<%= request.getContextPath() %>/profile" method="post" id="profileForm">
                     <input type="hidden" name="croppedImage" id="croppedImage">
@@ -563,8 +563,15 @@
                         </div>
                     </div>
 
-                    <div style="margin-top: 24px; text-align: right;">
-                        <button type="submit" class="btn-add" style="cursor: pointer;">
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label>Alamat</label>
+                            <textarea name="alamat" rows="3" placeholder="Masukkan alamat Anda"><%= StringUtils.escapeHtml(loggedUser.getAlamat()) %></textarea>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 text-right">
+                        <button type="submit" class="btn-add">
                             <i class="fa-solid fa-floppy-disk"></i> Simpan Profil
                         </button>
                     </div>
@@ -584,10 +591,10 @@
         </div>
         
         <div class="modal-footer">
-            <button type="button" class="btn-add" id="btnCancelCrop" style="background-color: var(--text-muted); box-shadow: none; cursor: pointer;">
+            <button type="button" class="btn-add" id="btnCancelCrop" style="background-color: var(--text-muted); box-shadow: none;">
                 Batal
             </button>
-            <button type="button" class="btn-add" id="btnSaveCrop" style="cursor: pointer;">
+            <button type="button" class="btn-add" id="btnSaveCrop">
                 Potong & Gunakan
             </button>
         </div>
