@@ -13,8 +13,11 @@ public class PasswordUtils {
         if (!hashedPassword.startsWith("$2a$") && !hashedPassword.startsWith("$2b$") && !hashedPassword.startsWith("$2y$")) {
             return hashedPassword.equals(plainPassword);
         }
-        // jBCrypt hanya support $2a$ dan $2y$, bukan $2b$ — konversi jika perlu
-        String normalized = hashedPassword.startsWith("$2b$") ? "$2y$" + hashedPassword.substring(4) : hashedPassword;
+        // jBCrypt 0.4 hanya support $2a$ — konversi $2b$/$2y$ ke $2a$
+        String normalized = hashedPassword;
+        if (normalized.startsWith("$2b$") || normalized.startsWith("$2y$")) {
+            normalized = "$2a$" + normalized.substring(4);
+        }
         return BCrypt.checkpw(plainPassword, normalized);
     }
 
