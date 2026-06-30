@@ -144,7 +144,15 @@
             %>
             <div class="book-card scroll-reveal" data-realjudul="<%= StringUtils.escapeHtml(b.getJudul()) %>" data-penulis="<%= StringUtils.escapeHtml(b.getPenulis()) %>" data-penerbit="<%= StringUtils.escapeHtml(b.getPenerbit()) %>" data-tahun="<%= b.getTahunTerbit() %>" data-isbn="<%= StringUtils.escapeHtml(isbnText) %>" data-abstraksi="<%= StringUtils.escapeHtml(absText) %>">
                 <div class="book-cover-placeholder">
-                    <i class="fa-solid fa-book-open"></i>
+                    <% if (b.getFotoBuku() != null && !b.getFotoBuku().isEmpty()) { %>
+                        <img src="<%=request.getContextPath()%>/uploads/buku/<%= b.getFotoBuku() %>" 
+                             style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;"
+                             loading="lazy"
+                             onerror="this.onerror=null;this.parentNode.innerHTML='<i class=\"fa-solid fa-book-open\" style=\"font-size:2rem;display:flex;align-items:center;justify-content:center;width:100%;height:100%;color:#94a3b8;\"></i>';"
+                             alt="<%= StringUtils.escapeHtml(b.getJudul()) %>">
+                    <% } else { %>
+                        <i class="fa-solid fa-book-open"></i>
+                    <% } %>
                 </div>
                 <div class="book-info">
                     <div class="book-title"><%= StringUtils.escapeHtml(b.getJudul()) %></div>

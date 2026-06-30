@@ -82,8 +82,8 @@ src/
 ├── main/webapp/
 │   ├── admin/           → 6 JSP pages
 │   ├── anggota/         → 6 JSP pages
-│   ├── css/             → style.css
-│   ├── js/              → script.js
+│   ├── css/             → 3 stylesheets
+│   ├── js/              → 3 JS files
 │   └── *.jsp            → login, register, profile
 └── test/java/           → 6 Unit Tests
 ```
@@ -98,9 +98,9 @@ src/
 - **5 Buku Terbaru** tampil otomatis
 
 ### Manajemen Katalog
-- **CRUD Buku** — Tambah, Edit, Hapus buku
+- **CRUD Buku** — Tambah, Edit, Hapus buku (plus upload sampul buku)
 - **CRUD Kategori** — Kelola kategori buku
-- Upload **ISBN & Abstraksi**
+- Upload **ISBN & Abstraksi & Sampul Buku**
 
 ---
 
@@ -124,10 +124,10 @@ src/
 # 👥 Fitur Anggota
 
 ### Katalog Buku
-- **Live Search** — cari real-time berdasarkan judul/penulis/penerbit
+- **Live Fuzzy Search** — cari real-time dengan toleransi typo (Levenshtein distance)
 - **Filter Kategori** — sortir buku berdasarkan kategori
-- **Modal Detail** — lihat informasi lengkap buku
-- **Lihat Ulasan & Rating** publik
+- **Modal Detail** — lihat informasi lengkap buku + ulasan publik
+- **Sampul Buku** — cover image di setiap kartu buku
 
 ### Peminjaman
 - **Ajukan Pinjam** — status otomatis "menunggu"
@@ -149,15 +149,41 @@ src/
 - **Unique Constraint** di level database
 
 ### Profil Pengguna
-- Edit **nama, email, password**
-- Upload **foto profil** dengan **cropper.js**
-- Hapus foto profil
+- Edit **nama, email, password, alamat**
+- **Deteksi Lokasi Otomatis** — isi alamat pakai geolocation + OpenStreetMap
+- Upload **foto profil** dengan **cropper.js** (crop + preview)
+
+---
+
+# 🎨 Fitur UI/UX Unggulan
+
+### ✨ Frontend Features
+- **Upload Sampul Buku** — admin dapat upload cover image buku (JPG/PNG, max 2MB)
+- **Fuzzy Search** — filter buku dengan toleransi kesalahan ketik
+- **Cropper.js** — crop & preview foto profil interaktif
+- **Dark Mode** — toggle tema gelap/terang, persist via localStorage
+- **Toast Notifications** — animasi sukses/gagal premium
+- **Auto-Detect Address** — geolocation + Nominatim reverse geocoding
+- **Page Loader** — spinner animasi saat halaman dimuat
+- **Logout Confirmation Modal** — cegah logout tidak sengaja
+- **Detail Buku Modal** — lihat info buku tanpa pindah halaman
+- **Star Rating** — input rating dengan visual bintang interaktif
+- **Responsive Sidebar** — overlay mobile dengan backdrop
+- **Skeleton Loading** — shimmer effect untuk placeholder
+
+### 🎨 Design System
+- Gradien warna biru/indigo modern
+- FontAwesome 6 (SVG/JS — tidak pakai web font, anti tofu!)
+- Card-based layout dengan glassmorphism
+- Smooth transitions & hover effects
+- Color-coded status badges
+- Mobile-first responsive breakpoints (1024/768/480px)
 
 ---
 
 # 🗄️ Entity Relationship Diagram
 
-### 6 Tabel Aktif + 1 Legacy
+### 6 Tabel Aktif
 
 ```
 ┌─────────┐    ┌──────────────┐    ┌───────────┐
@@ -174,9 +200,8 @@ src/
                               │ kategori  │◄──── buku
                               └───────────┘
 ```
-🔹 Relasi foreign key dengan CASCADE DELETE  
-🔹 Unique Constraint `(id_user, id_buku)` di tabel `ulasan` — anti-spam  
-🔹 Tabel `tabel_buku` (legacy) tidak digunakan dalam kode
+🔹 Relasi foreign key dengan CASCADE DELETE
+🔹 Unique Constraint `(id_user, id_buku)` di tabel `ulasan` — anti-spam
 
 ---
 
@@ -187,7 +212,7 @@ Request Masuk
      │
      ▼
 ┌─────────────────┐
-│   AuthFilter    │──► Static assets? → Allow
+│   AuthFilter    │──► Static assets (/css/, /js/)? → Allow
 │   @WebFilter    │──► Login/Register? → Allow
 │     ("/*")      │──► Lainnya? → Cek Session
 └─────────────────┘
@@ -199,12 +224,13 @@ Request Masuk
 └─────────────────┘
      │
      ▼
-┌──────────────────────┐
-│  Otorisasi Halaman   │
-│  /admin/*  → Admin   │
-│  /anggota/* → Anggota│
-│  /ulasan   → Both    │
-└──────────────────────┘
+┌──────────────────────────┐
+│     Otorisasi Halaman    │
+│  /admin/*  → Admin only  │
+│  /anggota/* → Anggota    │
+│  /buku, /kategori → Admin│
+│  /ulasan   → Both roles  │
+└──────────────────────────┘
 ```
 
 ---
@@ -220,9 +246,22 @@ Request Masuk
 | **Maven** | 3.9+ | Build tool & dependency |
 | **Tomcat** | 10.x | Application server |
 | **jBCrypt** | 0.4 | Hashing password |
-| **Cropper.js** | 1.6 | Crop foto profil |
-| **FontAwesome** | 6.5 | Icon library |
-| **Cargo Plugin** | 1.10 | Embedded Tomcat |
+| **Docker** | — | Container deployment |
+| **Railway** | — | Cloud hosting |
+
+---
+
+# 💻 Teknologi Frontend
+
+| Teknologi | Kegunaan |
+|-----------|----------|
+| **FontAwesome 6 (SVG/JS)** | Ikon — inline SVG, tanpa web font 📌 |
+| **Plus Jakarta Sans** | Font utama (Google Fonts) |
+| **Cropper.js** | Crop foto profil |
+| **OpenStreetMap Nominatim** | Reverse geocoding (deteksi alamat) |
+| **Custom Fuzzy Search** | Levenshtein + token scoring |
+| **CSS Custom Properties** | Dark mode via `[data-theme]` |
+| **CSS Animations** | Page loader, stagger, hover lift |
 
 ---
 
@@ -231,12 +270,13 @@ Request Masuk
 | Konsep OOP | Implementasi |
 |-----------|--------------|
 | **Inheritance** | `Admin extends User`, `Anggota extends User`, `BukuDAO extends BaseDAO` |
-| **Polymorphism** | `User user = new Admin()` / `new Anggota()` berdasarkan level |
-| **Abstract Class** | `BaseDAO` — template method `getEntityName()` |
+| **Polymorphism** | `User user = new Admin()` / `new Anggota()` berdasarkan level dari DB ⭐ |
+| **Abstract Class** | `BaseDAO` — template `getConnection()`, abstract `getEntityName()` |
 | **Interface** | `Transaksi` — kontrak `pinjam()` dan `kembalikan()` |
 | **Encapsulation** | Semua field model `private`, akses via getter/setter |
 | **Custom Exception** | `BookNotFoundException`, `InsufficientStockException` |
 | **Enum** | `StatusPeminjaman`, `UserLevel` — type-safe constants |
+| **Method Overloading** | `closeResources()` overload 2 parameter vs 3 parameter |
 
 ---
 
@@ -246,7 +286,7 @@ Request Masuk
 - **Session-based Authentication** — login/logout dengan HttpSession
 - **Filter Authorization** — `AuthFilter` proteksi halaman per role
 - **SQL Injection Prevention** — PreparedStatement di semua query
-- **Password Hashing** — bcrypt via jBCrypt
+- **Password Hashing** — bcrypt via jBCrypt (backward compatible)
 - **XSS Prevention** — escaping output dengan `StringUtils.escapeHtml()`
 - **Upload Validation** — whitelist extension (JPG/PNG), max 2MB
 
@@ -254,93 +294,6 @@ Request Masuk
 1. Anggota ajukan pinjam → status **menunggu**
 2. Admin **setujui/tolak** → stok berubah otomatis
 3. Buku **dikembalikan** → stok pulih, denda dihitung
-
----
-
-# 🔍 Arsitektur MVC
-
-```
-┌──────────────────────────────────────────────────┐
-│                    VIEW (JSP)                     │
-│  katalog.jsp, peminjaman.jsp, ulasan.jsp, dll    │
-└──────────────────────┬───────────────────────────┘
-                       │ HTTP Request/Response
-                       ▼
-┌──────────────────────────────────────────────────┐
-│              CONTROLLER (Servlet)                 │
-│  LoginServlet, BukuServlet, PeminjamanServlet    │
-│  UlasanServlet, FavoritServlet, ProfileServlet   │
-└──────────────────────┬───────────────────────────┘
-                       │ Method Calls
-                       ▼
-┌──────────────────────────────────────────────────┐
-│               MODEL (DAO + POJO)                  │
-│  UserDAO, BukuDAO, PeminjamanDAO, UlasanDAO      │
-│  User, Buku, Peminjaman, Ulasan, Kategori        │
-└──────────────────────┬───────────────────────────┘
-                       │ JDBC
-                       ▼
-┌──────────────────────────────────────────────────┐
-│                   DATABASE                        │
-│            MySQL / MariaDB                        │
-└──────────────────────────────────────────────────┘
-```
-
----
-
-# 📦 Database Schema
-
-### Tabel `user`
-| Kolom | Tipe | Keterangan |
-|-------|------|------------|
-| id_user | INT (PK) | Auto increment |
-| username | VARCHAR(50) | Unique |
-| password | VARCHAR(255) | bcrypt hash |
-| email | VARCHAR(100) | |
-| nama_lengkap | VARCHAR(100) | |
-| alamat | TEXT | |
-| level | VARCHAR(20) | admin / anggota |
-| foto_profil | VARCHAR(255) | Path file |
-
-### Tabel `buku`
-| Kolom | Tipe | Keterangan |
-|-------|------|------------|
-| id_buku | INT (PK) | Auto increment |
-| judul | VARCHAR(100) | |
-| penulis | VARCHAR(50) | |
-| penerbit | VARCHAR(50) | |
-| tahun_terbit | INT | |
-| jml_buku | INT | Stok tersedia |
-| isbn | VARCHAR(50) | |
-| abstraksi | TEXT | Sinopsis |
-| id_kategori | INT (FK) → kategori |
-
----
-
-# 📦 Database Schema (Lanjutan)
-
-### Tabel `peminjaman`
-| Kolom | Tipe | Keterangan |
-|-------|------|------------|
-| id_peminjaman | INT (PK) | Auto increment |
-| id_user | INT (FK) → user | |
-| id_buku | INT (FK) → buku | |
-| tanggal_pinjam | DATE | |
-| tanggal_tenggat | DATE | +1 bulan dari acc |
-| tanggal_kembali | DATE | Null jika belum |
-| status | ENUM | 'menunggu', 'disetujui', 'ditolak', 'dikembalikan' |
-| denda | DECIMAL(10,2) | Rp1.000/hari telat |
-
-### Tabel `ulasan`
-| Kolom | Tipe | Keterangan |
-|-------|------|------------|
-| id_ulasan | INT (PK) | Auto increment |
-| id_user | INT (FK) → user | |
-| id_buku | INT (FK) → buku | |
-| ulasan | TEXT | Komentar |
-| rating | INT | 1-5 |
-
-🔒 **Unique Constraint:** `(id_user, id_buku)` — 1 ulasan per anggota per buku
 
 ---
 
@@ -371,40 +324,19 @@ Anggota                        Admin                       Sistem
 
 ---
 
-# 🎨 Fitur UI/UX Unggulan
-
-### ✨ Frontend Features
-- **Live Search** — filter buku real-time tanpa reload
-- **Cropper.js** — crop & preview foto profil interaktif
-- **Toast Notifications** — animasi sukses/gagal premium
-- **Logout Confirmation Modal** — cegah logout tidak sengaja
-- **Detail Buku Modal** — lihat info buku tanpa pindah halaman
-- **Star Rating** — input rating dengan visual bintang interaktif
-- **Dropdown Profil** — akses cepat menu profil & logout
-- **Responsive Sidebar** — navigasi yang rapi dan intuitif
-
-### 🎨 Design System
-- Gradien warna biru/indigo modern
-- FontAwesome 6 icons
-- Card-based layout
-- Smooth transitions & hover effects
-- Color-coded status badges
-
----
-
 # 🧪 Pengujian
 
 ### Unit Test (JUnit 5)
 | Test | Deskripsi |
 |------|-----------|
-| `BukuDAOTest` | Integration test untuk BukuDAO (getAll, insert, getById) |
+| `BukuDAOTest` | Integration test untuk BukuDAO |
 | `BukuTest` | Model unit test |
 | `PeminjamanTest` | Model unit test |
 | `UserTest` | Model unit test |
 | `BookNotFoundExceptionTest` | Custom exception test |
 | `InsufficientStockExceptionTest` | Custom exception test |
 
-### Ruang Lingkup Pengujian
+### Cakupan
 - ✅ Validasi login/logout
 - ✅ CRUD buku dan kategori
 - ✅ Alur peminjaman (ajukan → setujui → kembali)
@@ -415,23 +347,35 @@ Anggota                        Admin                       Sistem
 
 ---
 
-# 🐳 Deployment
+# 🐳 Deployment — Railway
 
-### Docker
+### Docker Multi-Stage Build
 ```dockerfile
-# Stage 1: Build
+# Stage 1: Build WAR
 FROM maven:3.9.6-eclipse-temurin-21-jammy AS build
 COPY . .
 RUN mvn clean package -DskipTests
 
-# Stage 2: Run
+# Stage 2: Run di Tomcat
 FROM tomcat:10.1-jdk21-openjdk-slim
 COPY --from=build /target/*.war /usr/local/tomcat/webapps/ROOT.war
-EXPOSE 8080
-CMD ["catalina.sh", "run"]
+COPY librarymanagamentsystem.sql /schema.sql
+COPY wait-for-mysql.sh /usr/local/bin/
+CMD ["wait-for-mysql.sh"]
 ```
 
-### Local Development
+### Deploy
+```bash
+git push fork main
+railway up
+```
+
+**Live URL:** https://librarypro.up.railway.app
+
+---
+
+# 🐳 Local Development
+
 ```bash
 # 1. Import database
 mysql -u root -p < librarymanagamentsystem.sql
@@ -443,13 +387,13 @@ export MYSQL_DB=librarymanagamentsystem
 export MYSQL_USER=root
 export MYSQL_PASSWORD=
 
-# 3. Jalankan dengan embedded Tomcat
+# 3. Jalankan
 mvn cargo:run
 
 # Build WAR
 mvn clean package
 
-# Akses di browser
+# Akses
 http://localhost:8080/LibraryManagementSystem
 ```
 
@@ -458,7 +402,6 @@ http://localhost:8080/LibraryManagementSystem
 |------|----------|----------|
 | **Admin** | admin | 123 |
 | **Anggota** | maruf | 123 |
-| **Anggota** | (daftar baru) | (terserah) |
 
 ---
 
@@ -468,11 +411,12 @@ http://localhost:8080/LibraryManagementSystem
 |--------|--------|
 | **File Java** | ~37 source files |
 | **File JSP** | 16 pages |
-| **CSS/JS** | style.css + script.js |
-| **DAO Classes** | 7 |
-| **Model Classes** | 10 (incl. enums) |
+| **CSS Files** | 3 (22KB + 36KB + 3.4KB) |
+| **JS Files** | 3 (search, script, icon-fallback) |
+| **DAO Classes** | 6 + 1 abstract |
+| **Model Classes** | 9 (incl. enums) |
 | **Servlet Controllers** | 13 |
-| **Tabel Database** | 7 |
+| **Tabel Database** | 6 aktif |
 | **Unit Tests** | 6 |
 
 ---
@@ -484,8 +428,8 @@ http://localhost:8080/LibraryManagementSystem
 - 📧 **Email Notification** — notifikasi status peminjaman via email
 - 📊 **Grafik Dashboard** — chart.js untuk visualisasi data
 - 🔍 **Pagination** — untuk daftar buku & peminjaman yang besar
-- 🌐 **REST API** — endpoint JSON untuk integrasi aplikasi lain
-- 📖 **Barcode Scanner** — scan ISBN untuk input buku cepat
+- 📖 **Sampul Buku** — upload & tampilkan cover buku
+- 🌐 **REST API** — endpoint JSON untuk integrasi
 - 📝 **Export Report** — export data peminjaman ke PDF/Excel
 - 🔐 **2FA** — two-factor authentication untuk admin
 

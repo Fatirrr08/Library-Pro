@@ -232,7 +232,7 @@
                 <%= editBuku != null ? "Edit Data Buku" : "Tambah Buku Baru" %>
             </div>
             
-            <form action="<%=request.getContextPath()%>/buku" method="post">
+            <form action="<%=request.getContextPath()%>/buku" method="post" enctype="multipart/form-data">
                 <% if (editBuku != null) { %>
                     <input type="hidden" name="idBuku" value="<%= editBuku.getIdBuku() %>">
                     <input type="hidden" name="action" value="update">
@@ -292,6 +292,24 @@
                     <textarea name="abstraksi" rows="4" placeholder="Ketik ringkasan abstrak cerita atau sinopsis buku di sini secara mendalam..." style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-family: inherit; font-size: 14px; resize: vertical;"><%= StringUtils.escapeHtml(editBuku != null ? (editBuku.getAbstraksi() != null ? editBuku.getAbstraksi() : "") : "") %></textarea>
                 </div>
 
+                <div class="form-group" style="margin-top: 15px;">
+                    <label>Gambar Sampul Buku</label>
+                    <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+                        <% if (editBuku != null && editBuku.getFotoBuku() != null && !editBuku.getFotoBuku().isEmpty()) { %>
+                            <div style="width: 80px; height: 110px; border-radius: 6px; overflow: hidden; border: 1px solid #e2e8f0; flex-shrink: 0;">
+                                <img src="<%=request.getContextPath()%>/uploads/buku/<%= editBuku.getFotoBuku() %>" 
+                                     style="width: 100%; height: 100%; object-fit: cover;"
+                                     onerror="this.onerror=null;this.parentNode.innerHTML='<i class=\"fa-solid fa-book-open\" style=\"font-size:2rem;display:flex;align-items:center;justify-content:center;width:100%;height:100%;color:#94a3b8;\"></i>';"
+                                     alt="Sampul">
+                            </div>
+                        <% } %>
+                        <div style="flex:1; min-width: 200px;">
+                            <input type="file" name="coverImage" accept="image/jpeg,image/png" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px;">
+                            <small style="color: #94a3b8; display: block; margin-top: 4px;">Format: JPG/PNG, Maks: 2MB. Biarkan kosong jika tidak ingin mengubah sampul.</small>
+                        </div>
+                    </div>
+                </div>
+
                 <div style="display: flex; gap: 10px; margin-top: 20px;">
                     <button type="submit" class="btn-add" style="border: none; cursor: pointer;">
                         <i class="fa-solid fa-floppy-disk"></i> <%= editBuku != null ? "Perbarui Buku" : "Simpan Buku" %>
@@ -311,6 +329,7 @@
                 <thead>
                 <tr>
                     <th>ID</th>
+                    <th>Sampul</th>
                     <th>Judul Buku</th>
                     <th>Penulis</th>
                     <th>Penerbit</th>
@@ -326,6 +345,18 @@
                 %>
                 <tr>
                     <td><%= b.getIdBuku() %></td>
+                    <td>
+                        <div style="width: 50px; height: 68px; border-radius: 4px; overflow: hidden; border: 1px solid #e2e8f0;">
+                            <% if (b.getFotoBuku() != null && !b.getFotoBuku().isEmpty()) { %>
+                                <img src="<%=request.getContextPath()%>/uploads/buku/<%= b.getFotoBuku() %>" 
+                                     style="width: 100%; height: 100%; object-fit: cover;"
+                                     onerror="this.onerror=null;this.parentNode.innerHTML='<i class=\"fa-solid fa-book-open\" style=\"font-size:1.2rem;display:flex;align-items:center;justify-content:center;width:100%;height:100%;color:#94a3b8;\"></i>';"
+                                     alt="Sampul">
+                            <% } else { %>
+                                <i class="fa-solid fa-book-open" style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;color:#94a3b8;"></i>
+                            <% } %>
+                        </div>
+                    </td>
                     <td style="font-weight: 600; color: #1e293b;"><%= StringUtils.escapeHtml(b.getJudul()) %></td>
                     <td><%= StringUtils.escapeHtml(b.getPenulis()) %></td>
                     <td><%= StringUtils.escapeHtml(b.getPenerbit()) %></td>
@@ -362,7 +393,7 @@
                     } else {
                 %>
                 <tr>
-                    <td colspan="7" class="empty">Belum ada data buku terdaftar.</td>
+                    <td colspan="8" class="empty">Belum ada data buku terdaftar.</td>
                 </tr>
                 <%
                     }

@@ -97,7 +97,15 @@
             %>
             <div class="book-card scroll-reveal">
                 <div class="book-cover-placeholder">
-                    <i class="fa-solid fa-book-open"></i>
+                    <% if (f.getFotoBuku() != null && !f.getFotoBuku().isEmpty()) { %>
+                        <img src="<%=request.getContextPath()%>/uploads/buku/<%= f.getFotoBuku() %>" 
+                             style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;"
+                             loading="lazy"
+                             onerror="this.onerror=null;this.parentNode.innerHTML='<i class=\"fa-solid fa-book-open\" style=\"font-size:2rem;display:flex;align-items:center;justify-content:center;width:100%;height:100%;color:#94a3b8;\"></i>';"
+                             alt="<%= StringUtils.escapeHtml(f.getJudulBuku()) %>">
+                    <% } else { %>
+                        <i class="fa-solid fa-book-open"></i>
+                    <% } %>
                 </div>
                 <div class="book-info">
                     <div class="book-title"><%= StringUtils.escapeHtml(f.getJudulBuku()) %></div>

@@ -91,19 +91,36 @@
             </a>
         </div>
 
-        <div class="book-detail-card">
-            <div class="rating-badge">
-                <i class="fa-solid fa-star"></i> Komunitas Rating: <%= (rataRata != null && rataRata > 0) ? String.format("%.1f", rataRata) + " / 5.0" : "Belum dinilai" %>
+        <div class="book-detail-card" style="display: flex; gap: 24px; flex-wrap: wrap;">
+            <div style="flex-shrink: 0; width: 160px;">
+                <% if (b.getFotoBuku() != null && !b.getFotoBuku().isEmpty()) { %>
+                    <img src="<%=request.getContextPath()%>/uploads/buku/<%= b.getFotoBuku() %>" 
+                         style="width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);"
+                         onerror="this.onerror=null;this.style.display='none';this.nextElementSibling.style.display='flex';"
+                         alt="<%= StringUtils.escapeHtml(b.getJudul()) %>">
+                    <div style="display:none;width:100%;height:220px;background:#f1f5f9;border-radius:8px;align-items:center;justify-content:center;">
+                        <i class="fa-solid fa-book-open" style="font-size:3rem;color:#94a3b8;"></i>
+                    </div>
+                <% } else { %>
+                    <div style="width:100%;height:220px;background:#f1f5f9;border-radius:8px;display:flex;align-items:center;justify-content:center;">
+                        <i class="fa-solid fa-book-open" style="font-size:3rem;color:#94a3b8;"></i>
+                    </div>
+                <% } %>
             </div>
-            
-            <p><b>Penulis:</b> <%= StringUtils.escapeHtml(b.getPenulis()) %></p>
-            <p><b>Penerbit:</b> <%= StringUtils.escapeHtml(b.getPenerbit()) %></p>
-            <p><b>Tahun Terbit:</b> <%= b.getTahunTerbit() %></p>
-            <p><b>ISBN / ISSN:</b> <%= StringUtils.escapeHtml(b.getIsbn() != null ? b.getIsbn() : "-") %></p>
-            
-            <div class="book-detail-abstract">
-                <h4>Abstraksi / Sinopsis:</h4>
-                <p><%= StringUtils.escapeHtml(b.getAbstraksi() != null ? b.getAbstraksi() : "Sinopsis belum tersedia.") %></p>
+            <div style="flex: 1; min-width: 200px;">
+                <div class="rating-badge">
+                    <i class="fa-solid fa-star"></i> Komunitas Rating: <%= (rataRata != null && rataRata > 0) ? String.format("%.1f", rataRata) + " / 5.0" : "Belum dinilai" %>
+                </div>
+                
+                <p><b>Penulis:</b> <%= StringUtils.escapeHtml(b.getPenulis()) %></p>
+                <p><b>Penerbit:</b> <%= StringUtils.escapeHtml(b.getPenerbit()) %></p>
+                <p><b>Tahun Terbit:</b> <%= b.getTahunTerbit() %></p>
+                <p><b>ISBN / ISSN:</b> <%= StringUtils.escapeHtml(b.getIsbn() != null ? b.getIsbn() : "-") %></p>
+                
+                <div class="book-detail-abstract">
+                    <h4>Abstraksi / Sinopsis:</h4>
+                    <p><%= StringUtils.escapeHtml(b.getAbstraksi() != null ? b.getAbstraksi() : "Sinopsis belum tersedia.") %></p>
+                </div>
             </div>
         </div>
 

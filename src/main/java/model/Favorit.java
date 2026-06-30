@@ -9,6 +9,7 @@ public class Favorit {
     private String judulBuku;
     private String penulis;
     private String penerbit;
+    private String fotoBuku;
 
     public Favorit() {}
 
@@ -58,6 +59,14 @@ public class Favorit {
 
     public void setPenerbit(String penerbit) {
         this.penerbit = penerbit;
+    }
+
+    public String getFotoBuku() {
+        return fotoBuku;
+    }
+
+    public void setFotoBuku(String fotoBuku) {
+        this.fotoBuku = fotoBuku;
     }
 
     // [OOP: Method Overriding] Override toString() dari Object untuk representasi bermakna

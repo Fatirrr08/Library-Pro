@@ -17,7 +17,7 @@ public class BukuDAO extends BaseDAO {
 
     public void insert(Buku buku) {
         System.out.println("INSERT BUKU DIJALANKAN");
-        String sql = "INSERT INTO buku (judul, penulis, penerbit, tahun_terbit, jml_buku, id_kategori, isbn, abstraksi) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO buku (judul, penulis, penerbit, tahun_terbit, jml_buku, id_kategori, isbn, abstraksi, foto_buku) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DBConnection.getConnection()) {
             if (conn == null) return;
             try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -29,6 +29,7 @@ public class BukuDAO extends BaseDAO {
                 ps.setInt(6, buku.getIdKategori());
                 ps.setString(7, buku.getIsbn());
                 ps.setString(8, buku.getAbstraksi());
+                ps.setString(9, buku.getFotoBuku());
 
                 int hasil = ps.executeUpdate();
                 System.out.println("Data berhasil disimpan : " + hasil);
@@ -56,6 +57,7 @@ public class BukuDAO extends BaseDAO {
                     buku.setIdKategori(rs.getInt("id_kategori"));
                     buku.setIsbn(rs.getString("isbn"));
                     buku.setAbstraksi(rs.getString("abstraksi"));
+                    buku.setFotoBuku(rs.getString("foto_buku"));
                     list.add(buku);
                 }
             }
@@ -84,6 +86,7 @@ public class BukuDAO extends BaseDAO {
                         buku.setIdKategori(rs.getInt("id_kategori"));
                         buku.setIsbn(rs.getString("isbn"));
                         buku.setAbstraksi(rs.getString("abstraksi"));
+                        buku.setFotoBuku(rs.getString("foto_buku"));
                     }
                 }
             }
@@ -98,7 +101,7 @@ public class BukuDAO extends BaseDAO {
 
     public boolean update(Buku buku) {
         boolean success = false;
-        String sql = "UPDATE buku SET judul=?, penulis=?, penerbit=?, tahun_terbit=?, jml_buku=?, id_kategori=?, isbn=?, abstraksi=? WHERE id_buku=?";
+        String sql = "UPDATE buku SET judul=?, penulis=?, penerbit=?, tahun_terbit=?, jml_buku=?, id_kategori=?, isbn=?, abstraksi=?, foto_buku=? WHERE id_buku=?";
         try (Connection conn = DBConnection.getConnection()) {
             if (conn == null) return false;
             try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -110,7 +113,8 @@ public class BukuDAO extends BaseDAO {
                 ps.setInt(6, buku.getIdKategori());
                 ps.setString(7, buku.getIsbn());
                 ps.setString(8, buku.getAbstraksi());
-                ps.setInt(9, buku.getIdBuku());
+                ps.setString(9, buku.getFotoBuku());
+                ps.setInt(10, buku.getIdBuku());
                 int rows = ps.executeUpdate();
                 if (rows > 0) {
                     success = true;
@@ -191,6 +195,7 @@ public class BukuDAO extends BaseDAO {
                         buku.setIdKategori(rs.getInt("id_kategori"));
                         buku.setIsbn(rs.getString("isbn"));
                         buku.setAbstraksi(rs.getString("abstraksi"));
+                        buku.setFotoBuku(rs.getString("foto_buku"));
                         list.add(buku);
                     }
                 }
@@ -220,6 +225,7 @@ public class BukuDAO extends BaseDAO {
                         buku.setIdKategori(rs.getInt("id_kategori"));
                         buku.setIsbn(rs.getString("isbn"));
                         buku.setAbstraksi(rs.getString("abstraksi"));
+                        buku.setFotoBuku(rs.getString("foto_buku"));
                         list.add(buku);
                     }
                 }

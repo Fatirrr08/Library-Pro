@@ -36,6 +36,7 @@ CREATE TABLE `buku` (
   `jml_buku` int(10) NOT NULL,
   `isbn` varchar(50) DEFAULT '-',
   `abstraksi` text DEFAULT NULL,
+  `foto_buku` varchar(255) DEFAULT NULL,
   `id_kategori` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 

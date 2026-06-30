@@ -57,7 +57,7 @@ public class FavoritDAO extends BaseDAO {
 
     public List<Favorit> getFavoritByUser(int idUser) {
         List<Favorit> list = new ArrayList<>();
-        String sql = "SELECT f.*, b.judul AS judul_buku, b.penulis, b.penerbit " +
+        String sql = "SELECT f.*, b.judul AS judul_buku, b.penulis, b.penerbit, b.foto_buku " +
                      "FROM favorit f " +
                      "JOIN buku b ON f.id_buku = b.id_buku " +
                      "WHERE f.id_user = ? " +
@@ -75,6 +75,7 @@ public class FavoritDAO extends BaseDAO {
                         fav.setJudulBuku(rs.getString("judul_buku"));
                         fav.setPenulis(rs.getString("penulis"));
                         fav.setPenerbit(rs.getString("penerbit"));
+                        fav.setFotoBuku(rs.getString("foto_buku"));
                         list.add(fav);
                     }
                 }

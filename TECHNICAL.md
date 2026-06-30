@@ -53,7 +53,7 @@ Browser → AuthFilter (/*) intercepts ALL requests
 
 | Where | File(s) | How It's Applied |
 |-------|---------|------------------|
-| All Model classes | `model/User.java`, `model/Buku.java`, `model/Peminjaman.java`, `model/Admin.java`, `model/Anggota.java` dsb. | **All fields are `private`**; accessed only through `public` getters/setters |
+| All Model classes | `model/User.java`, `model/Buku.java` (termasuk `fotoBuku` untuk sampul), `model/Peminjaman.java`, `model/Admin.java`, `model/Anggota.java`, `model/Favorit.java` dsb. | **All fields are `private`**; accessed only through `public` getters/setters |
 | Database config | `config/DBConnection.java` | Connection details hidden; only `getConnection()` exposed |
 | BaseDAO | `dao/BaseDAO.java` | `protected` methods (`getConnection()`, `closeResources()`) — accessible to subclasses, hidden from outside |
 | Custom Exceptions | `exception/BookNotFoundException.java` | `private final int bookId` — immutable encapsulated field with only getter |
@@ -337,7 +337,7 @@ src/main/java/
 │   ├── LogoutServlet.java
 │   ├── RegisterServlet.java
 │   ├── DashboardServlet.java             ← Routes admin/anggota dinamis
-│   ├── BukuServlet.java                  ← Book CRUD
+│       ├── BukuServlet.java                  ← Book CRUD + multipart cover upload (@MultipartConfig)
 │   ├── KategoriServlet.java              ← Category CRUD
 │   ├── UserServlet.java                  ← User CRUD (admin)
 │   ├── PeminjamanServlet.java            ← Borrow flow
@@ -348,8 +348,8 @@ src/main/java/
 │   └── ProfileServlet.java              ← Profile + Base64 photo upload
 ├── dao/
 │   ├── BaseDAO.java                      ← Abstract class ⭐
-│   ├── BukuDAO.java
-│   ├── FavoritDAO.java
+│   ├── BukuDAO.java                      ← CRUD + foto_buku column ⭐
+│   ├── FavoritDAO.java                   ← JOIN foto_buku dari tabel buku
 │   ├── KategoriDAO.java
 │   ├── PeminjamanDAO.java                ← Implements Transaksi + transactions ⭐
 │   ├── UlasanDAO.java

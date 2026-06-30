@@ -11,6 +11,7 @@ public class Buku {
     private int idKategori;
     private String abstraksi;
     private String isbn;
+    private String fotoBuku;
 
     public Buku() {}
 
@@ -83,6 +84,14 @@ public class Buku {
     }
     public void setIsbn(String isbn) {
         this.isbn = isbn;
+    }
+
+    public String getFotoBuku() {
+        return fotoBuku;
+    }
+
+    public void setFotoBuku(String fotoBuku) {
+        this.fotoBuku = fotoBuku;
     }
 
     // [OOP: Method Overriding] Override toString() dari Object untuk representasi bermakna
