@@ -16,5 +16,8 @@ done
 echo "✅ MySQL siap! Mengimpor skema database..."
 mysql -h "$host" -P "$port" -u"${MYSQL_USER}" -p"${MYSQL_PASSWORD}" "${MYSQL_DB}" --force < /schema.sql 2>&1 || echo "⚠️ Beberapa error saat impor skema (mungkin sudah ada)"
 
+echo "✅ Menjalankan migrasi database..."
+mysql -h "$host" -P "$port" -u"${MYSQL_USER}" -p"${MYSQL_PASSWORD}" "${MYSQL_DB}" -e "ALTER TABLE buku ADD COLUMN foto_buku VARCHAR(255) DEFAULT NULL AFTER abstraksi;" 2>/dev/null || true
+
 echo "✅ Skema siap! Menjalankan: $cmd"
 exec $cmd
