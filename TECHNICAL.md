@@ -283,6 +283,8 @@ KATEGORI ──<── BUKU
 | **Stok auto**: -1 di approve, +1 di return | Transactional SQL with rollback | `PeminjamanDAO` |
 | **Masa pinjam**: 30 hari | `LocalDate.now().plusMonths(1)` | `PeminjamanDAO.verifikasiPeminjaman()` |
 | **Role-based access** | `AuthFilter` + path separation | `filter/AuthFilter.java` |
+| **Forgot Password** | 3-step: username → security question → reset password | `ForgotPasswordServlet.java` |
+| **Security Question** | Ditetapkan saat registrasi, diverifikasi sebelum reset | `User.securityQuestion` / `User.securityAnswer` |
 | **One review per user per book** | UNIQUE KEY(id_user, id_buku) di DB + cek di servlet | `UlasanServlet.java` |
 | **Cascading delete** | Hapus ulasan → favorit → peminjaman sebelum hapus buku | `BukuDAO.delete()` |
 
@@ -332,12 +334,13 @@ KATEGORI ──<── BUKU
 src/main/java/
 ├── config/
 │   └── DBConnection.java                 ← Environment-based DB connection
-├── controller/                           ← 13 Servlets
+├── controller/                           ← 14 Servlets
 │   ├── LoginServlet.java                 ← Polymorphic login ⭐
 │   ├── LogoutServlet.java
-│   ├── RegisterServlet.java
+│   ├── RegisterServlet.java              ← + security question ⭐
+│   ├── ForgotPasswordServlet.java        ← 3-step forgot password ⭐
 │   ├── DashboardServlet.java             ← Routes admin/anggota dinamis
-│       ├── BukuServlet.java                  ← Book CRUD + multipart cover upload (@MultipartConfig)
+│   ├── BukuServlet.java                  ← Book CRUD + multipart cover upload
 │   ├── KategoriServlet.java              ← Category CRUD
 │   ├── UserServlet.java                  ← User CRUD (admin)
 │   ├── PeminjamanServlet.java            ← Borrow flow
@@ -353,7 +356,7 @@ src/main/java/
 │   ├── KategoriDAO.java
 │   ├── PeminjamanDAO.java                ← Implements Transaksi + transactions ⭐
 │   ├── UlasanDAO.java
-│   └── UserDAO.java                      ← Polymorphic instantiation ⭐
+│   └── UserDAO.java                      ← Polymorphic instantiation + forgot-password methods ⭐
 ├── exception/
 │   ├── BookNotFoundException.java        ← Custom exception
 │   └── InsufficientStockException.java   ← Custom exception with context
@@ -369,7 +372,7 @@ src/main/java/
     ├── Kategori.java
     ├── Peminjaman.java
     ├── Ulasan.java
-    ├── User.java                         ← Base class ⭐
+    ├── User.java                         ← Base class + securityQuestion/Answer ⭐
     └── enums/
         ├── StatusPeminjaman.java         ← Type-safe enum
         └── UserLevel.java               ← Type-safe enum

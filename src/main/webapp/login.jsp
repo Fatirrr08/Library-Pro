@@ -60,6 +60,15 @@
         </div>
         <%
             }
+            String resetSuccess = request.getParameter("resetSuccess");
+            if ("true".equals(resetSuccess)) {
+        %>
+        <div class="alert alert-success">
+            <i class="fa-solid fa-circle-check"></i>
+            <span>Password berhasil direset! Silakan login dengan password baru.</span>
+        </div>
+        <%
+            }
         %>
 
         <form action="<%=request.getContextPath()%>/login" method="post" class="auth-form">
@@ -77,6 +86,12 @@
                     <i class="fa-solid fa-lock input-icon"></i>
                     <input type="password" id="password" name="password" placeholder="Masukkan password" required>
                 </div>
+            </div>
+
+            <div style="text-align: right; margin-top: -10px; margin-bottom: 10px;">
+                <a href="<%=request.getContextPath()%>/forgot-password" style="font-size: 13px; color: #64748b; text-decoration: none;">
+                    <i class="fa-solid fa-key"></i> Lupa Password?
+                </a>
             </div>
 
             <button type="submit" class="btn btn-accent">

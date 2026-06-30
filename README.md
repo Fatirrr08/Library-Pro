@@ -22,6 +22,7 @@
 - **Favorit** — wishlist buku
 - **Ulasan & Rating** — rating 1-5, 1 ulasan per buku (anti-spam)
 - **Profil** — edit data + foto (cropper.js) + **deteksi alamat otomatis** (geolocation)
+- **Lupa Password** — reset password via pertanyaan keamanan (3-step flow)
 
 ---
 

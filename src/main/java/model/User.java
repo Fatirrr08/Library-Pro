@@ -10,6 +10,8 @@ public class User {
     private String alamat;
     private String level;
     private String fotoProfil;
+    private String securityQuestion;
+    private String securityAnswer;
 
     public User() {
     }
@@ -76,6 +78,22 @@ public class User {
 
     public void setFotoProfil(String fotoProfil) {
         this.fotoProfil = fotoProfil;
+    }
+
+    public String getSecurityQuestion() {
+        return securityQuestion;
+    }
+
+    public void setSecurityQuestion(String securityQuestion) {
+        this.securityQuestion = securityQuestion;
+    }
+
+    public String getSecurityAnswer() {
+        return securityAnswer;
+    }
+
+    public void setSecurityAnswer(String securityAnswer) {
+        this.securityAnswer = securityAnswer;
     }
 
     // [OOP: Method Overriding] Override toString() dari Object untuk representasi bermakna

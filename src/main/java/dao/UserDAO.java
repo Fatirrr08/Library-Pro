@@ -85,7 +85,7 @@ public class UserDAO extends BaseDAO {
 
     public boolean insert(User user) {
         boolean success = false;
-        String sql = "INSERT INTO user (username, password, email, nama_lengkap, alamat, level) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO user (username, password, email, nama_lengkap, alamat, level, security_question, security_answer) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DBConnection.getConnection()) {
             if (conn == null) return false;
             try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -96,6 +96,8 @@ public class UserDAO extends BaseDAO {
                 ps.setString(4, user.getNamaLengkap());
                 ps.setString(5, user.getAlamat());
                 ps.setString(6, user.getLevel() == null ? "anggota" : user.getLevel());
+                ps.setString(7, user.getSecurityQuestion());
+                ps.setString(8, user.getSecurityAnswer());
                 int rows = ps.executeUpdate();
                 if (rows > 0) {
                     success = true;
@@ -234,6 +236,48 @@ public class UserDAO extends BaseDAO {
                 if (rows > 0) {
                     success = true;
                 }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return success;
+    }
+
+    public User findByUsername(String username) {
+        User user = null;
+        String sql = "SELECT * FROM user WHERE username=?";
+        try (Connection conn = DBConnection.getConnection()) {
+            if (conn == null) return null;
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setString(1, username);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        user = new User();
+                        user.setIdUser(rs.getInt("id_user"));
+                        user.setUsername(rs.getString("username"));
+                        user.setEmail(rs.getString("email"));
+                        user.setSecurityQuestion(rs.getString("security_question"));
+                        user.setSecurityAnswer(rs.getString("security_answer"));
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return user;
+    }
+
+    public boolean updatePassword(int userId, String newPassword) {
+        boolean success = false;
+        String hashed = PasswordUtils.hash(newPassword);
+        String sql = "UPDATE user SET password=? WHERE id_user=?";
+        try (Connection conn = DBConnection.getConnection()) {
+            if (conn == null) return false;
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setString(1, hashed);
+                ps.setInt(2, userId);
+                int rows = ps.executeUpdate();
+                if (rows > 0) success = true;
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -47,6 +47,8 @@ public class RegisterServlet extends HttpServlet {
         user.setPassword(password);
         user.setAlamat(alamat);
         user.setLevel("anggota");
+        user.setSecurityQuestion(request.getParameter("securityQuestion"));
+        user.setSecurityAnswer(request.getParameter("securityAnswer"));
 
         boolean success = dao.register(user);
 

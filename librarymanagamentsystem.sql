@@ -193,18 +193,20 @@ CREATE TABLE `user` (
   `nama_lengkap` varchar(50) NOT NULL,
   `alamat` text DEFAULT NULL,
   `level` varchar(50) NOT NULL,
-  `foto_profil` varchar(255) DEFAULT NULL
+  `foto_profil` varchar(255) DEFAULT NULL,
+  `security_question` varchar(255) DEFAULT NULL,
+  `security_answer` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data untuk tabel `user`
 --
 
-INSERT INTO `user` (`id_user`, `username`, `password`, `email`, `nama_lengkap`, `alamat`, `level`, `foto_profil`) VALUES
-(1, 'admin', '123', 'admin@gmail.com', 'Administrator', 'Bandung', 'admin', 'admin_029c5fcb-c1a6-4cf7-b135-8cc3aca9252d.png'),
-(3, 'ida', '123', 'ida@gmail.com', 'ida', 'purwokerto', 'anggota', NULL),
-(4, 'maruf', '123', 'marufsarifudin@gmail.com', 'Ma\'ruf Sarifudin', 'purwokerto', 'anggota', 'maruf_47187c88-c6f3-4542-93f5-64ae9e13f295.png'),
-(5, 'Faiz', '123', 'is@gmail.com', 'FaizNrsydn', 'PWT', 'anggota', NULL);
+INSERT INTO `user` (`id_user`, `username`, `password`, `email`, `nama_lengkap`, `alamat`, `level`, `foto_profil`, `security_question`, `security_answer`) VALUES
+(1, 'admin', '123', 'admin@gmail.com', 'Administrator', 'Bandung', 'admin', 'admin_029c5fcb-c1a6-4cf7-b135-8cc3aca9252d.png', 'Apa nama hewan peliharaan Anda?', 'kucing'),
+(3, 'ida', '123', 'ida@gmail.com', 'ida', 'purwokerto', 'anggota', NULL, 'Apa nama kota kelahiran Anda?', 'jakarta'),
+(4, 'maruf', '123', 'marufsarifudin@gmail.com', 'Ma\'ruf Sarifudin', 'purwokerto', 'anggota', 'maruf_47187c88-c6f3-4542-93f5-64ae9e13f295.png', 'Apa nama hewan peliharaan Anda?', 'kucing'),
+(5, 'Faiz', '123', 'is@gmail.com', 'FaizNrsydn', 'PWT', 'anggota', NULL, 'Apa nama kota kelahiran Anda?', 'purwokerto');
 
 --
 -- Indexes for dumped tables

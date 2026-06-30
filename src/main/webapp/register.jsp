@@ -103,6 +103,29 @@
                 </button>
             </div>
 
+            <div class="input-group">
+                <label for="securityQuestion">Pertanyaan Keamanan <span style="color: #94a3b8; font-weight: 400;">(untuk reset password)</span></label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-shield-halved input-icon"></i>
+                    <select id="securityQuestion" name="securityQuestion" required style="width: 100%; padding: 12px 12px 12px 40px; border: none; background: transparent; outline: none; font-family: inherit; font-size: 14px; appearance: auto;">
+                        <option value="">-- Pilih Pertanyaan --</option>
+                        <option value="Apa nama hewan peliharaan Anda?">Apa nama hewan peliharaan Anda?</option>
+                        <option value="Apa nama kota kelahiran Anda?">Apa nama kota kelahiran Anda?</option>
+                        <option value="Apa nama sekolah dasar Anda?">Apa nama sekolah dasar Anda?</option>
+                        <option value="Apa makanan favorit Anda?">Apa makanan favorit Anda?</option>
+                        <option value="Apa merek mobil pertama Anda?">Apa merek mobil pertama Anda?</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="securityAnswer">Jawaban Keamanan</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-pencil input-icon"></i>
+                    <input type="text" id="securityAnswer" name="securityAnswer" placeholder="Tulis jawaban untuk pertanyaan di atas" required>
+                </div>
+            </div>
+
             <button type="submit" class="btn btn-accent">
                 Daftar Akun Sekarang <i class="fa-solid fa-arrow-right"></i>
             </button>

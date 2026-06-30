@@ -72,7 +72,7 @@ Diperlukan sistem digital yang **terintegrasi, terotomatisasi, dan mudah diakses
 src/
 ├── main/java/
 │   ├── config/          → DBConnection.java
-│   ├── controller/      → 13 Servlets
+│   ├── controller/      → 14 Servlets (+ ForgotPasswordServlet)
 │   ├── dao/             → 7 DAO classes
 │   ├── model/           → 10 Model classes + Enums
 │   ├── exception/       → 2 Custom Exceptions
@@ -84,7 +84,7 @@ src/
 │   ├── anggota/         → 6 JSP pages
 │   ├── css/             → 3 stylesheets
 │   ├── js/              → 3 JS files
-│   └── *.jsp            → login, register, profile
+│   └── *.jsp            → login, register, profile, forgot-password
 └── test/java/           → 6 Unit Tests
 ```
 
@@ -152,6 +152,12 @@ src/
 - Edit **nama, email, password, alamat**
 - **Deteksi Lokasi Otomatis** — isi alamat pakai geolocation + OpenStreetMap
 - Upload **foto profil** dengan **cropper.js** (crop + preview)
+
+### 🔑 Lupa Password
+- **3-step flow**: Username → Pertanyaan Keamanan → Reset Password
+- Pertanyaan keamanan ditentukan saat registrasi
+- Password di-hash dengan bcrypt sebelum disimpan
+- Anti-brute force dengan verifikasi jawaban case-insensitive
 
 ---
 
@@ -289,6 +295,7 @@ Request Masuk
 - **Password Hashing** — bcrypt via jBCrypt (backward compatible)
 - **XSS Prevention** — escaping output dengan `StringUtils.escapeHtml()`
 - **Upload Validation** — whitelist extension (JPG/PNG), max 2MB
+- **Lupa Password** — 3-step flow: username → security question → reset password
 
 ### Alur Validasi Peminjaman
 1. Anggota ajukan pinjam → status **menunggu**
