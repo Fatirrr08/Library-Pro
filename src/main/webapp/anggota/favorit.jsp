@@ -5,7 +5,7 @@
 <%@ page import="util.StringUtils" %>
 
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,264 +13,10 @@
     <link rel="icon" type="image/png" href="https://i.imgur.com/oZIZRfO.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="<%=request.getContextPath()%>/css/style.css">
-    
-    <style>
-        .profile-dropdown-container {
-            position: relative;
-            display: inline-block;
-        }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            user-select: none;
-            padding: 6px 12px;
-            border-radius: 8px;
-            transition: background-color 0.3s ease;
-        }
-
-        .user-profile:hover {
-            background-color: #f1f5f9;
-        }
-
-        .user-profile img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .user-profile span {
-            font-weight: 500;
-            color: #334155;
-        }
-
-        /* Menu Dropdown Profil di Topbar */
-        .dropdown-menu {
-            position: absolute;
-            right: 0;
-            top: 55px;
-            background-color: #ffffff;
-            min-width: 180px;
-            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            padding: 8px 0;
-            list-style: none;
-            z-index: 1000;
-            border: 1px solid #e2e8f0;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-10px);
-            transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
-        }
-
-        .dropdown-menu.show {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-
-        .dropdown-menu li a {
-            color: #334155;
-            padding: 10px 15px;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 14px;
-            transition: background-color 0.2s, color 0.2s;
-        }
-
-        .dropdown-menu li a i {
-            font-size: 16px;
-            width: 20px;
-            text-align: center;
-        }
-
-        .dropdown-menu li a:hover {
-            background-color: #f8fafc;
-            color: #2563eb;
-        }
-
-        .dropdown-menu li a.logout-link:hover {
-            background-color: #fef2f2;
-            color: #dc2626;
-        }
-
-        .dropdown-menu .divider {
-            height: 1px;
-            background-color: #e2e8f0;
-            margin: 6px 0;
-        }
-
-        /* Sytling Khusus Bintang Favorit Aktif agar Konsisten */
-        .btn-fav.active {
-            background-color: #fef9c3;
-            color: #eab308 !important;
-            border: 1px solid #fde047;
-        }
-        
-        .book-info a {
-            position: relative;
-            z-index: 10;
-        }
-
-        /* DESAIN PREMIUM UNTUK EMPTY STATE FAVORIT */
-        .premium-empty-container {
-            grid-column: 1 / -1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 50px 20px;
-            background: #ffffff;
-            border-radius: 12px;
-            border: 1px dashed #cbd5e1;
-            max-width: 500px;
-            margin: 30px auto;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-        }
-
-        .premium-empty-icon {
-            font-size: 50px;
-            color: #94a3b8;
-            background: #f8fafc;
-            width: 90px;
-            height: 90px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            margin-bottom: 20px;
-            border: 4px solid #f1f5f9;
-        }
-
-        .premium-empty-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: #1e293b;
-            margin-bottom: 8px;
-        }
-
-        .premium-empty-text {
-            font-size: 14px;
-            color: #64748b;
-            line-height: 1.5;
-            margin-bottom: 22px;
-            max-width: 340px;
-        }
-
-        .premium-empty-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background-color: #2563eb;
-            color: #ffffff !important;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 14px;
-            text-decoration: none;
-            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
-            transition: all 0.2s ease;
-        }
-
-        .premium-empty-btn:hover {
-            background-color: #1d4ed8;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 14px rgba(37, 99, 235, 0.3);
-        }
-
-        /* ==================== DIATUR: STYLE OVERLAY MODAL BASE ==================== */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(4px);
-            display: flex; align-items: center; justify-content: center;
-            z-index: 2000;
-            opacity: 0; visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-        .modal-overlay.show {
-            opacity: 1; visibility: visible;
-        }
-
-        /* ==================== STYLE MODAL KONFIRMASI LOGOUT ==================== */
-        .logout-modal-box {
-            background: #ffffff;
-            width: 90%;
-            max-width: 400px;
-            border-radius: 14px;
-            padding: 24px;
-            text-align: center;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            transform: scale(0.9);
-            transition: transform 0.25s ease;
-        }
-        .modal-overlay.show .logout-modal-box {
-            transform: scale(1);
-        }
-        .logout-warning-icon {
-            font-size: 44px;
-            color: #ef4444;
-            background: #fef2f2;
-            width: 80px;
-            height: 80px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            margin-bottom: 16px;
-        }
-        .logout-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: #1e293b;
-            margin-bottom: 8px;
-        }
-        .logout-desc {
-            font-size: 14px;
-            color: #64748b;
-            line-height: 1.5;
-            margin-bottom: 24px;
-        }
-        .logout-btn-container {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-        }
-        .btn-confirm-logout {
-            background-color: #ef4444;
-            color: white !important;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 14px;
-            text-decoration: none;
-            transition: background-color 0.2s;
-            flex: 1;
-        }
-        .btn-confirm-logout:hover { background-color: #dc2626; }
-        .btn-cancel-logout {
-            background-color: #f1f5f9;
-            color: #334155;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 14px;
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            flex: 1;
-        }
-        .btn-cancel-logout:hover { background-color: #e2e8f0; }
-    </style>
 </head>
 <body>
+
+<div class="page-loader" id="pageLoader"></div>
 
 <%
     User loggedUser = (User) session.getAttribute("user");
@@ -283,60 +29,38 @@
 %>
 
 <div class="sidebar">
-    <div class="logo">
-        <i class="fa-solid fa-book-open-reader"></i>
-        <span>LibraryPro</span>
-    </div>
+    <div class="logo"><i class="fa-solid fa-book-open-reader"></i> <span>LibraryPro</span></div>
     <ul class="menu">
-        <li>
-            <a href="<%=request.getContextPath()%>/dashboard">
-                <i class="fa-solid fa-chart-line"></i> Dashboard
-            </a>
-        </li>
-        <li>
-            <a href="<%=request.getContextPath()%>/anggota/katalog.jsp">
-                <i class="fa-solid fa-book-open"></i> Katalog Buku
-            </a>
-        </li>
-        <li>
-            <a href="<%=request.getContextPath()%>/peminjaman">
-                <i class="fa-solid fa-clock-rotate-left"></i> Riwayat Peminjaman
-            </a>
-        </li>
-        <li>
-            <a href="<%=request.getContextPath()%>/favorit" class="active">
-                <i class="fa-solid fa-star"></i> Favorit Saya
-            </a>
-        </li>
-        <li>
-            <a href="<%=request.getContextPath()%>/ulasan">
-                <i class="fa-solid fa-comments"></i> Ulasan & Rating Saya
-            </a>
-        </li>
+        <li><a href="<%=request.getContextPath()%>/dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a></li>
+        <li><a href="<%=request.getContextPath()%>/anggota/katalog.jsp"><i class="fa-solid fa-book-open"></i> Katalog Buku</a></li>
+        <li><a href="<%=request.getContextPath()%>/peminjaman"><i class="fa-solid fa-clock-rotate-left"></i> Riwayat Peminjaman</a></li>
+        <li><a href="<%=request.getContextPath()%>/favorit" class="active"><i class="fa-solid fa-star"></i> Favorit Saya</a></li>
+        <li><a href="<%=request.getContextPath()%>/ulasan"><i class="fa-solid fa-comments"></i> Ulasan & Rating Saya</a></li>
     </ul>
+    <div class="sidebar-footer">
+        <img src="<%= (loggedUser.getFotoProfil() != null && !loggedUser.getFotoProfil().isEmpty()) ? request.getContextPath() + "/uploads/profile/" + loggedUser.getFotoProfil() : request.getContextPath() + "/uploads/profile/default.png" %>" alt="Profil">
+        <div class="user-info">
+            <span><%= StringUtils.escapeHtml(loggedUser.getNamaLengkap()) %></span>
+            <small>Anggota</small>
+        </div>
+    </div>
 </div>
 
 <div class="main-content">
     <div class="topbar">
-        <button class="sidebar-toggle-btn" id="sidebarToggle" type="button"><i class="fa-solid fa-bars"></i></button>
+        <button class="sidebar-toggle-btn" id="sidebarToggle" type="button" aria-label="Toggle sidebar"><i class="fa-solid fa-bars"></i></button>
         <h2>Buku Terfavorit Anda</h2>
-        
         <div class="profile-dropdown-container">
-            <div class="user-profile" id="profileTrigger">
-                <img src="<%= (loggedUser.getFotoProfil() != null && !loggedUser.getFotoProfil().isEmpty()) ? request.getContextPath() + "/uploads/profile/" + loggedUser.getFotoProfil() : request.getContextPath() + "/uploads/profile/default.png" %>" alt="Anggota">
+            <div class="user-profile" id="profileTrigger" role="button" tabindex="0" aria-haspopup="true" aria-expanded="false">
+                <img src="<%= (loggedUser.getFotoProfil() != null && !loggedUser.getFotoProfil().isEmpty()) ? request.getContextPath() + "/uploads/profile/" + loggedUser.getFotoProfil() : request.getContextPath() + "/uploads/profile/default.png" %>" alt="Foto Profil">
                 <span><%= StringUtils.escapeHtml(loggedUser.getNamaLengkap()) %></span>
-                <i class="fa-solid fa-chevron-down" style="font-size: 11px; color: #64748b;"></i>
+                <i class="fa-solid fa-chevron-down chevron-icon"></i>
             </div>
-            
-            <ul class="dropdown-menu" id="dropdownMenu">
+            <ul class="dropdown-menu" id="dropdownMenu" role="menu">
+                <li><a href="<%=request.getContextPath()%>/profile" role="menuitem"><i class="fa-solid fa-user-gear"></i> Profil Saya</a></li>
+                <li class="divider" role="separator"></li>
                 <li>
-                    <a href="<%=request.getContextPath()%>/profile">
-                        <i class="fa-solid fa-user-gear"></i> Profil Saya
-                    </a>
-                </li>
-                <li class="divider"></li>
-                <li>
-                    <a href="#" class="logout-link" id="logoutTrigger">
+                    <a href="#" class="logout-link" id="logoutTrigger" role="menuitem">
                         <i class="fa-solid fa-right-from-bracket"></i> Logout
                     </a>
                 </li>
@@ -345,34 +69,37 @@
     </div>
 
     <div class="dashboard-content">
-        <div class="welcome">
+        <div class="welcome animate-fade-in">
             <h1>Buku Favorit Saya</h1>
             <p>Daftar buku yang Anda tandai sebagai favorit untuk dipinjam di lain waktu.</p>
         </div>
 
-        <div class="catalog-grid" style="margin-top: 30px;">
+        <div class="catalog-grid">
             <%
                 if (daftarFavorit != null && !daftarFavorit.isEmpty()) {
                     for (Favorit f : daftarFavorit) {
             %>
-            <div class="book-card">
+            <div class="book-card scroll-reveal">
+                <div class="book-cover-placeholder">
+                    <i class="fa-solid fa-book-open"></i>
+                </div>
                 <div class="book-info">
                     <div class="book-title"><%= StringUtils.escapeHtml(f.getJudulBuku()) %></div>
-                    <div class="book-meta">Penulis: <span><%= StringUtils.escapeHtml(f.getPenulis()) %></span></div>
-                    <div class="book-meta">Penerbit: <span><%= StringUtils.escapeHtml(f.getPenerbit()) %></span></div>
+                    <div class="book-meta"><i class="fa-solid fa-feather"></i> <span><%= StringUtils.escapeHtml(f.getPenulis()) %></span></div>
+                    <div class="book-meta"><i class="fa-solid fa-building"></i> <span><%= StringUtils.escapeHtml(f.getPenerbit()) %></span></div>
                     
-                    <div style="margin-top: 15px; font-size: 0.85rem;">
-                        <a href="<%=request.getContextPath()%>/review-buku?idBuku=<%= f.getIdBuku() %>" style="color: var(--primary); text-decoration: none; font-weight: 600;">
+                    <div class="book-review-link">
+                        <a href="<%=request.getContextPath()%>/review-buku?idBuku=<%= f.getIdBuku() %>">
                             <i class="fa-solid fa-comments"></i> Lihat Ulasan & Rating
                         </a>
                     </div>
                 </div>
                 <div class="book-actions">
-                    <a href="<%=request.getContextPath()%>/peminjaman?action=pinjam&idBuku=<%= f.getIdBuku() %>" class="btn-sm btn-primary" style="text-align: center; justify-content: center; flex: 1; text-decoration: none;">
+                    <a href="<%=request.getContextPath()%>/peminjaman?action=pinjam&idBuku=<%= f.getIdBuku() %>" class="btn-sm btn-primary btn-action-link">
                         <i class="fa-solid fa-book-reader"></i> Pinjam Buku
                     </a>
                     
-                    <a href="<%=request.getContextPath()%>/favorit?action=delete&idBuku=<%= f.getIdBuku() %>" class="btn-fav active" title="Hapus dari Favorit" style="flex: 0 0 42px; text-decoration: none;">
+                    <a href="<%=request.getContextPath()%>/favorit?action=delete&idBuku=<%= f.getIdBuku() %>" class="btn-fav active" title="Hapus dari Favorit">
                         <i class="fa-solid fa-star"></i>
                     </a>
                 </div>
@@ -383,7 +110,7 @@
             %>
             <div class="premium-empty-container">
                 <div class="premium-empty-icon">
-                    <i class="fa-regular fa-star" style="animation: pulse 2s infinite;"></i>
+                    <i class="fa-regular fa-star"></i>
                 </div>
                 <div class="premium-empty-title">Belum Ada Buku Favorit</div>
                 <div class="premium-empty-text">
@@ -400,7 +127,7 @@
     </div>
 </div>
 
-<div class="modal-overlay" id="logoutModal">
+<div class="modal-overlay" id="logoutModal" role="dialog" aria-modal="true">
     <div class="logout-modal-box">
         <div class="logout-warning-icon">
             <i class="fa-solid fa-triangle-exclamation"></i>
@@ -416,44 +143,83 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        // 1. Logika Dropdown Profil Atas
-        const profileTrigger = document.getElementById("profileTrigger");
-        const dropdownMenu = document.getElementById("dropdownMenu");
+        var pageLoader = document.getElementById("pageLoader");
+        if (pageLoader) {
+            pageLoader.classList.add("active");
+            setTimeout(function () {
+                pageLoader.classList.remove("active");
+            }, 800);
+        }
+
+        // Scroll reveal
+        if ("IntersectionObserver" in window) {
+            var revealObserver = new IntersectionObserver(function (entries) {
+                entries.forEach(function (entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("revealed");
+                        revealObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+            document.querySelectorAll(".scroll-reveal").forEach(function (el) {
+                revealObserver.observe(el);
+            });
+        } else {
+            document.querySelectorAll(".scroll-reveal").forEach(function (el) {
+                el.classList.add("revealed");
+            });
+        }
+
+        // Profile dropdown
+        var profileTrigger = document.getElementById("profileTrigger");
+        var dropdownMenu = document.getElementById("dropdownMenu");
 
         if (profileTrigger && dropdownMenu) {
-            profileTrigger.addEventListener("click", function (event) {
-                event.stopPropagation();
-                dropdownMenu.classList.toggle("show");
+            profileTrigger.addEventListener("click", function (e) {
+                e.stopPropagation();
+                var isOpen = dropdownMenu.classList.toggle("show");
+                profileTrigger.setAttribute("aria-expanded", isOpen);
             });
-
-            document.addEventListener("click", function (event) {
-                if (!profileTrigger.contains(event.target) && !dropdownMenu.contains(event.target)) {
+            document.addEventListener("click", function (e) {
+                if (!profileTrigger.contains(e.target) && !dropdownMenu.contains(e.target)) {
                     dropdownMenu.classList.remove("show");
+                    profileTrigger.setAttribute("aria-expanded", "false");
+                }
+            });
+            profileTrigger.addEventListener("keydown", function (e) {
+                if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    var isOpen = dropdownMenu.classList.toggle("show");
+                    profileTrigger.setAttribute("aria-expanded", isOpen);
                 }
             });
         }
 
-        // 2. LOGIKA INTERAKTIF MODAL KONFIRMASI LOGOUT
-        const logoutTrigger = document.getElementById("logoutTrigger");
-        const logoutModal = document.getElementById("logoutModal");
-        const btnCancelLogout = document.getElementById("btnCancelLogout");
+        // Logout modal
+        var logoutTrigger = document.getElementById("logoutTrigger");
+        var logoutModal = document.getElementById("logoutModal");
+        var btnCancelLogout = document.getElementById("btnCancelLogout");
 
         if (logoutTrigger && logoutModal && btnCancelLogout) {
             logoutTrigger.addEventListener("click", function (e) {
-                e.preventDefault(); 
-                dropdownMenu.classList.remove("show"); 
-                logoutModal.classList.add("show"); 
+                e.preventDefault();
+                dropdownMenu.classList.remove("show");
+                logoutModal.classList.add("show");
             });
-
             btnCancelLogout.addEventListener("click", function () {
-                logoutModal.classList.remove("show"); 
+                logoutModal.classList.remove("show");
             });
         }
-
-        // PERBAIKAN: Menghapus variabel 'detailModal' yang memicu error crash script
         window.addEventListener("click", function (e) {
-            if (e.target === logoutModal) {
-                logoutModal.classList.remove("show");
+            if (e.target === logoutModal) logoutModal.classList.remove("show");
+        });
+
+        // Escape key
+        document.addEventListener("keydown", function (e) {
+            if (e.key === "Escape") {
+                document.querySelectorAll(".modal-overlay.show").forEach(function (modal) {
+                    modal.classList.remove("show");
+                });
             }
         });
     });

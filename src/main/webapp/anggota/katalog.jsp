@@ -22,6 +22,8 @@
 </head>
 <body>
 
+<div class="page-loader" id="pageLoader"></div>
+
 <%
     User loggedUser = (User) session.getAttribute("user");
     if (loggedUser == null || !"anggota".equalsIgnoreCase(loggedUser.getLevel())) {
@@ -61,6 +63,13 @@
         <li><a href="<%=request.getContextPath()%>/favorit"><i class="fa-solid fa-star"></i> Favorit Saya</a></li>
         <li><a href="<%=request.getContextPath()%>/ulasan"><i class="fa-solid fa-comments"></i> Ulasan & Rating Saya</a></li>
     </ul>
+    <div class="sidebar-footer">
+        <img src="<%= (loggedUser.getFotoProfil() != null && !loggedUser.getFotoProfil().isEmpty()) ? request.getContextPath() + "/uploads/profile/" + loggedUser.getFotoProfil() : request.getContextPath() + "/uploads/profile/default.png" %>" alt="Profil">
+        <div class="user-info">
+            <span><%= StringUtils.escapeHtml(loggedUser.getNamaLengkap()) %></span>
+            <small>Anggota</small>
+        </div>
+    </div>
 </div>
 
 <div class="main-content">
@@ -87,12 +96,15 @@
 
     <div class="dashboard-content">
         <div class="welcome animate-fade-in">
-            <h1>Cari & Pinjam Buku</h1>
+            <h1>Cari & Pinjam Buku <span class="text-gradient">LibraryPro</span></h1>
             <p>Jelajahi berbagai judul buku yang tersedia untuk dipinjam.</p>
         </div>
 
         <form action="katalog.jsp" method="get" class="search-container" id="searchForm" onsubmit="return false;">
-            <input type="text" id="searchInput" name="q" value="<%= StringUtils.escapeHtml(query != null ? query : "") %>" placeholder="Ketik satu huruf untuk mencari otomatis..." aria-label="Cari buku">
+            <div class="search-wrapper">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" id="searchInput" name="q" value="<%= StringUtils.escapeHtml(query != null ? query : "") %>" placeholder="Ketik satu huruf untuk mencari otomatis..." aria-label="Cari buku">
+            </div>
             <select name="kategori" class="filter-select" onchange="window.location.href='katalog.jsp?kategori=' + this.value;" aria-label="Filter kategori">
                 <option value="all">Semua Kategori</option>
                 <%
@@ -106,7 +118,7 @@
                     }
                 %>
             </select>
-            <a href="katalog.jsp" class="btn-reset">Reset</a>
+            <a href="katalog.jsp" class="btn-reset"><i class="fa-solid fa-rotate-right"></i> Reset</a>
         </form>
 
         <div class="catalog-grid" id="catalogGrid">
@@ -120,7 +132,7 @@
                         String absText = (b.getAbstraksi() != null) ? b.getAbstraksi().replace("\"", "&quot;") : "Abstraksi belum tersedia untuk buku ini.";
                         String isbnText = (b.getIsbn() != null && !b.getIsbn().isEmpty()) ? b.getIsbn() : "-";
             %>
-            <div class="book-card" 
+            <div class="book-card scroll-reveal"
                  data-judul="<%= StringUtils.escapeHtml(b.getJudul().toLowerCase()) %>" 
                  data-realjudul="<%= StringUtils.escapeHtml(b.getJudul()) %>"
                  data-penulis="<%= StringUtils.escapeHtml(b.getPenulis()) %>" 
@@ -130,12 +142,15 @@
                  data-isbn="<%= StringUtils.escapeHtml(isbnText) %>"
                  data-abstraksi="<%= StringUtils.escapeHtml(absText) %>">
                   
+                <div class="book-cover-placeholder">
+                    <i class="fa-solid fa-book-open"></i>
+                </div>
                 <div class="book-info">
                     <div class="book-category"><%= StringUtils.escapeHtml(katNama) %></div>
                     <div class="book-title"><%= StringUtils.escapeHtml(b.getJudul()) %></div>
-                    <div class="book-meta">Penulis: <span><%= StringUtils.escapeHtml(b.getPenulis()) %></span></div>
-                    <div class="book-meta">Penerbit: <span><%= StringUtils.escapeHtml(b.getPenerbit()) %></span></div>
-                    <div class="book-meta">Tahun: <span><%= b.getTahunTerbit() %></span></div>
+                    <div class="book-meta"><i class="fa-solid fa-feather"></i> <span><%= StringUtils.escapeHtml(b.getPenulis()) %></span></div>
+                    <div class="book-meta"><i class="fa-solid fa-building"></i> <span><%= StringUtils.escapeHtml(b.getPenerbit()) %></span></div>
+                    <div class="book-meta"><i class="fa-solid fa-calendar"></i> <span><%= b.getTahunTerbit() %></span></div>
                     
                     <div class="book-review-link">
                         <a href="<%=request.getContextPath()%>/review-buku?idBuku=<%= b.getIdBuku() %>">
@@ -145,19 +160,19 @@
                 </div>
                 <div class="book-actions">
                     <% if (b.getJmlBuku() > 0) { %>
-                        <a href="<%=request.getContextPath()%>/peminjaman?action=pinjam&idBuku=<%= b.getIdBuku() %>" class="btn-sm btn-primary btn-action-link">
+                        <a href="<%=request.getContextPath()%>/peminjaman?action=pinjam&idBuku=<%= b.getIdBuku() %>" class="btn-sm btn-primary btn-action-link ripple-btn">
                             <i class="fa-solid fa-book-reader"></i> Pinjam Buku
                         </a>
                     <% } else { %>
-                        <span class="status borrowed btn-stok-habis">Stok Habis</span>
+                        <span class="status borrowed btn-stok-habis"><i class="fa-solid fa-circle-exclamation"></i> Stok Habis</span>
                     <% } %>
                     
                     <% if (isFav) { %>
-                        <a href="<%=request.getContextPath()%>/favorit?action=delete&idBuku=<%= b.getIdBuku() %>" class="btn-fav active">
+                        <a href="<%=request.getContextPath()%>/favorit?action=delete&idBuku=<%= b.getIdBuku() %>" class="btn-fav active" title="Hapus dari Favorit">
                             <i class="fa-solid fa-star"></i>
                         </a>
                     <% } else { %>
-                        <a href="<%=request.getContextPath()%>/favorit?action=add&idBuku=<%= b.getIdBuku() %>" class="btn-fav">
+                        <a href="<%=request.getContextPath()%>/favorit?action=add&idBuku=<%= b.getIdBuku() %>" class="btn-fav" title="Tambah ke Favorit">
                             <i class="fa-regular fa-star"></i>
                         </a>
                     <% } %>
@@ -167,7 +182,10 @@
                     }
                 }
             %>
-            <div id="emptyMessage" class="empty catalog-grid-empty">Tidak ditemukan buku yang cocok dengan pencarian Anda.</div>
+            <div id="emptyMessage" class="empty catalog-grid-empty">
+                <i class="fa-solid fa-book" style="font-size: 2rem; color: #cbd5e1; margin-bottom: 12px; display: block;"></i>
+                Tidak ditemukan buku yang cocok dengan pencarian Anda.
+            </div>
         </div>
     </div>
 </div>
@@ -208,21 +226,49 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        // Staggered card animation
-        const bookCards = document.querySelectorAll(".book-card");
+        var pageLoader = document.getElementById("pageLoader");
+        if (pageLoader) {
+            pageLoader.classList.add("active");
+            setTimeout(function () {
+                pageLoader.classList.remove("active");
+            }, 800);
+        }
+
+        var bookCards = document.querySelectorAll(".book-card");
+
         bookCards.forEach(function (card, index) {
             card.style.animationDelay = (index * 0.06) + "s";
         });
 
+        // Scroll reveal
+        if ("IntersectionObserver" in window) {
+            var revealObserver = new IntersectionObserver(function (entries) {
+                entries.forEach(function (entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("revealed");
+                        revealObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll(".scroll-reveal").forEach(function (el) {
+                revealObserver.observe(el);
+            });
+        } else {
+            document.querySelectorAll(".scroll-reveal").forEach(function (el) {
+                el.classList.add("revealed");
+            });
+        }
+
         // Profile dropdown
-        const profileTrigger = document.getElementById("profileTrigger");
-        const dropdownMenu = document.getElementById("dropdownMenu");
+        var profileTrigger = document.getElementById("profileTrigger");
+        var dropdownMenu = document.getElementById("dropdownMenu");
 
         if (profileTrigger && dropdownMenu) {
             profileTrigger.addEventListener("click", function (e) {
                 e.stopPropagation();
-                dropdownMenu.classList.toggle("show");
-                profileTrigger.setAttribute("aria-expanded", dropdownMenu.classList.contains("show"));
+                var isOpen = dropdownMenu.classList.toggle("show");
+                profileTrigger.setAttribute("aria-expanded", isOpen);
             });
 
             document.addEventListener("click", function (e) {
@@ -235,15 +281,15 @@
             profileTrigger.addEventListener("keydown", function (e) {
                 if (e.key === "Enter" || e.key === " ") {
                     e.preventDefault();
-                    dropdownMenu.classList.toggle("show");
-                    profileTrigger.setAttribute("aria-expanded", dropdownMenu.classList.contains("show"));
+                    var isOpen = dropdownMenu.classList.toggle("show");
+                    profileTrigger.setAttribute("aria-expanded", isOpen);
                 }
             });
         }
 
         // Live search
-        const searchInput = document.getElementById("searchInput");
-        const emptyMessage = document.getElementById("emptyMessage");
+        var searchInput = document.getElementById("searchInput");
+        var emptyMessage = document.getElementById("emptyMessage");
 
         if (searchInput) {
             searchInput.addEventListener("input", function () {
@@ -331,11 +377,9 @@
             }
         });
 
-        // Close modals with Escape key
         document.addEventListener("keydown", function (e) {
             if (e.key === "Escape") {
-                var openModals = document.querySelectorAll(".modal-overlay.show");
-                openModals.forEach(function (modal) {
+                document.querySelectorAll(".modal-overlay.show").forEach(function (modal) {
                     modal.classList.remove("show");
                 });
             }
