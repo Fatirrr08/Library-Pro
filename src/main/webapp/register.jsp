@@ -119,6 +119,7 @@
 </div>
 
 <script src="<%=request.getContextPath()%>/js/icon-fallback.js"></script>
+<script src="<%=request.getContextPath()%>/js/script.js"></script>
 <script>
 function detectLocation() {
     var btn = document.getElementById("detectLocationBtn");
