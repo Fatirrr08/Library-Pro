@@ -37,7 +37,7 @@
 </head>
 <body>
 
-<div class="page-loader" id="pageLoader"></div>
+<div class="page-loader" id="pageLoader"><div class="loader-spinner"></div></div>
 
 <%
     User loggedUser = (User) session.getAttribute("user");

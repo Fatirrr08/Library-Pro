@@ -26,6 +26,8 @@
     <link rel="stylesheet" href="<%=request.getContextPath()%>/css/style-auth.css">
 </head>
 <body class="auth-page">
+<div class="page-loader" id="pageLoader"><div class="loader-spinner"></div></div>
+
 
 <div class="auth-container">
     <div class="auth-card">
