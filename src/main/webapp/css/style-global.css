@@ -486,10 +486,7 @@ i.fa-fallback {
   font-style: normal;
   font-weight: 400;
   font-size: inherit;
-  font-family: 'Times New Roman', serif;
-}
-
-i.fa-fallback[data-fa-icon] {
+  font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', 'Times New Roman', serif;
   speak: none;
 }
 
