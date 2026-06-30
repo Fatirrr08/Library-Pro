@@ -79,6 +79,10 @@
                     <i class="fa-solid fa-location-dot input-icon" style="top: 16px; transform: none;"></i>
                     <textarea id="alamat" name="alamat" placeholder="Masukkan alamat lengkap domisili" rows="3" required></textarea>
                 </div>
+                <button type="button" class="btn btn-outline btn-sm" id="detectLocationBtn" onclick="detectLocation()" style="margin-top: 6px; width: 100%;">
+                    <i class="fa-solid fa-location-crosshairs"></i>
+                    <span id="detectLocationText">Gunakan Lokasi Saat Ini</span>
+                </button>
             </div>
 
             <button type="submit" class="btn btn-accent">
@@ -92,6 +96,83 @@
 
     </div>
 </div>
+
+<div class="dark-mode-toggle" onclick="toggleDarkMode()" title="Toggle Dark Mode">
+    <i class="fa-solid fa-moon"></i>
+</div>
+
+<script>
+function detectLocation() {
+    var btn = document.getElementById("detectLocationBtn");
+    var text = document.getElementById("detectLocationText");
+    var textarea = document.getElementById("alamat");
+
+    if (!navigator.geolocation) {
+        alert("Browser Anda tidak mendukung Geolocation.");
+        return;
+    }
+
+    btn.disabled = true;
+    text.innerHTML = "Mendeteksi lokasi...";
+
+    navigator.geolocation.getCurrentPosition(
+        function (position) {
+            var lat = position.coords.latitude;
+            var lon = position.coords.longitude;
+
+            fetch("https://nominatim.openstreetmap.org/reverse?format=json&lat=" + lat + "&lon=" + lon + "&accept-language=id")
+                .then(function (res) { return res.json(); })
+                .then(function (data) {
+                    var addr = data.display_name || lat + ", " + lon;
+                    textarea.value = addr;
+                    text.innerHTML = '<i class="fa-solid fa-check"></i> Lokasi ditemukan';
+                    btn.disabled = false;
+                    setTimeout(function () {
+                        text.innerHTML = "Gunakan Lokasi Saat Ini";
+                    }, 3000);
+                })
+                .catch(function () {
+                    textarea.value = lat + ", " + lon;
+                    text.innerHTML = "Gagal reverse geocoding, koordinat digunakan";
+                    btn.disabled = false;
+                });
+        },
+        function (err) {
+            text.innerHTML = "Gunakan Lokasi Saat Ini";
+            btn.disabled = false;
+            if (err.code === 1) {
+                alert("Akses lokasi ditolak. Izinkan akses lokasi di browser Anda.");
+            } else {
+                alert("Gagal mendapatkan lokasi: " + err.message);
+            }
+        },
+        { enableHighAccuracy: true, timeout: 10000 }
+    );
+}
+
+function toggleDarkMode() {
+    var html = document.documentElement;
+    var toggle = document.querySelector(".dark-mode-toggle i");
+    if (html.getAttribute("data-theme") === "dark") {
+        html.removeAttribute("data-theme");
+        toggle.className = "fa-solid fa-moon";
+        localStorage.setItem("theme", "light");
+    } else {
+        html.setAttribute("data-theme", "dark");
+        toggle.className = "fa-solid fa-sun";
+        localStorage.setItem("theme", "dark");
+    }
+}
+
+(function () {
+    var saved = localStorage.getItem("theme");
+    if (saved === "dark") {
+        document.documentElement.setAttribute("data-theme", "dark");
+        var toggle = document.querySelector(".dark-mode-toggle i");
+        if (toggle) toggle.className = "fa-solid fa-sun";
+    }
+})();
+</script>
 
 </body>
 </html>
