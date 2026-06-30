@@ -493,13 +493,21 @@ i.fa-fallback[data-fa-icon] {
   speak: none;
 }
 
-/* ── Animations ── */
-.fade-in-up {
-  animation: fadeInUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+/* ── Motion System ── */
+
+/* Page entrance */
+.page-enter {
+  animation: pageEnter 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.fade-in {
-  animation: fadeIn 0.4s ease forwards;
+@keyframes pageEnter {
+  0% { opacity: 0; transform: translateY(12px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Fade-in-up base */
+.fade-in-up {
+  animation: fadeInUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 @keyframes fadeInUp {
@@ -507,9 +515,114 @@ i.fa-fallback[data-fa-icon] {
   100% { opacity: 1; transform: translateY(0); }
 }
 
+/* Fade-in base */
+.fade-in {
+  animation: fadeIn 0.4s ease forwards;
+}
+
 @keyframes fadeIn {
   0% { opacity: 0; }
   100% { opacity: 1; }
+}
+
+/* Slide-in from left (for sidebar items) */
+.slide-in-left {
+  animation: slideInLeft 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideInLeft {
+  0% { opacity: 0; transform: translateX(-16px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+/* Scale-in (for modals) */
+.scale-in {
+  animation: scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes scaleIn {
+  0% { opacity: 0; transform: scale(0.92); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* Card stagger — apply to parent grid */
+.stagger-children > * {
+  opacity: 0;
+  animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.stagger-children > *:nth-child(1)  { animation-delay: 0.00s; }
+.stagger-children > *:nth-child(2)  { animation-delay: 0.06s; }
+.stagger-children > *:nth-child(3)  { animation-delay: 0.12s; }
+.stagger-children > *:nth-child(4)  { animation-delay: 0.18s; }
+.stagger-children > *:nth-child(5)  { animation-delay: 0.24s; }
+.stagger-children > *:nth-child(6)  { animation-delay: 0.30s; }
+.stagger-children > *:nth-child(7)  { animation-delay: 0.36s; }
+.stagger-children > *:nth-child(8)  { animation-delay: 0.42s; }
+.stagger-children > *:nth-child(9)  { animation-delay: 0.48s; }
+.stagger-children > *:nth-child(10) { animation-delay: 0.54s; }
+.stagger-children > *:nth-child(n+11) { animation-delay: 0.60s; }
+
+/* Card hover lift — apply to any card */
+.hover-lift {
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Scale on hover */
+.hover-scale {
+  transition: transform var(--transition);
+}
+
+.hover-scale:hover {
+  transform: scale(1.04);
+}
+
+/* Glow on hover (primary) */
+.hover-glow {
+  transition: box-shadow var(--transition);
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 20px -4px var(--primary);
+}
+
+/* Skeleton loading pulse */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, var(--border-light) 25%, var(--border) 50%, var(--border-light) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: var(--radius-sm);
+}
+
+/* Ripple effect for buttons */
+.ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(255,255,255,0.3) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+.ripple:active::after {
+  opacity: 1;
+  transition: opacity 0s;
 }
 
 /* ── Dark Mode ── */
@@ -766,13 +879,69 @@ i.fa-fallback[data-fa-icon] {
   background: var(--text-muted);
 }
 
-/* ── Responsive Grid Overrides ── */
+/* ── Responsive System ── */
+
+/* Tablet */
 @media (max-width: 1024px) {
   .grid-4 { grid-template-columns: repeat(2, 1fr); }
   .grid-3 { grid-template-columns: repeat(2, 1fr); }
+  .hide-tablet { display: none !important; }
 }
 
-@media (max-width: 640px) {
-  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+/* Mobile */
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+    position: fixed !important;
+    z-index: 1000;
+    transition: transform var(--transition);
+  }
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  .main-content {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+  .topbar h2 { font-size: 14px; }
+  .dashboard-content { padding: 16px; }
+  .cards { grid-template-columns: 1fr 1fr; }
+  .catalog-grid { grid-template-columns: 1fr; }
+  .search-container { flex-direction: column; }
+  .table-container { overflow-x: auto; }
+  table { min-width: 600px; }
+  .auth-card { padding: 28px 20px 24px; }
+  .auth-header h2 { font-size: 22px; }
+  .modal-box { width: 95%; margin: 16px; }
+}
+
+/* Small mobile */
+@media (max-width: 480px) {
+  .cards { grid-template-columns: 1fr; }
+  .topbar { padding: 10px 16px; }
+  .user-profile span { display: none; }
+  .book-card { flex-direction: column; }
+  .book-actions { flex-direction: row; flex-wrap: wrap; }
+  .btn { width: 100%; }
   .table-header { flex-direction: column; gap: 12px; align-items: flex-start; }
+  .auth-card { padding: 24px 16px 20px; }
+}
+
+/* Sidebar overlay for mobile */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 999;
+}
+
+.sidebar-overlay.show {
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .sidebar-overlay.show {
+    display: block;
+  }
 }

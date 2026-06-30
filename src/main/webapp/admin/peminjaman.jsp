@@ -14,9 +14,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manajemen Peminjaman - LibraryPro</title>
     <link rel="icon" type="image/png" href="https://i.imgur.com/oZIZRfO.png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
+
+    <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"></noscript>
+
+    <link rel="preload" as="style" href="<%=request.getContextPath()%>/css/style-global.css">
+    <link rel="stylesheet" href="<%=request.getContextPath()%>/css/style-global.css">
     <link rel="stylesheet" href="<%=request.getContextPath()%>/css/style.css">
-    
+
     <style>
         .profile-dropdown-container {
             position: relative;
@@ -518,6 +531,33 @@
     });
 </script>
 
+<script src="<%=request.getContextPath()%>/js/icon-fallback.js"></script>
 <script src="<%=request.getContextPath()%>/js/script.js"></script>
+<div class="dark-mode-toggle" onclick="toggleDarkMode()" title="Toggle Dark Mode">
+    <i class="fa-solid fa-moon"></i>
+</div>
+<script>
+function toggleDarkMode() {
+    var html = document.documentElement;
+    var toggle = document.querySelector(".dark-mode-toggle i");
+    if (html.getAttribute("data-theme") === "dark") {
+        html.removeAttribute("data-theme");
+        toggle.className = "fa-solid fa-moon";
+        localStorage.setItem("theme", "light");
+    } else {
+        html.setAttribute("data-theme", "dark");
+        toggle.className = "fa-solid fa-sun";
+        localStorage.setItem("theme", "dark");
+    }
+}
+(function () {
+    var saved = localStorage.getItem("theme");
+    if (saved === "dark") {
+        document.documentElement.setAttribute("data-theme", "dark");
+        var toggle = document.querySelector(".dark-mode-toggle i");
+        if (toggle) toggle.className = "fa-solid fa-sun";
+    }
+})();
+</script>
 </body>
 </html>
