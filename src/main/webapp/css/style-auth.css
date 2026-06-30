@@ -140,7 +140,7 @@
   color: var(--primary);
 }
 
-.auth-form .btn-primary {
+.auth-form .btn-accent {
   margin-top: 6px;
 }
 
