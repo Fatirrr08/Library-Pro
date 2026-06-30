@@ -3,9 +3,6 @@
    Ratio: 60% Neutral · 30% Primary · 10% Accent
    ===================================================== */
 
-/* ── Google Fonts ── */
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
-
 /* ── CSS Variables ── */
 :root {
   /* 60% — Neutral */
@@ -131,25 +128,61 @@ img {
 .mt-4 { margin-top: 16px; }
 .mt-6 { margin-top: 24px; }
 .mt-8 { margin-top: 32px; }
+.mt-10 { margin-top: 40px; }
+.mt-12 { margin-top: 48px; }
+.mt-16 { margin-top: 64px; }
 .mb-1 { margin-bottom: 4px; }
 .mb-2 { margin-bottom: 8px; }
 .mb-3 { margin-bottom: 12px; }
 .mb-4 { margin-bottom: 16px; }
 .mb-6 { margin-bottom: 24px; }
 .mb-8 { margin-bottom: 32px; }
+.mb-10 { margin-bottom: 40px; }
+.mb-12 { margin-bottom: 48px; }
+.ml-1 { margin-left: 4px; }
+.ml-2 { margin-left: 8px; }
+.ml-3 { margin-left: 12px; }
+.ml-4 { margin-left: 16px; }
+.mr-1 { margin-right: 4px; }
+.mr-2 { margin-right: 8px; }
+.mr-3 { margin-right: 12px; }
+.mr-4 { margin-right: 16px; }
+.p-1 { padding: 4px; }
+.p-2 { padding: 8px; }
+.p-3 { padding: 12px; }
+.p-4 { padding: 16px; }
+.p-6 { padding: 24px; }
+.p-8 { padding: 32px; }
+.px-1 { padding-left: 4px; padding-right: 4px; }
+.px-2 { padding-left: 8px; padding-right: 8px; }
+.px-3 { padding-left: 12px; padding-right: 12px; }
+.px-4 { padding-left: 16px; padding-right: 16px; }
+.px-6 { padding-left: 24px; padding-right: 24px; }
+.py-1 { padding-top: 4px; padding-bottom: 4px; }
+.py-2 { padding-top: 8px; padding-bottom: 8px; }
+.py-3 { padding-top: 12px; padding-bottom: 12px; }
+.py-4 { padding-top: 16px; padding-bottom: 16px; }
+.py-6 { padding-top: 24px; padding-bottom: 24px; }
 
 /* ── Flex & Grid Utilities ── */
 .flex { display: flex; }
 .flex-col { flex-direction: column; }
+.flex-row { flex-direction: row; }
 .flex-wrap { flex-wrap: wrap; }
+.flex-1 { flex: 1; }
 .items-center { align-items: center; }
 .items-start { align-items: flex-start; }
+.items-end { align-items: flex-end; }
 .justify-between { justify-content: space-between; }
 .justify-center { justify-content: center; }
 .justify-end { justify-content: flex-end; }
+.justify-around { justify-content: space-around; }
 .gap-1 { gap: 4px; }
 .gap-2 { gap: 8px; }
 .gap-3 { gap: 12px; }
+.gap-4 { gap: 16px; }
+.gap-6 { gap: 24px; }
+.gap-8 { gap: 32px; }
 .gap-4 { gap: 16px; }
 .gap-6 { gap: 24px; }
 .flex-1 { flex: 1; }
@@ -437,6 +470,27 @@ tr:hover td {
   font-size: 14px;
   color: var(--text-secondary);
   margin-top: 4px;
+}
+
+/* ── Icon Size Scale ── */
+.icon-xs { font-size: 12px; }
+.icon-sm { font-size: 14px; }
+.icon-md { font-size: 18px; }
+.icon-lg { font-size: 24px; }
+.icon-xl { font-size: 32px; }
+.icon-2xl { font-size: 40px; }
+.icon-3xl { font-size: 48px; }
+
+/* ── FontAwesome CSS Fallback (when CDN fails) ── */
+i.fa-fallback {
+  font-style: normal;
+  font-weight: 400;
+  font-size: inherit;
+  font-family: 'Times New Roman', serif;
+}
+
+i.fa-fallback[data-fa-icon] {
+  speak: none;
 }
 
 /* ── Animations ── */
