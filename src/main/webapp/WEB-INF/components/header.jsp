@@ -1,7 +1,6 @@
+<%-- header.jsp — Global <head> + Opening body + Sidebar (for internal pages) --%>
 <%@ page import="model.User" %>
 <%@ page import="util.StringUtils" %>
-<%-- header.jsp — Global <head> + Opening body + Sidebar (for internal pages) --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     User loggedUser = (User) session.getAttribute("user");
     boolean isInternal = loggedUser != null;

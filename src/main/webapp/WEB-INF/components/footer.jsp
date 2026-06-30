@@ -1,5 +1,4 @@
 <%-- footer.jsp — Closing tags + Scripts --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     User loggedUser = (User) session.getAttribute("user");
     boolean isInternal = loggedUser != null;
