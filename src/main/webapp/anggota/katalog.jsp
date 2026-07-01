@@ -80,13 +80,13 @@
         <li><a href="<%=request.getContextPath()%>/favorit"><i class="fa-solid fa-star"></i> <%= Lang.get("menu.favorites", request) %></a></li>
         <li><a href="<%=request.getContextPath()%>/ulasan"><i class="fa-solid fa-comments"></i> <%= Lang.get("menu.reviews", request) %></a></li>
     </ul>
-    <div class="sidebar-footer">
+    <a href="<%=request.getContextPath()%>/profile" class="sidebar-footer">
         <img src="<%= (loggedUser.getFotoProfil() != null && !loggedUser.getFotoProfil().isEmpty()) ? request.getContextPath() + "/uploads/profile/" + loggedUser.getFotoProfil() : request.getContextPath() + "/uploads/profile/default.png" %>" alt="Profil" loading="lazy" onerror="this.onerror=null;this.src='<%=request.getContextPath()%>/uploads/profile/default.png'">
         <div class="user-info">
             <span><%= StringUtils.escapeHtml(loggedUser.getNamaLengkap()) %></span>
             <small><%= Lang.get("role.member", request) %></small>
         </div>
-    </div>
+    </a>
 </div>
 
 <div class="main-content">
@@ -324,9 +324,10 @@
 
         if (searchInput && typeof FuzzySearch !== "undefined") {
             var bookData = [];
-            bookCards.forEach(function (card) {
+            bookCards.forEach(function (card, index) {
                 bookData.push({
                     element: card,
+                    index: index,
                     judul: card.getAttribute("data-judul") || "",
                     penulis: card.getAttribute("data-penulis") || "",
                     penerbit: card.getAttribute("data-penerbit") || "",
@@ -335,7 +336,7 @@
             });
 
             var doSearch = FuzzySearch.debounce(function () {
-                var keyword = searchInput.value.trim();
+                var keyword = searchInput.value.trim().toLowerCase();
                 var results;
 
                 if (!keyword) {
@@ -348,11 +349,11 @@
                 var shown = {};
                 results.forEach(function (r) {
                     r.element.style.display = "flex";
-                    shown[r.element.dataset.index || r.index] = true;
+                    shown[r.index] = true;
                     visibleCount++;
                 });
                 bookData.forEach(function (r) {
-                    if (!shown[r.element.dataset.index || r.index]) {
+                    if (!shown[r.index]) {
                         r.element.style.display = "none";
                     }
                 });

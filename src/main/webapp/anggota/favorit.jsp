@@ -3,6 +3,7 @@
 <%@ page import="model.Favorit" %>
 <%@ page import="model.User" %>
 <%@ page import="util.StringUtils" %>
+<%@ page import="util.Lang" %>
 
 <!DOCTYPE html>
 <html lang="id">
@@ -47,25 +48,25 @@
 <div class="sidebar">
     <div class="logo"><i class="fa-solid fa-book-open-reader"></i> <span>LibraryPro</span></div>
     <ul class="menu">
-        <li><a href="<%=request.getContextPath()%>/dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a></li>
-        <li><a href="<%=request.getContextPath()%>/anggota/katalog.jsp"><i class="fa-solid fa-book-open"></i> Katalog Buku</a></li>
-        <li><a href="<%=request.getContextPath()%>/peminjaman"><i class="fa-solid fa-clock-rotate-left"></i> Riwayat Peminjaman</a></li>
-        <li><a href="<%=request.getContextPath()%>/favorit" class="active"><i class="fa-solid fa-star"></i> Favorit Saya</a></li>
-        <li><a href="<%=request.getContextPath()%>/ulasan"><i class="fa-solid fa-comments"></i> Ulasan & Rating Saya</a></li>
+        <li><a href="<%=request.getContextPath()%>/dashboard"><i class="fa-solid fa-chart-line"></i> <%= Lang.get("menu.dashboard", request) %></a></li>
+        <li><a href="<%=request.getContextPath()%>/anggota/katalog.jsp"><i class="fa-solid fa-book-open"></i> <%= Lang.get("menu.catalog", request) %></a></li>
+        <li><a href="<%=request.getContextPath()%>/peminjaman"><i class="fa-solid fa-clock-rotate-left"></i> <%= Lang.get("menu.history", request) %></a></li>
+        <li><a href="<%=request.getContextPath()%>/favorit" class="active"><i class="fa-solid fa-star"></i> <%= Lang.get("menu.favorites", request) %></a></li>
+        <li><a href="<%=request.getContextPath()%>/ulasan"><i class="fa-solid fa-comments"></i> <%= Lang.get("menu.reviews", request) %></a></li>
     </ul>
-    <div class="sidebar-footer">
+    <a href="<%=request.getContextPath()%>/profile" class="sidebar-footer">
         <img src="<%= (loggedUser.getFotoProfil() != null && !loggedUser.getFotoProfil().isEmpty()) ? request.getContextPath() + "/uploads/profile/" + loggedUser.getFotoProfil() : request.getContextPath() + "/uploads/profile/default.png" %>" loading="lazy" onerror="this.onerror=null;this.src='<%=request.getContextPath()%>/uploads/profile/default.png'" alt="Profil">
         <div class="user-info">
             <span><%= StringUtils.escapeHtml(loggedUser.getNamaLengkap()) %></span>
-            <small>Anggota</small>
+            <small><%= Lang.get("role.member", request) %></small>
         </div>
-    </div>
+    </a>
 </div>
 
 <div class="main-content">
     <div class="topbar">
         <button class="sidebar-toggle-btn" id="sidebarToggle" type="button" aria-label="Toggle sidebar"><i class="fa-solid fa-bars"></i></button>
-        <h2>Buku Terfavorit Anda</h2>
+        <h2><%= Lang.get("favorit.title", request) %></h2>
         <div class="profile-dropdown-container">
             <div class="user-profile" id="profileTrigger" role="button" tabindex="0" aria-haspopup="true" aria-expanded="false">
                 <img src="<%= (loggedUser.getFotoProfil() != null && !loggedUser.getFotoProfil().isEmpty()) ? request.getContextPath() + "/uploads/profile/" + loggedUser.getFotoProfil() : request.getContextPath() + "/uploads/profile/default.png" %>" loading="lazy" onerror="this.onerror=null;this.src='<%=request.getContextPath()%>/uploads/profile/default.png'" alt="Foto Profil">
@@ -73,11 +74,17 @@
                 <i class="fa-solid fa-chevron-down chevron-icon"></i>
             </div>
             <ul class="dropdown-menu" id="dropdownMenu" role="menu">
-                <li><a href="<%=request.getContextPath()%>/profile" role="menuitem"><i class="fa-solid fa-user-gear"></i> Profil Saya</a></li>
+                <li><a href="<%=request.getContextPath()%>/profile" role="menuitem"><i class="fa-solid fa-user-gear"></i> <%= Lang.get("menu.profile", request) %></a></li>
+                <li>
+                    <a href="<%= request.getContextPath() %>/language?lang=<%= "en".equals(session.getAttribute("lang")) ? "id" : "en" %>" class="lang-toggle-link" role="menuitem">
+                        <span><i class="fa-solid fa-globe"></i> <%= Lang.get("menu.lang_switch", request) %></span>
+                        <span class="lang-badge"><%= "en".equals(session.getAttribute("lang")) ? "EN" : "ID" %></span>
+                    </a>
+                </li>
                 <li class="divider" role="separator"></li>
                 <li>
                     <a href="#" class="logout-link" id="logoutTrigger" role="menuitem">
-                        <i class="fa-solid fa-right-from-bracket"></i> Logout
+                        <i class="fa-solid fa-right-from-bracket"></i> <%= Lang.get("menu.logout", request) %>
                     </a>
                 </li>
             </ul>
@@ -86,8 +93,8 @@
 
     <div class="dashboard-content">
         <div class="welcome animate-fade-in">
-            <h1>Buku Favorit Saya</h1>
-            <p>Daftar buku yang Anda tandai sebagai favorit untuk dipinjam di lain waktu.</p>
+            <h1><%= Lang.get("favorit.title", request) %></h1>
+            <p><%= Lang.get("favorit.subtitle", request) %></p>
         </div>
 
         <div class="catalog-grid">

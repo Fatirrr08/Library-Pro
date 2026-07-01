@@ -326,6 +326,18 @@ body::before {
   align-items: center;
   gap: 10px;
   flex-shrink: 0;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.sidebar-footer:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.sidebar-footer:hover img {
+  border-color: var(--color-accent-cyan);
+  transform: scale(1.05);
 }
 
 .sidebar-footer img {

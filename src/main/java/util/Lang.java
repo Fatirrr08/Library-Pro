@@ -54,6 +54,17 @@ public class Lang {
             case "history.subtitle": return isEn ? "View the status of your borrowed books and process returns." : "Lihat status buku yang Anda pinjam dan lakukan pengembalian secara mandiri.";
             case "history.badge_pay_counter": return isEn ? "Pay Fine at Counter!" : "Bayar Denda di Loket!";
             
+            // Page contents (Favorit)
+            case "favorit.title": return isEn ? "My Favorite Books" : "Buku Terfavorit Anda";
+            case "favorit.subtitle": return isEn ? "Your collection of saved books for quick access." : "Kumpulan buku pilihan yang Anda simpan untuk akses cepat.";
+            
+            // Page contents (Ulasan)
+            case "reviews.title_history": return isEn ? "My Review History" : "History Ulasan Anda";
+            case "reviews.title_write": return isEn ? "Write Book Review" : "Tulis Ulasan Buku";
+            case "reviews.title_edit": return isEn ? "Edit Book Review" : "Edit Ulasan Buku";
+            case "reviews.title_main": return isEn ? "Book Reviews & Ratings" : "Ulasan & Rating Buku";
+            case "reviews.back_catalog": return isEn ? "Back to Catalog" : "Kembali ke Katalog";
+            
             default: return key;
         }
     }
