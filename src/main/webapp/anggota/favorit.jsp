@@ -101,7 +101,7 @@
                         <img src="<%=request.getContextPath()%>/uploads/buku/<%= f.getFotoBuku() %>" 
                              style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;"
                              loading="lazy"
-                             onerror="this.onerror=null;this.parentNode.innerHTML='<i class=\'fa-solid fa-book-open\' style=\'font-size:2rem;display:flex;align-items:center;justify-content:center;width:100%;height:100%;color:#94a3b8;\'></i>';"
+                             onerror="this.onerror=null;this.parentNode.innerHTML='<i class=\'fa-solid fa-book-open\'></i>';"
                              alt="<%= StringUtils.escapeHtml(f.getJudulBuku()) %>">
                     <% } else { %>
                         <i class="fa-solid fa-book-open"></i>

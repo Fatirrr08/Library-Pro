@@ -296,10 +296,10 @@
                     <label>Gambar Sampul Buku</label>
                     <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
                         <% if (editBuku != null && editBuku.getFotoBuku() != null && !editBuku.getFotoBuku().isEmpty()) { %>
-                            <div style="width: 80px; height: 110px; border-radius: 6px; overflow: hidden; border: 1px solid #e2e8f0; flex-shrink: 0;">
+                            <div style="width: 80px; height: 110px; border-radius: 6px; overflow: hidden; border: 1px solid #e2e8f0; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: #f1f5f9;">
                                 <img src="<%=request.getContextPath()%>/uploads/buku/<%= editBuku.getFotoBuku() %>" 
                                      style="width: 100%; height: 100%; object-fit: cover;"
-                                     onerror="this.onerror=null;this.parentNode.innerHTML='<i class=\'fa-solid fa-book-open\' style=\'font-size:2rem;display:flex;align-items:center;justify-content:center;width:100%;height:100%;color:#94a3b8;\'></i>';"
+                                     onerror="this.onerror=null;this.parentNode.innerHTML='<i class=\'fa-solid fa-book-open\' style=\'font-size:2rem;color:#94a3b8;\'></i>';"
                                      alt="Sampul">
                             </div>
                         <% } %>
@@ -346,14 +346,14 @@
                 <tr>
                     <td><%= b.getIdBuku() %></td>
                     <td>
-                        <div style="width: 50px; height: 68px; border-radius: 4px; overflow: hidden; border: 1px solid #e2e8f0;">
+                        <div style="width: 50px; height: 68px; border-radius: 4px; overflow: hidden; border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center; background: #f1f5f9;">
                             <% if (b.getFotoBuku() != null && !b.getFotoBuku().isEmpty()) { %>
                                 <img src="<%=request.getContextPath()%>/uploads/buku/<%= b.getFotoBuku() %>" 
                                      style="width: 100%; height: 100%; object-fit: cover;"
-                                     onerror="this.onerror=null;this.parentNode.innerHTML='<i class=\'fa-solid fa-book-open\' style=\'font-size:1.2rem;display:flex;align-items:center;justify-content:center;width:100%;height:100%;color:#94a3b8;\'></i>';"
+                                     onerror="this.onerror=null;this.parentNode.innerHTML='<i class=\'fa-solid fa-book-open\' style=\'font-size:1.2rem;color:#94a3b8;\'></i>';"
                                      alt="Sampul">
                             <% } else { %>
-                                <i class="fa-solid fa-book-open" style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;color:#94a3b8;"></i>
+                                <i class="fa-solid fa-book-open" style="font-size:1.2rem;color:#94a3b8;"></i>
                             <% } %>
                         </div>
                     </td>
