@@ -109,7 +109,7 @@ public class PeminjamanDAO extends BaseDAO implements Transaksi {
                 }
                 
                 LocalDate tanggalAccHariIni = LocalDate.now();
-                LocalDate batasKembali = tanggalAccHariIni.plusMonths(1); 
+                LocalDate batasKembali = tanggalAccHariIni.plusDays(30); 
 
                 String updateStatusSql = "UPDATE peminjaman SET status = ?, tanggal_pinjam = ?, tanggal_tenggat = ? WHERE id_peminjaman = ?";
                 PreparedStatement psStatus = conn.prepareStatement(updateStatusSql);
@@ -177,7 +177,7 @@ public class PeminjamanDAO extends BaseDAO implements Transaksi {
                         
                         if (hariIni.isAfter(batasKembali)) {
                             long selisihHari = ChronoUnit.DAYS.between(batasKembali, hariIni);
-                            dendaFinal = selisihHari * 1000; 
+                            dendaFinal = selisihHari * 2000; 
                         }
                     }
 
@@ -249,7 +249,7 @@ public class PeminjamanDAO extends BaseDAO implements Transaksi {
                         
                         if (hariIni.isAfter(batasKembali)) {
                             long selisihHari = ChronoUnit.DAYS.between(batasKembali, hariIni);
-                            dendaTampil = selisihHari * 1000;
+                            dendaTampil = selisihHari * 2000;
                         }
                     }
 
@@ -300,7 +300,7 @@ public class PeminjamanDAO extends BaseDAO implements Transaksi {
                             
                             if (hariIni.isAfter(batasKembali)) {
                                 long selisihHari = ChronoUnit.DAYS.between(batasKembali, hariIni);
-                                dendaTampil = selisihHari * 1000;
+                                dendaTampil = selisihHari * 2000;
                             }
                         }
 

@@ -12,7 +12,7 @@ public class Peminjaman {
     private String status;
 
     // Join fields for UI display
-    private long denda; // 🌟 Diubah ke long agar kalkulasi hari perkalian Rp1.000 presisi
+    private long denda; // 🌟 Diubah ke long agar kalkulasi hari perkalian Rp2.000 presisi
     private String username;
     private String namaLengkap;
     private String judulBuku;

@@ -5,6 +5,7 @@
 <%@ page import="java.text.NumberFormat" %>
 <%@ page import="java.util.Locale" %>
 <%@ page import="util.StringUtils" %>
+<%@ page import="util.Lang" %>
 
 <!DOCTYPE html>
 <html lang="id">
@@ -52,17 +53,17 @@
 <div class="sidebar">
     <div class="logo"><i class="fa-solid fa-book-open-reader"></i> <span>LibraryPro</span></div>
     <ul class="menu">
-        <li><a href="<%=request.getContextPath()%>/dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a></li>
-        <li><a href="<%=request.getContextPath()%>/anggota/katalog.jsp"><i class="fa-solid fa-book-open"></i> Katalog Buku</a></li>
-        <li><a href="<%=request.getContextPath()%>/peminjaman" class="active"><i class="fa-solid fa-clock-rotate-left"></i> Riwayat Peminjaman</a></li>
-        <li><a href="<%=request.getContextPath()%>/favorit"><i class="fa-solid fa-star"></i> Favorit Saya</a></li>
-        <li><a href="<%=request.getContextPath()%>/ulasan"><i class="fa-solid fa-comments"></i> Ulasan & Rating Saya</a></li>
+        <li><a href="<%=request.getContextPath()%>/dashboard"><i class="fa-solid fa-chart-line"></i> <%= Lang.get("menu.dashboard", request) %></a></li>
+        <li><a href="<%=request.getContextPath()%>/anggota/katalog.jsp"><i class="fa-solid fa-book-open"></i> <%= Lang.get("menu.catalog", request) %></a></li>
+        <li><a href="<%=request.getContextPath()%>/peminjaman" class="active"><i class="fa-solid fa-clock-rotate-left"></i> <%= Lang.get("menu.history", request) %></a></li>
+        <li><a href="<%=request.getContextPath()%>/favorit"><i class="fa-solid fa-star"></i> <%= Lang.get("menu.favorites", request) %></a></li>
+        <li><a href="<%=request.getContextPath()%>/ulasan"><i class="fa-solid fa-comments"></i> <%= Lang.get("menu.reviews", request) %></a></li>
     </ul>
     <div class="sidebar-footer">
         <img src="<%= (loggedUser.getFotoProfil() != null && !loggedUser.getFotoProfil().isEmpty()) ? request.getContextPath() + "/uploads/profile/" + loggedUser.getFotoProfil() : request.getContextPath() + "/uploads/profile/default.png" %>" loading="lazy" onerror="this.onerror=null;this.src='<%=request.getContextPath()%>/uploads/profile/default.png'" alt="Profil">
         <div class="user-info">
             <span><%= StringUtils.escapeHtml(loggedUser.getNamaLengkap()) %></span>
-            <small>Anggota</small>
+            <small><%= Lang.get("role.member", request) %></small>
         </div>
     </div>
 </div>
@@ -70,7 +71,7 @@
 <div class="main-content">
     <div class="topbar">
         <button class="sidebar-toggle-btn" id="sidebarToggle" type="button" aria-label="Toggle sidebar"><i class="fa-solid fa-bars"></i></button>
-        <h2>Riwayat Peminjaman Anda</h2>
+        <h2><%= Lang.get("history.title", request) %></h2>
         <div class="profile-dropdown-container">
             <div class="user-profile" id="profileTrigger" role="button" tabindex="0" aria-haspopup="true" aria-expanded="false">
                 <img src="<%= (loggedUser.getFotoProfil() != null && !loggedUser.getFotoProfil().isEmpty()) ? request.getContextPath() + "/uploads/profile/" + loggedUser.getFotoProfil() : request.getContextPath() + "/uploads/profile/default.png" %>" loading="lazy" onerror="this.onerror=null;this.src='<%=request.getContextPath()%>/uploads/profile/default.png'" alt="Foto Profil">
@@ -78,17 +79,46 @@
                 <i class="fa-solid fa-chevron-down chevron-icon"></i>
             </div>
             <ul class="dropdown-menu" id="dropdownMenu" role="menu">
-                <li><a href="<%=request.getContextPath()%>/profile" role="menuitem"><i class="fa-solid fa-user-gear"></i> Profil Saya</a></li>
+                <li><a href="<%=request.getContextPath()%>/profile" role="menuitem"><i class="fa-solid fa-user-gear"></i> <%= Lang.get("menu.profile", request) %></a></li>
+                <li>
+                    <a href="<%= request.getContextPath() %>/language?lang=<%= "en".equals(session.getAttribute("lang")) ? "id" : "en" %>" class="lang-toggle-link" role="menuitem">
+                        <span><i class="fa-solid fa-globe"></i> <%= Lang.get("menu.lang_switch", request) %></span>
+                        <span class="lang-badge"><%= "en".equals(session.getAttribute("lang")) ? "EN" : "ID" %></span>
+                    </a>
+                </li>
                 <li class="divider" role="separator"></li>
-                <li><a href="#" class="logout-link" id="logoutTrigger" role="menuitem"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+                <li><a href="#" class="logout-link" id="logoutTrigger" role="menuitem"><i class="fa-solid fa-right-from-bracket"></i> <%= Lang.get("menu.logout", request) %></a></li>
             </ul>
         </div>
     </div>
 
     <div class="dashboard-content">
         <div class="welcome">
-            <h1>Riwayat Peminjaman</h1>
-            <p>Lihat status buku yang Anda pinjam dan lakukan pengembalian secara mandiri.</p>
+            <h1><%= Lang.get("menu.history", request) %></h1>
+            <p><%= Lang.get("history.subtitle", request) %></p>
+        </div>
+
+        <!-- Premium Aturan Peminjaman Info Box -->
+        <div style="background: linear-gradient(135deg, #fef2f2, #fff1f2); border: 1px dashed #f43f5e; padding: 20px; border-radius: 12px; margin-bottom: 24px; display: flex; gap: 16px; align-items: flex-start; box-shadow: var(--shadow-sm); transition: transform 0.2s ease;">
+            <div style="background: #ffe4e6; color: #e11d48; width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; box-shadow: 0 4px 10px rgba(225, 29, 72, 0.15);">
+                <i class="fa-solid fa-scroll"></i>
+            </div>
+            <div style="flex: 1;">
+                <h4 style="margin: 0 0 6px 0; color: #9f1239; font-weight: 700; font-size: 0.98rem; display: flex; align-items: center; gap: 6px;">
+                    <%= "en".equals(session.getAttribute("lang")) ? "Library Rules & Policies" : "Ketentuan & Aturan Peminjaman" %>
+                </h4>
+                <ul style="margin: 0; padding-left: 20px; font-size: 0.85rem; color: #4c0519; line-height: 1.6; display: flex; flex-direction: column; gap: 4px;">
+                    <li>
+                        <%= "en".equals(session.getAttribute("lang")) ? "The borrowing period is specified by the system starting from the borrow date (max 30 days)." : "Waktu peminjaman sudah ditentukan oleh sistem terhitung sejak tanggal peminjaman (Maksimal 30 hari)." %>
+                    </li>
+                    <li>
+                        <%= "en".equals(session.getAttribute("lang")) ? "A fine of <strong>Rp 2,000 / day</strong> will be charged for any late returns." : "Denda keterlambatan pengembalian buku ditetapkan sebesar <strong>Rp 2.000 / hari</strong>." %>
+                    </li>
+                    <li>
+                        <%= "en".equals(session.getAttribute("lang")) ? "Fine payments must be settled in cash directly at the <strong>Library Guard Counter</strong> before returning the book." : "Pembayaran denda wajib diselesaikan secara tunai langsung di <strong>Loket Penjaga Perpustakaan</strong> sebelum mengembalikan buku." %>
+                    </li>
+                </ul>
+            </div>
         </div>
 
         <%
@@ -167,8 +197,8 @@
                     <td>
                         <% if ("disetujui".equalsIgnoreCase(p.getStatus()) || "dipinjam".equalsIgnoreCase(p.getStatus())) { %>
                             <% if (p.getDenda() > 0) { %>
-                                <span>
-                                    <i class="fa-solid fa-circle-exclamation"></i> Bayar Denda!
+                                <span class="denda-active" title="<%= "en".equals(session.getAttribute("lang")) ? "Pay fine at the guard counter to return" : "Bayar denda di loket penjaga perpustakaan untuk mengembalikan" %>" style="font-size: 0.8rem; display: inline-flex; align-items: center; gap: 4px; color: #ef4444; font-weight: 600;">
+                                    <i class="fa-solid fa-circle-exclamation"></i> <%= Lang.get("history.badge_pay_counter", request) %>
                                 </span>
                             <% } else { %>
                                 <a href="<%=request.getContextPath()%>/peminjaman?action=kembalikan&id=<%= p.getIdPeminjaman() %>" class="btn-action-table btn-table-return">

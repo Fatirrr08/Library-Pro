@@ -220,7 +220,7 @@
     <div class="dashboard-content">
         <div class="welcome">
             <h1>Manajemen & Validasi Peminjaman</h1>
-            <p>Otorisasi permintaan sirkulasi buku baru serta pantau akumulasi denda keterlambatan pengembalian (Maks 1 Bulan, Rp 1.000/hari).</p>
+            <p>Otorisasi permintaan sirkulasi buku baru serta pantau denda keterlambatan (Batas 30 Hari, Rp 2.000/hari, denda dibayarkan di loket penjaga perpustakaan).</p>
         </div>
 
         <div class="form-box">

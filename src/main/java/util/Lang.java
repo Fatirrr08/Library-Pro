@@ -49,6 +49,11 @@ public class Lang {
             case "katalog.search_btn": return isEn ? "Search Book" : "Cari Buku";
             case "katalog.reset_btn": return isEn ? "Reset Filter" : "Atur Ulang";
             
+            // Page contents (Riwayat Peminjaman)
+            case "history.title": return isEn ? "My Borrowing History" : "Riwayat Peminjaman Anda";
+            case "history.subtitle": return isEn ? "View the status of your borrowed books and process returns." : "Lihat status buku yang Anda pinjam dan lakukan pengembalian secara mandiri.";
+            case "history.badge_pay_counter": return isEn ? "Pay Fine at Counter!" : "Bayar Denda di Loket!";
+            
             default: return key;
         }
     }
