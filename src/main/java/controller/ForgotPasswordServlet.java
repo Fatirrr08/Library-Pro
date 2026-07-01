@@ -130,18 +130,18 @@ public class ForgotPasswordServlet extends HttpServlet {
             }
 
             int userId = (int) session.getAttribute("resetUserId");
+            String resetUsername = (String) session.getAttribute("resetUsername");
             boolean updated = userDAO.updatePassword(userId, newPassword);
 
-            session.removeAttribute("resetUserId");
-            session.removeAttribute("resetUsername");
-            session.removeAttribute("resetQuestion");
-
             if (updated) {
+                session.removeAttribute("resetUserId");
+                session.removeAttribute("resetUsername");
+                session.removeAttribute("resetQuestion");
                 response.sendRedirect(request.getContextPath() + "/login.jsp?resetSuccess=true");
             } else {
                 request.setAttribute("error", "Gagal mereset password. Silakan coba lagi.");
                 request.setAttribute("step", "3");
-                request.setAttribute("resetUsername", session.getAttribute("resetUsername"));
+                request.setAttribute("resetUsername", resetUsername);
                 request.getRequestDispatcher("/forgot-password.jsp").forward(request, response);
             }
 

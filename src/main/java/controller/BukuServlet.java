@@ -37,12 +37,16 @@ public class BukuServlet extends HttpServlet {
 
         if ("delete".equals(action)) {
             int id = Integer.parseInt(request.getParameter("id"));
-            // Delete cover image file first
-            Buku bukuToDelete = dao.getBukuById(id);
-            if (bukuToDelete.getFotoBuku() != null && !bukuToDelete.getFotoBuku().isEmpty()) {
-                String filePath = getServletContext().getRealPath("/") + "uploads" + File.separator + "buku" + File.separator + bukuToDelete.getFotoBuku();
-                File file = new File(filePath);
-                if (file.exists()) file.delete();
+            try {
+                Buku bukuToDelete = dao.getBukuById(id);
+                if (bukuToDelete.getFotoBuku() != null && !bukuToDelete.getFotoBuku().isEmpty()) {
+                    String filePath = getServletContext().getRealPath("/") + "uploads" + File.separator + "buku" + File.separator + bukuToDelete.getFotoBuku();
+                    File file = new File(filePath);
+                    if (file.exists()) file.delete();
+                }
+            } catch (Exception e) {
+                response.sendRedirect(request.getContextPath() + "/buku?status=fail");
+                return;
             }
             boolean deleted = dao.delete(id);
             if (deleted) {
