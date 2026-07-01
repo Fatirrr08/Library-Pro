@@ -146,7 +146,7 @@
                 <div class="book-cover-placeholder">
                     <% if (b.getFotoBuku() != null && !b.getFotoBuku().isEmpty()) { %>
                         <img src="<%=request.getContextPath()%>/uploads/buku/<%= b.getFotoBuku() %>" 
-                             style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;"
+                             style="width: auto; height: 100%; max-width: 100%; object-fit: contain; border-radius: 6px; box-shadow: 0 4px 8px rgba(0,0,0,0.15); transition: transform 0.3s ease;"
                              loading="lazy"
                              onerror="this.onerror=null;this.parentNode.innerHTML='<i class=\'fa-solid fa-book-open\'></i>';"
                              alt="<%= StringUtils.escapeHtml(b.getJudul()) %>">
