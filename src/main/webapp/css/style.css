@@ -865,7 +865,7 @@ table tbody tr:hover {
 /* cover placeholder */
 .book-cover-placeholder {
   width: 100%;
-  height: 120px;
+  aspect-ratio: 16 / 11;
   background: linear-gradient(135deg, var(--color-primary-light), #C4B5FD, var(--color-accent-cyan-light));
   background-size: 200% 200%;
   animation: gradientShift 5s ease infinite;
@@ -1602,7 +1602,7 @@ table tbody tr:hover {
     gap: 16px;
   }
   .book-card { border-radius: var(--radius-sm); }
-  .book-cover-placeholder { height: 90px; font-size: 1.8rem; }
+  .book-cover-placeholder { height: auto; aspect-ratio: 16 / 11; font-size: 1.8rem; }
   .book-info { padding: 14px 16px; }
   .book-actions { padding: 10px 16px; }
 
