@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="model.User" %>
 <%@ page import="util.StringUtils" %>
+<%@ page import="util.Lang" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -363,59 +364,59 @@
         <% if ("admin".equalsIgnoreCase(loggedUser.getLevel())) { %>
             <li>
                 <a href="<%=request.getContextPath()%>/dashboard">
-                    <i class="fa-solid fa-chart-line"></i> Dashboard
+                    <i class="fa-solid fa-chart-line"></i> <%= Lang.get("menu.dashboard", request) %>
                 </a>
             </li>
             <li>
                 <a href="<%=request.getContextPath()%>/buku">
-                    <i class="fa-solid fa-book"></i> Buku
+                    <i class="fa-solid fa-book"></i> <%= Lang.get("menu.books", request) %>
                 </a>
             </li>
             <li>
                 <a href="<%=request.getContextPath()%>/kategori">
-                    <i class="fa-solid fa-layer-group"></i> Kategori
+                    <i class="fa-solid fa-layer-group"></i> <%= Lang.get("menu.categories", request) %>
                 </a>
             </li>
             <li>
                 <a href="<%=request.getContextPath()%>/user">
-                    <i class="fa-solid fa-users"></i> User
+                    <i class="fa-solid fa-users"></i> <%= Lang.get("menu.users", request) %>
                 </a>
             </li>
             <li>
                 <a href="<%=request.getContextPath()%>/peminjaman">
-                    <i class="fa-solid fa-arrow-right-arrow-left"></i> Peminjaman
+                    <i class="fa-solid fa-arrow-right-arrow-left"></i> <%= Lang.get("menu.loans", request) %>
                 </a>
             </li>
         <% } else { %>
             <li>
                 <a href="<%=request.getContextPath()%>/dashboard">
-                    <i class="fa-solid fa-chart-line"></i> Dashboard
+                    <i class="fa-solid fa-chart-line"></i> <%= Lang.get("menu.dashboard", request) %>
                 </a>
             </li>
             <li>
                 <a href="<%=request.getContextPath()%>/anggota/katalog.jsp">
-                    <i class="fa-solid fa-book-open"></i> Katalog Buku
+                    <i class="fa-solid fa-book-open"></i> <%= Lang.get("menu.catalog", request) %>
                 </a>
             </li>
             <li>
                 <a href="<%=request.getContextPath()%>/peminjaman">
-                    <i class="fa-solid fa-clock-rotate-left"></i> Peminjaman Saya
+                    <i class="fa-solid fa-clock-rotate-left"></i> <%= Lang.get("menu.history", request) %>
                 </a>
             </li>
             <li>
                 <a href="<%=request.getContextPath()%>/favorit">
-                    <i class="fa-solid fa-star"></i> Favorit Saya
+                    <i class="fa-solid fa-star"></i> <%= Lang.get("menu.favorites", request) %>
                 </a>
             </li>
             <li>
                 <a href="<%=request.getContextPath()%>/ulasan">
-                    <i class="fa-solid fa-comments"></i> History Ulasan
+                    <i class="fa-solid fa-comments"></i> <%= Lang.get("menu.reviews", request) %>
                 </a>
             </li>
         <% } %>
         <li>
             <a href="<%=request.getContextPath()%>/profile" class="active">
-                <i class="fa-solid fa-user-gear"></i> Profil Saya
+                <i class="fa-solid fa-user-gear"></i> <%= Lang.get("menu.profile", request) %>
             </a>
         </li>
     </ul>
@@ -424,7 +425,7 @@
 <div class="main-content">
     <div class="topbar">
         <button class="sidebar-toggle-btn" id="sidebarToggle" type="button"><i class="fa-solid fa-bars"></i></button>
-        <h2>Profil Saya</h2>
+        <h2><%= Lang.get("menu.profile", request) %></h2>
         
         <div class="profile-dropdown-container">
             <div class="user-profile" id="profileTrigger">
@@ -436,13 +437,19 @@
             <ul class="dropdown-menu" id="dropdownMenu">
                 <li>
                     <a href="<%=request.getContextPath()%>/profile">
-                        <i class="fa-solid fa-user-gear"></i> Profil Saya
+                        <i class="fa-solid fa-user-gear"></i> <%= Lang.get("menu.profile", request) %>
+                    </a>
+                </li>
+                <li>
+                    <a href="<%= request.getContextPath() %>/language?lang=<%= "en".equals(session.getAttribute("lang")) ? "id" : "en" %>" class="lang-toggle-link">
+                        <span><i class="fa-solid fa-globe"></i> <%= Lang.get("menu.lang_switch", request) %></span>
+                        <span class="lang-badge"><%= "en".equals(session.getAttribute("lang")) ? "EN" : "ID" %></span>
                     </a>
                 </li>
                 <li class="divider"></li>
                 <li>
                     <a href="#" class="logout-link" id="logoutTrigger">
-                        <i class="fa-solid fa-right-from-bracket"></i> Logout
+                        <i class="fa-solid fa-right-from-bracket"></i> <%= Lang.get("menu.logout", request) %>
                     </a>
                 </li>
             </ul>
