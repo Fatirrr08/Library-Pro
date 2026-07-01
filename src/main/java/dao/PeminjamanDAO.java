@@ -109,7 +109,7 @@ public class PeminjamanDAO extends BaseDAO implements Transaksi {
                 }
                 
                 LocalDate tanggalAccHariIni = LocalDate.now();
-                LocalDate batasKembali = tanggalAccHariIni.plusDays(30); 
+                LocalDate batasKembali = tanggalAccHariIni.plusDays(14); 
 
                 String updateStatusSql = "UPDATE peminjaman SET status = ?, tanggal_pinjam = ?, tanggal_tenggat = ? WHERE id_peminjaman = ?";
                 PreparedStatement psStatus = conn.prepareStatement(updateStatusSql);

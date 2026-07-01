@@ -109,7 +109,7 @@
                 </h4>
                 <ul style="margin: 0; padding-left: 20px; font-size: 0.85rem; color: #4c0519; line-height: 1.6; display: flex; flex-direction: column; gap: 4px;">
                     <li>
-                        <%= "en".equals(session.getAttribute("lang")) ? "The borrowing period is specified by the system starting from the borrow date (max 30 days)." : "Waktu peminjaman sudah ditentukan oleh sistem terhitung sejak tanggal peminjaman (Maksimal 30 hari)." %>
+                        <%= "en".equals(session.getAttribute("lang")) ? "The borrowing period is specified by the system starting from the borrow date (max 14 days)." : "Waktu peminjaman sudah ditentukan oleh sistem terhitung sejak tanggal peminjaman (Maksimal 14 hari)." %>
                     </li>
                     <li>
                         <%= "en".equals(session.getAttribute("lang")) ? "A fine of <strong>Rp 2,000 / day</strong> will be charged for any late returns." : "Denda keterlambatan pengembalian buku ditetapkan sebesar <strong>Rp 2.000 / hari</strong>." %>
