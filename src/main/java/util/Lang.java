@@ -27,6 +27,7 @@ public class Lang {
             case "menu.all_reviews": return isEn ? "Manage Reviews" : "Kelola Ulasan";
             case "menu.profile": return isEn ? "My Profile" : "Profil Saya";
             case "menu.logout": return isEn ? "Logout" : "Logout";
+            case "menu.lang_switch": return isEn ? "Language" : "Bahasa";
             
             // Topbar
             case "topbar.title": return isEn ? "Digital Library" : "Perpustakaan Digital";

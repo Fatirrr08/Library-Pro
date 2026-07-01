@@ -1147,6 +1147,38 @@ table tbody tr:hover {
   color: var(--color-accent-coral);
 }
 
+.dropdown-menu li a.lang-toggle-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dropdown-menu li a.lang-toggle-link .lang-badge {
+  background: var(--bg-main);
+  border: 1px solid var(--border);
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dropdown-menu li a.lang-toggle-link:hover .lang-badge {
+  background: var(--color-primary);
+  color: #ffffff;
+  border-color: var(--color-primary);
+  transform: scale(1.05);
+}
+
+.dropdown-menu li a.lang-toggle-link .fa-globe {
+  transition: transform 0.3s ease;
+}
+
+.dropdown-menu li a.lang-toggle-link:hover .fa-globe {
+  transform: rotate(20deg);
+}
+
 .dropdown-menu .divider {
   height: 1px;
   background: var(--border);
