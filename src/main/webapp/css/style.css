@@ -1730,3 +1730,50 @@ table tbody tr:hover {
     font-size: 1.5rem;
   }
 }
+
+/* ── Star Rating Input Widget ── */
+.rating-stars-wrapper {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.rating-stars-wrapper input[type="radio"] {
+  display: none;
+}
+
+.rating-stars-wrapper label {
+  font-size: 2.2rem;
+  color: #D1D5DB;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.rating-stars-wrapper label:hover,
+.rating-stars-wrapper label:hover ~ label,
+.rating-stars-wrapper input[type="radio"]:checked ~ label {
+  color: #FBBF24;
+  text-shadow: 0 0 10px rgba(251, 191, 36, 0.35);
+}
+
+.rating-stars-wrapper label:hover {
+  transform: scale(1.15) rotate(5deg);
+}
+
+.rating-stars-wrapper label:active {
+  transform: scale(0.9);
+}
+
+[data-theme="dark"] .rating-stars-wrapper label {
+  color: #334155;
+}
+
+[data-theme="dark"] .rating-stars-wrapper label:hover,
+[data-theme="dark"] .rating-stars-wrapper label:hover ~ label,
+[data-theme="dark"] .rating-stars-wrapper input[type="radio"]:checked ~ label {
+  color: #FBBF24;
+  text-shadow: 0 0 15px rgba(251, 191, 36, 0.55);
+}
+

@@ -111,13 +111,22 @@
                     
                     <div class="form-group">
                         <label>Rating Buku</label>
-                        <div class="rating-input-container">
+                        <div class="rating-stars-wrapper">
                             <% int ratingLama = (editUlasan != null) ? editUlasan.getRating() : 0; %>
-                            <input type="radio" id="star5" name="rating" value="5" required <%= ratingLama == 5 ? "checked" : "" %>/><label for="star5" class="fa-solid fa-star"></label>
-                            <input type="radio" id="star4" name="rating" value="4" <%= ratingLama == 4 ? "checked" : "" %>/><label for="star4" class="fa-solid fa-star"></label>
-                            <input type="radio" id="star3" name="rating" value="3" <%= ratingLama == 3 ? "checked" : "" %>/><label for="star3" class="fa-solid fa-star"></label>
-                            <input type="radio" id="star2" name="rating" value="2" <%= ratingLama == 2 ? "checked" : "" %>/><label for="star2" class="fa-solid fa-star"></label>
-                            <input type="radio" id="star1" name="rating" value="1" <%= ratingLama == 1 ? "checked" : "" %>/><label for="star1" class="fa-solid fa-star"></label>
+                            <input type="radio" id="star5" name="rating" value="5" required <%= ratingLama == 5 ? "checked" : "" %> />
+                            <label for="star5" class="fa-solid fa-star" title="5 Stars"></label>
+                            
+                            <input type="radio" id="star4" name="rating" value="4" <%= ratingLama == 4 ? "checked" : "" %> />
+                            <label for="star4" class="fa-solid fa-star" title="4 Stars"></label>
+                            
+                            <input type="radio" id="star3" name="rating" value="3" <%= ratingLama == 3 ? "checked" : "" %> />
+                            <label for="star3" class="fa-solid fa-star" title="3 Stars"></label>
+                            
+                            <input type="radio" id="star2" name="rating" value="2" <%= ratingLama == 2 ? "checked" : "" %> />
+                            <label for="star2" class="fa-solid fa-star" title="2 Stars"></label>
+                            
+                            <input type="radio" id="star1" name="rating" value="1" <%= ratingLama == 1 ? "checked" : "" %> />
+                            <label for="star1" class="fa-solid fa-star" title="1 Star"></label>
                         </div>
                     </div>
                     
@@ -170,7 +179,7 @@
                                         <i class="fa-solid fa-star"></i>
                                     <% } %>
                                     <% for(int i = u.getRating() + 1; i <= 5; i++) { %>
-                                        <i class="fa-solid fa-star"></i>
+                                        <i class="fa-regular fa-star" style="color: #cbd5e1;"></i>
                                     <% } %>
                                 </div>
                             </td>

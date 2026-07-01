@@ -141,7 +141,7 @@
                         <div class="user-name"><i class="fa-solid fa-circle-user"></i> <%= StringUtils.escapeHtml(u.getNamaLengkap() != null ? u.getNamaLengkap() : u.getUsername()) %></div>
                         <div class="stars-orange">
                             <% for(int i = 1; i <= u.getRating(); i++) { %><i class="fa-solid fa-star"></i><% } %>
-                            <% for(int i = u.getRating() + 1; i <= 5; i++) { %><i class="fa-solid fa-star"></i><% } %>
+                            <% for(int i = u.getRating() + 1; i <= 5; i++) { %><i class="fa-regular fa-star" style="color: #cbd5e1;"></i><% } %>
                         </div>
                     </div>
                     <div class="review-text">"<%= StringUtils.escapeHtml(u.getUlasan()) %>"</div>
