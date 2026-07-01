@@ -4,6 +4,7 @@
 <%@ page import="model.User" %>
 <%@ page import="dao.FavoritDAO" %>
 <%@ page import="util.StringUtils" %>
+<%@ page import="util.Lang" %>
 
 <!DOCTYPE html>
 <html lang="id">
@@ -46,17 +47,17 @@
 <div class="sidebar">
     <div class="logo"><i class="fa-solid fa-book-open-reader"></i> <span>LibraryPro</span></div>
     <ul class="menu">
-        <li><a href="<%=request.getContextPath()%>/dashboard" class="active"><i class="fa-solid fa-chart-line"></i> Dashboard</a></li>
-        <li><a href="<%=request.getContextPath()%>/anggota/katalog.jsp"><i class="fa-solid fa-book-open"></i> Katalog Buku</a></li>
-        <li><a href="<%=request.getContextPath()%>/peminjaman"><i class="fa-solid fa-clock-rotate-left"></i> Riwayat Peminjaman</a></li>
-        <li><a href="<%=request.getContextPath()%>/favorit"><i class="fa-solid fa-star"></i> Favorit Saya</a></li>
-        <li><a href="<%=request.getContextPath()%>/ulasan"><i class="fa-solid fa-comments"></i> Ulasan & Rating Saya</a></li>
+        <li><a href="<%=request.getContextPath()%>/dashboard" class="active"><i class="fa-solid fa-chart-line"></i> <%= Lang.get("menu.dashboard", request) %></a></li>
+        <li><a href="<%=request.getContextPath()%>/anggota/katalog.jsp"><i class="fa-solid fa-book-open"></i> <%= Lang.get("menu.catalog", request) %></a></li>
+        <li><a href="<%=request.getContextPath()%>/peminjaman"><i class="fa-solid fa-clock-rotate-left"></i> <%= Lang.get("menu.history", request) %></a></li>
+        <li><a href="<%=request.getContextPath()%>/favorit"><i class="fa-solid fa-star"></i> <%= Lang.get("menu.favorites", request) %></a></li>
+        <li><a href="<%=request.getContextPath()%>/ulasan"><i class="fa-solid fa-comments"></i> <%= Lang.get("menu.reviews", request) %></a></li>
     </ul>
     <div class="sidebar-footer">
         <img src="<%= (loggedUser.getFotoProfil() != null && !loggedUser.getFotoProfil().isEmpty()) ? request.getContextPath() + "/uploads/profile/" + loggedUser.getFotoProfil() : request.getContextPath() + "/uploads/profile/default.png" %>" loading="lazy" onerror="this.onerror=null;this.src='<%=request.getContextPath()%>/uploads/profile/default.png'" alt="Profil">
         <div class="user-info">
             <span><%= StringUtils.escapeHtml(loggedUser.getNamaLengkap()) %></span>
-            <small>Anggota</small>
+            <small><%= Lang.get("role.member", request) %></small>
         </div>
     </div>
 </div>
@@ -64,7 +65,14 @@
 <div class="main-content">
     <div class="topbar">
         <button class="sidebar-toggle-btn" id="sidebarToggle" type="button" aria-label="Toggle sidebar"><i class="fa-solid fa-bars"></i></button>
-        <h2>Perpustakaan Digital</h2>
+        <h2><%= Lang.get("topbar.title", request) %></h2>
+        <div style="display: flex; align-items: center; gap: 15px; margin-left: auto; margin-right: 15px;">
+            <div class="lang-selector" style="display: flex; gap: 8px; font-weight: 700; font-size: 0.85rem; align-items: center; background: var(--bg-surface); border: 1px solid var(--border); padding: 4px 10px; border-radius: 20px; box-shadow: var(--shadow-sm);">
+                <a href="<%= request.getContextPath() %>/language?lang=id" style="color: <%= "en".equals(session.getAttribute("lang")) ? "var(--text-muted)" : "var(--color-primary)" %>; text-decoration: none; transition: var(--transition-fast);">ID</a>
+                <span style="color: var(--border);">|</span>
+                <a href="<%= request.getContextPath() %>/language?lang=en" style="color: <%= "en".equals(session.getAttribute("lang")) ? "var(--color-primary)" : "var(--text-muted)" %>; text-decoration: none; transition: var(--transition-fast);">EN</a>
+            </div>
+        </div>
         <div class="profile-dropdown-container">
             <div class="user-profile" id="profileTrigger" role="button" tabindex="0" aria-haspopup="true" aria-expanded="false">
                 <img src="<%= (loggedUser.getFotoProfil() != null && !loggedUser.getFotoProfil().isEmpty()) ? request.getContextPath() + "/uploads/profile/" + loggedUser.getFotoProfil() : request.getContextPath() + "/uploads/profile/default.png" %>" loading="lazy" onerror="this.onerror=null;this.src='<%=request.getContextPath()%>/uploads/profile/default.png'" alt="Foto Profil">
@@ -72,11 +80,11 @@
                 <i class="fa-solid fa-chevron-down chevron-icon"></i>
             </div>
             <ul class="dropdown-menu" id="dropdownMenu" role="menu">
-                <li><a href="<%=request.getContextPath()%>/profile" role="menuitem"><i class="fa-solid fa-user-gear"></i> Profil Saya</a></li>
+                <li><a href="<%=request.getContextPath()%>/profile" role="menuitem"><i class="fa-solid fa-user-gear"></i> <%= Lang.get("menu.profile", request) %></a></li>
                 <li class="divider" role="separator"></li>
                 <li>
                     <a href="#" class="logout-link" id="logoutTrigger" role="menuitem">
-                        <i class="fa-solid fa-right-from-bracket"></i> Logout
+                        <i class="fa-solid fa-right-from-bracket"></i> <%= Lang.get("menu.logout", request) %>
                     </a>
                 </li>
             </ul>
@@ -124,8 +132,8 @@
         </div>
 
         <div class="table-header">
-            <div class="table-title">Rekomendasi Buku Terbaru</div>
-            <a href="<%=request.getContextPath()%>/anggota/katalog.jsp" class="btn-add"><i class="fa-solid fa-magnifying-glass"></i> Cari Buku Lainnya</a>
+            <div class="table-title"><%= Lang.get("dashboard.new_recommendations", request) %></div>
+            <a href="<%=request.getContextPath()%>/anggota/katalog.jsp" class="btn-add"><i class="fa-solid fa-magnifying-glass"></i> <%= Lang.get("dashboard.search_other", request) %></a>
         </div>
 
         <div class="catalog-grid">

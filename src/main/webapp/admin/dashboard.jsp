@@ -3,6 +3,7 @@
 <%@ page import="model.Buku" %>
 <%@ page import="model.User" %>
 <%@ page import="util.StringUtils" %>
+<%@ page import="util.Lang" %>
 
 <!DOCTYPE html>
 <html>
@@ -126,32 +127,32 @@
     <ul class="menu">
         <li>
             <a href="<%=request.getContextPath()%>/dashboard" class="active">
-                <i class="fa-solid fa-chart-line"></i> Dashboard
+                <i class="fa-solid fa-chart-line"></i> <%= Lang.get("menu.dashboard", request) %>
             </a>
         </li>
         <li>
             <a href="<%=request.getContextPath()%>/buku">
-                <i class="fa-solid fa-book"></i> Buku
+                <i class="fa-solid fa-book"></i> <%= Lang.get("menu.books", request) %>
             </a>
         </li>
         <li>
             <a href="<%=request.getContextPath()%>/kategori">
-                <i class="fa-solid fa-layer-group"></i> Kategori
+                <i class="fa-solid fa-layer-group"></i> <%= Lang.get("menu.categories", request) %>
             </a>
         </li>
         <li>
             <a href="<%=request.getContextPath()%>/user">
-                <i class="fa-solid fa-users"></i> User
+                <i class="fa-solid fa-users"></i> <%= Lang.get("menu.users", request) %>
             </a>
         </li>
         <li>
             <a href="<%=request.getContextPath()%>/peminjaman">
-                <i class="fa-solid fa-arrow-right-arrow-left"></i> Peminjaman
+                <i class="fa-solid fa-arrow-right-arrow-left"></i> <%= Lang.get("menu.loans", request) %>
             </a>
         </li>
         <li>
             <a href="<%=request.getContextPath()%>/ulasan">
-                <i class="fa-solid fa-comments"></i> Lihat Ulasan User
+                <i class="fa-solid fa-comments"></i> <%= Lang.get("menu.all_reviews", request) %>
             </a>
         </li>
     </ul>
@@ -160,7 +161,15 @@
 <div class="main-content">
     <div class="topbar">
         <button class="sidebar-toggle-btn" id="sidebarToggle" type="button"><i class="fa-solid fa-bars"></i></button>
-        <h2>Library Management System</h2>
+        <h2><%= Lang.get("topbar.title", request) %></h2>
+        
+        <div style="display: flex; align-items: center; gap: 15px; margin-left: auto; margin-right: 15px;">
+            <div class="lang-selector" style="display: flex; gap: 8px; font-weight: 700; font-size: 0.85rem; align-items: center; background: var(--bg-surface); border: 1px solid var(--border); padding: 4px 10px; border-radius: 20px; box-shadow: var(--shadow-sm);">
+                <a href="<%= request.getContextPath() %>/language?lang=id" style="color: <%= "en".equals(session.getAttribute("lang")) ? "var(--text-muted)" : "var(--color-primary)" %>; text-decoration: none; transition: var(--transition-fast);">ID</a>
+                <span style="color: var(--border);">|</span>
+                <a href="<%= request.getContextPath() %>/language?lang=en" style="color: <%= "en".equals(session.getAttribute("lang")) ? "var(--color-primary)" : "var(--text-muted)" %>; text-decoration: none; transition: var(--transition-fast);">EN</a>
+            </div>
+        </div>
         
         <div class="profile-dropdown-container">
             <div class="user-profile" id="profileTrigger">
@@ -169,11 +178,11 @@
                 <i class="fa-solid fa-chevron-down" style="font-size: 11px; color: #64748b;"></i>
             </div>
             <ul class="dropdown-menu" id="dropdownMenu">
-                <li><a href="<%=request.getContextPath()%>/profile"><i class="fa-solid fa-user-gear"></i> Profil Saya</a></li>
+                <li><a href="<%=request.getContextPath()%>/profile"><i class="fa-solid fa-user-gear"></i> <%= Lang.get("menu.profile", request) %></a></li>
                 <li class="divider"></li>
                 <li>
                     <a href="#" class="logout-link" id="logoutTrigger">
-                        <i class="fa-solid fa-right-from-bracket"></i> Logout
+                        <i class="fa-solid fa-right-from-bracket"></i> <%= Lang.get("menu.logout", request) %>
                     </a>
                 </li>
             </ul>
